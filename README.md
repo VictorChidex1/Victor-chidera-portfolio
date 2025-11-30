@@ -20,9 +20,10 @@ A modern, responsive personal portfolio website built with React, Vite, and Tail
 - **Modern Aesthetics:** Dark theme with a global star background, glassmorphism effects, and bold typography.
 - **Comprehensive Sections:**
   - **Hero:** "Designing Digital Dreams" with animated text.
-  - **Process:** 5-phase workflow with a unique stacking card animation.
+  - **Process:** 5-phase workflow with a **Tech/Cyber** aesthetic, featuring corner accents, scanning line animations, and a sticky "scrollytelling" experience.
   - **FAQ:** Accordion-style frequently asked questions.
   - **Benefits & About:** Detailed sections highlighting value and personal background.
+- **Scroll to Top:** A convenient button to quickly navigate back to the top of the page.
 - **Contact Form:** Integrated with EmailJS (or prepared for integration) for direct messaging.
 - **Modern Styling:** Clean and professional aesthetic using Tailwind CSS utility classes.
 
