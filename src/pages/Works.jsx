@@ -5,7 +5,7 @@ import foodflowImg from "../assets/images/foodflow.png";
 import eventflow from "../assets/images/eventflow.png";
 import healthpoint from "../assets/images/healthpoint.png";
 
-const projects = [
+export const projects = [
   {
     id: 1,
     title: "FoodFlow",

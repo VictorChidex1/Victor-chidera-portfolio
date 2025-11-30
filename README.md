@@ -15,8 +15,14 @@ A modern, responsive personal portfolio website built with React, Vite, and Tail
 ## ✨ Features
 
 - **Responsive Design:** Fully optimized for mobile, tablet, and desktop devices.
-- **Dynamic Routing:** Seamless navigation between Home, Works, Blog, and Contact pages.
-- **Interactive UI:** Smooth animations and transitions using Framer Motion.
+- **Dynamic Routing:** Seamless navigation between Home, Works, Blog, Contact, Services, and Testimonials pages.
+- **Interactive UI:** Smooth animations and transitions using Framer Motion, including stacking cards and text reveals.
+- **Modern Aesthetics:** Dark theme with a global star background, glassmorphism effects, and bold typography.
+- **Comprehensive Sections:**
+  - **Hero:** "Designing Digital Dreams" with animated text.
+  - **Process:** 5-phase workflow with a unique stacking card animation.
+  - **FAQ:** Accordion-style frequently asked questions.
+  - **Benefits & About:** Detailed sections highlighting value and personal background.
 - **Contact Form:** Integrated with EmailJS (or prepared for integration) for direct messaging.
 - **Modern Styling:** Clean and professional aesthetic using Tailwind CSS utility classes.
 

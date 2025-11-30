@@ -1,95 +1,46 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { Github, Linkedin, Twitter, Mail } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-900 border-t border-slate-800 py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main Footer Content: 3 Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Column 1: Brand & Description */}
-          <div className="text-center md:text-left">
-            <h3 className="text-xl font-bold text-white mb-4">
-              Victor<span className="text-brand-orange">Chidera</span>.
-            </h3>
-            <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-              Crafting accessible, pixel-perfect, and performant web experiences
-              for the modern web.
-            </p>
+    <footer className="bg-brand-dark pt-24 pb-12 border-t border-slate-800">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row justify-between items-start mb-20 gap-12">
+          <div className="max-w-xl">
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
+              Let's build something{" "}
+              <span className="text-brand-orange">extraordinary</span> together.
+            </h2>
           </div>
 
-          {/* Column 2: Quick Links (NEW SECTION) */}
-          <div className="text-center">
-            <h4 className="text-white font-bold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  to="/"
-                  className="text-slate-400 hover:text-brand-orange transition-colors text-sm"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/works"
-                  className="text-slate-400 hover:text-brand-orange transition-colors text-sm"
-                >
-                  Works
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/blog"
-                  className="text-slate-400 hover:text-brand-orange transition-colors text-sm"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="text-slate-400 hover:text-brand-orange transition-colors text-sm"
-                >
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3: Social Links (Your Updated Links) */}
-          <div className="text-center md:text-right">
-            <h4 className="text-white font-bold mb-4">Connect</h4>
-            <div className="flex justify-center md:justify-end gap-6">
+          <div className="flex flex-col gap-8">
+            <div className="flex gap-6">
               <a
-                href="https://github.com/VictorChidex1"
+                href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-brand-orange transition-colors duration-300 transform hover:-translate-y-1"
-                aria-label="GitHub"
+                className="text-slate-400 hover:text-white transition-colors"
               >
-                <Github size={20} />
+                <Github size={24} />
               </a>
               <a
-                href="https://www.linkedin.com/in/victor-chidera-255526b9"
+                href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-brand-orange transition-colors duration-300 transform hover:-translate-y-1"
-                aria-label="LinkedIn"
+                className="text-slate-400 hover:text-white transition-colors"
               >
-                <Linkedin size={20} />
+                <Linkedin size={24} />
               </a>
               <a
-                href="https://x.com/Iamkingchidex"
+                href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-brand-orange transition-colors duration-300 transform hover:-translate-y-1"
-                aria-label="Twitter"
+                className="text-slate-400 hover:text-white transition-colors"
               >
-                <Twitter size={20} />
+                <Twitter size={24} />
               </a>
               <a
                 href="mailto:donchid.online@gmail.com"
@@ -99,14 +50,45 @@ const Footer = () => {
                 <Mail size={20} />
               </a>
             </div>
+
+            <div className="flex flex-col gap-2 text-slate-400 text-sm">
+              <Link
+                to="/"
+                className="hover:text-brand-orange transition-colors"
+              >
+                Home
+              </Link>
+              <Link
+                to="/works"
+                className="hover:text-brand-orange transition-colors"
+              >
+                Work
+              </Link>
+              <Link
+                to="/services"
+                className="hover:text-brand-orange transition-colors"
+              >
+                Services
+              </Link>
+              <Link
+                to="/testimonials"
+                className="hover:text-brand-orange transition-colors"
+              >
+                Testimonials
+              </Link>
+              <Link
+                to="/contact"
+                className="hover:text-brand-orange transition-colors"
+              >
+                Contact
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* Copyright Bar */}
-        <div className="border-t border-slate-800 pt-8 text-center">
-          <p className="text-slate-500 text-xs">
-            © {currentYear} Victor Chidera. Built with React & Tailwind.
-          </p>
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-slate-800 text-slate-500 text-sm">
+          <p>© {currentYear} Victor Chidera. All rights reserved.</p>
+          <p className="mt-2 md:mt-0">Designed & Built with ❤️</p>
         </div>
       </div>
     </footer>
