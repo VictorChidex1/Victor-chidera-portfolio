@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
@@ -51,6 +51,14 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
+          <a
+            href="/victor-chidera-full-stack-cv.pdf"
+            download
+            className="flex items-center gap-2 px-5 py-2.5 bg-brand-orange/10 border border-brand-orange/50 rounded-full text-brand-orange text-sm font-medium hover:bg-brand-orange hover:text-white transition-all duration-300"
+          >
+            <Download size={16} />
+            HIRE ME
+          </a>
         </div>
 
         {/* Mobile Menu Button */}

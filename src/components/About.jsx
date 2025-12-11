@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Download } from "lucide-react";
 import { fadeInUp, staggerContainer } from "../utils/animations";
 
 const About = () => {
@@ -50,6 +51,17 @@ const About = () => {
                 optimizing application performance, or contributing to
                 open-source projects.
               </p>
+            </motion.div>
+
+            <motion.div variants={fadeInUp} className="mt-8">
+              <a
+                href="/victor-chidera-full-stack-cv.pdf"
+                download
+                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-orange text-white font-medium rounded-full hover:bg-brand-orange/90 transition-all shadow-lg hover:shadow-brand-orange/20"
+              >
+                <Download size={20} />
+                Download CV
+              </a>
             </motion.div>
 
             <motion.div
