@@ -23,7 +23,7 @@ export const projects = [
     category: "Full Stack App & Productivity",
     description:
       "Analytics dashboard for online retailers with real-time data visualization. Track sales, customer behavior, and inventory seamlessly.",
-    tech: ["React", "Node.js", "Tailwind"],
+    tech: ["React", "Firebase", "Tailwind", "TypeScript"],
     link: "https://eventflow-neon.vercel.app/#/",
     image: eventflow,
   },
@@ -33,7 +33,7 @@ export const projects = [
     category: "Healthcare & Appointment System",
     description:
       "Book appointments with top specialists (cardiology, pediatrics, and more) at Healthpoint Hospital. Easily manage your health records and consultations online.",
-    tech: ["React", "Node.js", "Tailwind", "TypeScript"],
+    tech: ["React", "Firebase", "Tailwind", "TypeScript"],
     link: "https://healthpoint-hospital.vercel.app/#/",
     image: healthpoint,
   },
@@ -43,9 +43,9 @@ export const projects = [
     category: "Ecommerce & Management System",
     description:
       "A comprehensive food delivery management system optimizing restaurant workflows. Built with the same Dark Blue & Orange theme.",
-    tech: ["React", "Node.js", "Tailwind"],
+    tech: ["React", "Firebase", "Tailwind", "TypeScript"],
     // REPLACE with your real link
-    link: "https://victorchidex1.github.io/food-delivery-app/",
+    link: "https://food-delivery-app-zeta-beige.vercel.app/#/",
     image: foodflowImg,
   },
 ];
