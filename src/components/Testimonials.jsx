@@ -6,27 +6,27 @@ import { fadeInUp, staggerContainer } from "../utils/animations";
 const testimonials = [
   {
     id: 1,
-    name: "Sarah Johnson",
+    name: "Esther Onyinye",
     role: "CEO, TechStart",
     content:
       "Working with Victor was an absolute pleasure. He transformed our outdated website into a modern, high-converting platform.",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
+    image: "/esther-onyinye.webp",
   },
   {
     id: 2,
-    name: "Michael Chen",
+    name: "Emmanuel Olafisoye",
     role: "Product Manager, InnovateCorp",
     content:
       "The dashboard application Victor built for us has streamlined our internal processes significantly. Highly recommended.",
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
+    image: "/emmanuel-olafisoye.webp",
   },
   {
     id: 3,
-    name: "Emily Rodriguez",
+    name: "Dr Ozioma Glory",
     role: "Marketing Director, CreativeFlow",
     content:
       "I was impressed by Victor's ability to translate our design concepts into pixel-perfect code. He is a true professional.",
-    image: "https://randomuser.me/api/portraits/women/68.jpg",
+    image: "/dr-ozioma.webp",
   },
 ];
 
