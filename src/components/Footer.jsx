@@ -19,7 +19,7 @@ const Footer = () => {
           <div className="flex flex-col gap-8">
             <div className="flex gap-6">
               <a
-                href="https://github.com"
+                href="https://github.com/VictorChidex1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-400 hover:text-white transition-colors"
@@ -27,7 +27,7 @@ const Footer = () => {
                 <Github size={24} />
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/victor-chidera-255526b9"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-400 hover:text-white transition-colors"
@@ -35,7 +35,7 @@ const Footer = () => {
                 <Linkedin size={24} />
               </a>
               <a
-                href="https://twitter.com"
+                href="https://x.com/Iamkingchidex"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-400 hover:text-white transition-colors"
