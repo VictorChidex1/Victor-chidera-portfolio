@@ -17,7 +17,7 @@ const testimonials = [
     name: "Emmanuel Olafisoye",
     role: "Afrobeats Superstar (Raploard)",
     content:
-      "The dashboard application Victor built for us has streamlined our internal processes significantly. Highly recommended.",
+      "Victor built my artist porfolio website with a dashboard application for bookings and contact. Highly recommended.",
     image: "/emmanuel-olafisoye.webp",
   },
   {
