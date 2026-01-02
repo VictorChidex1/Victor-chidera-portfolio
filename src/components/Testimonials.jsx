@@ -15,7 +15,7 @@ const testimonials = [
   {
     id: 2,
     name: "Emmanuel Olafisoye",
-    role: "Product Manager, InnovateCorp",
+    role: "Afrobeats Superstar (Raploard)",
     content:
       "The dashboard application Victor built for us has streamlined our internal processes significantly. Highly recommended.",
     image: "/emmanuel-olafisoye.webp",
