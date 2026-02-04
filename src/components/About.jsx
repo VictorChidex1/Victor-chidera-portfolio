@@ -69,7 +69,7 @@ const About = () => {
               className="grid grid-cols-2 gap-8 mt-12"
             >
               <div>
-                <h4 className="text-5xl font-bold text-white mb-2">2+</h4>
+                <h4 className="text-5xl font-bold text-white mb-2">3+</h4>
                 <p className="text-brand-orange font-medium uppercase tracking-wider text-sm">
                   Years Exp.
                 </p>
