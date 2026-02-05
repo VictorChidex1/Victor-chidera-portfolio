@@ -9,7 +9,7 @@ const Hero = () => {
   return (
     <section className="min-h-screen flex items-center justify-center pt-32 pb-20 px-6 relative overflow-hidden">
       {/* Background Gradient Blob */}
-      <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-brand-orange/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(249,115,22,0.1)_0%,transparent_70%)] rounded-full pointer-events-none" />
 
       <motion.div
         variants={staggerContainer}
@@ -60,7 +60,7 @@ const Hero = () => {
         >
           <div className="relative">
             {/* Decorative element behind image */}
-            <div className="absolute -inset-4 bg-brand-orange/20 rounded-3xl blur-xl -z-10"></div>
+            <div className="absolute -inset-4 bg-[radial-gradient(circle,rgba(249,115,22,0.2)_0%,transparent_70%)] rounded-3xl -z-10"></div>
             <img
               src={profileImage}
               alt="Victor Chidera"
