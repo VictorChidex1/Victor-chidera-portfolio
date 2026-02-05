@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeInUp, staggerContainer, textReveal } from "../utils/animations";
-import profilePic from "../assets/images/profile.png";
+import profileImage from "../assets/images/profile.webp";
 
 const Hero = () => {
   return (
