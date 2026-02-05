@@ -62,7 +62,7 @@ const Hero = () => {
             {/* Decorative element behind image */}
             <div className="absolute -inset-4 bg-brand-orange/20 rounded-3xl blur-xl -z-10"></div>
             <img
-              src={profilePic}
+              src={profileImage}
               alt="Victor Chidera"
               className="w-72 h-72 md:w-96 md:h-96 rounded-3xl border-2 border-slate-700/50 object-cover shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500"
             />
