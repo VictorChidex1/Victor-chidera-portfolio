@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 
 const StarBackground = () => {
   const [stars, setStars] = useState([]);
@@ -29,7 +28,7 @@ const StarBackground = () => {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
       {stars.map((star) => (
-        <motion.div
+        <div
           key={star.id}
           className="absolute bg-white rounded-full"
           style={{
@@ -38,16 +37,8 @@ const StarBackground = () => {
             width: `${star.size}px`,
             height: `${star.size}px`,
             opacity: star.opacity,
-          }}
-          animate={{
-            opacity: [star.opacity, star.opacity * 0.3, star.opacity],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: star.duration,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: star.delay,
+            animation: `twinkle ${star.duration}s ease-in-out infinite`,
+            animationDelay: `${star.delay}s`,
           }}
         />
       ))}
