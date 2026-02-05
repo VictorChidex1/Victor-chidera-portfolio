@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 // Import Components
@@ -6,13 +6,13 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import StarBackground from "./components/StarBackground";
 
-// Lazy Import Pages
-const Home = React.lazy(() => import("./pages/Home"));
-const Works = React.lazy(() => import("./pages/Works"));
-const Services = React.lazy(() => import("./pages/Services"));
-const Testimonials = React.lazy(() => import("./pages/Testimonials"));
-const Blog = React.lazy(() => import("./pages/Blog"));
-const Contact = React.lazy(() => import("./pages/Contact"));
+// Import Pages
+import Home from "./pages/Home";
+import Works from "./pages/Works";
+import Services from "./pages/Services";
+import Testimonials from "./pages/Testimonials";
+import Blog from "./pages/Blog";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -23,22 +23,14 @@ function App() {
 
       {/* Main content grows to fill space */}
       <main className="flex-grow">
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center min-h-[50vh]">
-              <div className="w-12 h-12 border-4 border-brand-orange border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          }
-        >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/works" element={<Works />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/testimonials" element={<Testimonials />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </Suspense>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/works" element={<Works />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/testimonials" element={<Testimonials />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
       </main>
 
       {/* Footer stays at the bottom */}
