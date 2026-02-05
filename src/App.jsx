@@ -5,7 +5,6 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import StarBackground from "./components/StarBackground";
-import LoadingSpinner from "./components/LoadingSpinner"; // You'll need to create this or use a simple fallback
 
 // Lazy Import Pages
 const Home = React.lazy(() => import("./pages/Home"));
