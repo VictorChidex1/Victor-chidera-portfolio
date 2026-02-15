@@ -10,7 +10,7 @@ const WhatsAppButton = () => {
       rel="noopener noreferrer"
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="fixed bottom-8 right-8 z-50 flex items-center justify-center group"
+      className="fixed bottom-6 right-4 z-50 flex items-center justify-center group"
       aria-label="Chat on WhatsApp"
     >
       {/* Pulse/Glow Effect */}
