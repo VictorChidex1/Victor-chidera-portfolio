@@ -9,6 +9,7 @@ import raploard from "../assets/images/raploard.webp";
 import veravox from "../assets/images/veravox.webp";
 import kelvinsGrid from "../assets/images/kelvins-grid.webp";
 import canManHero from "../assets/images/canman-hero.webp";
+import oxygenHealth from "../assets/images/oxygen-health.webp";
 
 export const projects = [
   {
@@ -32,6 +33,22 @@ export const projects = [
   },
   {
     id: 2,
+    title: "Oxygen Health Systems: Premium Landing Page",
+    category: "Health Tech & Lead Generation",
+    description:
+      "A high-converting, custom-coded landing page engineered for a US-based health technology brand. Features a premium UI/UX architecture, seamless video integrations, and direct GoHighLevel (CRM) webhook connections to streamline lead generation and pricing requests.",
+    tech: [
+      "React",
+      "Firebase (Hosting)",
+      "Tailwind CSS",
+      "GoHighLevel (Webhooks)",
+      "Framer Motion",
+    ],
+    link: "https://oxygen-health.vercel.app/",
+    image: oxygenHealth,
+  },
+  {
+    id: 3,
     title: "VeraVox AI: Automated Reputation Engine",
     category: "Serverless Micro-SaaS & AI Automation",
     description:
@@ -50,7 +67,7 @@ export const projects = [
     image: veravox,
   },
   {
-    id: 3,
+    id: 4,
     title: "Raploard official Website",
     category: "Artist Portfolio Website for bookings and contact",
     description:
@@ -68,7 +85,7 @@ export const projects = [
     image: raploard,
   },
   {
-    id: 4,
+    id: 5,
     title: "Kelvin's Grid: Serverless Solar Utility Platform",
     category: "Renewable Energy CRM & Customer Portal (SaaS)",
     description:
@@ -86,7 +103,7 @@ export const projects = [
     image: kelvinsGrid,
   },
   {
-    id: 5,
+    id: 6,
     title: "The CanMan: Operations & Recruitment Platform",
     category: "Service Business Management System (SaaS)",
     description:
@@ -104,7 +121,7 @@ export const projects = [
     image: canManHero,
   },
   {
-    id: 6,
+    id: 7,
     title: "EventFlow: Event Booking & Management Platform",
     category: "Advanced React Architecture & E-commerce Simulation",
     description:
@@ -123,7 +140,7 @@ export const projects = [
     image: eventflow,
   },
   {
-    id: 7,
+    id: 8,
     title: "HealthPoint: Hospital Management System",
     category: "Advanced Healthcare UI & Workflow Simulation",
     description:
@@ -142,7 +159,7 @@ export const projects = [
     image: healthpoint,
   },
   {
-    id: 8,
+    id: 9,
     title: "FoodFlow: Restaurant Management and Delivery Logistics Platform",
     category: "Advanced Frontend Simulation & Geospatial UI",
     description:
