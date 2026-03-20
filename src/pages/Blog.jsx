@@ -1,9 +1,9 @@
 import React from "react";
 import { ChevronRight, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
-import blog1 from "../assets/images/blog1.webp";
-import blog2 from "../assets/images/blog2.webp";
-import blog3 from "../assets/images/blog3.webp";
+const blog1 = "/assets/images/blog1.webp";
+const blog2 = "/assets/images/blog2.webp";
+const blog3 = "/assets/images/blog3.webp";
 
 const blogPosts = [
   {

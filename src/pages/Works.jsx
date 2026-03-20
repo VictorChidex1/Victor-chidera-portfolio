@@ -1,15 +1,16 @@
 import React from "react";
 import { ExternalLink, Code } from "lucide-react";
 import { motion } from "framer-motion";
-import foodflowImg from "../assets/images/foodflow.webp";
-import eventflow from "../assets/images/eventflow.webp";
-import healthpoint from "../assets/images/healthpoint.webp";
-import novluma from "../assets/images/novluma.webp";
-import raploard from "../assets/images/raploard.webp";
-import veravox from "../assets/images/veravox.webp";
-import kelvinsGrid from "../assets/images/kelvins-grid.webp";
-import canManHero from "../assets/images/canman-hero.webp";
-import oxygenHealth from "../assets/images/oxygen-health.webp";
+const foodflowImg = "/assets/images/foodflow.webp";
+const eventflow = "/assets/images/eventflow.webp";
+const healthpoint = "/assets/images/healthpoint.webp";
+const novluma = "/assets/images/novluma.webp";
+const raploard = "/assets/images/raploard.webp";
+const veravox = "/assets/images/veravox.webp";
+const kelvinsGrid = "/assets/images/kelvins-grid.webp";
+const canManHero = "/assets/images/canman-hero.webp";
+const oxygenHealth = "/assets/images/oxygen-health.webp";
+const kudiflow = "/assets/images/kudiflow.webp";
 
 export const projects = [
   {
@@ -49,6 +50,25 @@ export const projects = [
   },
   {
     id: 3,
+    title: "KudiFlow: The Offline-First App for Smart Vendors",
+    category: "Fintech & Offline-First B2B SaaS",
+    description:
+      "An offline-first business operating system engineered to digitize retail shops and market vendors. Built with a robust React and Firebase architecture, the platform transitions users from traditional paper ledgers to secure, cloud-backed inventory and debtor management. Features include a fully automated serverless email onboarding pipeline (Resend), custom-routed Firebase authentication flows, automated WhatsApp reminders, and build-time SEO prerendering for a dynamic in-house content management system.",
+    tech: [
+      "React",
+      "Firebase (Firestore DB/Auth)",
+      "Tailwind CSS",
+      "TypeScript",
+      "Framer Motion",
+      "Zustand (State)",
+      "Resend API",
+      "React Helmet (SEO)",
+    ],
+    link: "https://kudiflow.vercel.app/",
+    image: kudiflow,
+  },
+  {
+    id: 4,
     title: "VeraVox AI: Automated Reputation Engine",
     category: "Serverless Micro-SaaS & AI Automation",
     description:
@@ -67,7 +87,7 @@ export const projects = [
     image: veravox,
   },
   {
-    id: 4,
+    id: 5,
     title: "Raploard official Website",
     category: "Artist Portfolio Website for bookings and contact",
     description:
@@ -85,7 +105,7 @@ export const projects = [
     image: raploard,
   },
   {
-    id: 5,
+    id: 6,
     title: "Kelvin's Grid: Serverless Solar Utility Platform",
     category: "Renewable Energy CRM & Customer Portal (SaaS)",
     description:
@@ -103,7 +123,7 @@ export const projects = [
     image: kelvinsGrid,
   },
   {
-    id: 6,
+    id: 7,
     title: "The CanMan: Operations & Recruitment Platform",
     category: "Service Business Management System (SaaS)",
     description:
@@ -121,7 +141,7 @@ export const projects = [
     image: canManHero,
   },
   {
-    id: 7,
+    id: 8,
     title: "EventFlow: Event Booking & Management Platform",
     category: "Advanced React Architecture & E-commerce Simulation",
     description:
@@ -140,7 +160,7 @@ export const projects = [
     image: eventflow,
   },
   {
-    id: 8,
+    id: 9,
     title: "HealthPoint: Hospital Management System",
     category: "Advanced Healthcare UI & Workflow Simulation",
     description:
@@ -159,7 +179,7 @@ export const projects = [
     image: healthpoint,
   },
   {
-    id: 9,
+    id: 10,
     title: "FoodFlow: Restaurant Management and Delivery Logistics Platform",
     category: "Advanced Frontend Simulation & Geospatial UI",
     description:
