@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ExternalLink, Code } from "lucide-react";
 import { motion } from "framer-motion";
 const foodflowImg = "/assets/images/foodflow.webp";
@@ -201,6 +201,18 @@ export const projects = [
 ];
 
 const Works = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
+
+  const totalPages = Math.ceil(projects.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentProjects = projects.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <section className="py-24 pt-32 bg-brand-dark min-h-screen">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -220,7 +232,7 @@ const Works = () => {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {currentProjects.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 30 }}
@@ -290,6 +302,52 @@ const Works = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="mt-16 flex justify-center items-center gap-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                currentPage === 1
+                  ? "bg-slate-800 text-slate-500 cursor-not-allowed"
+                  : "bg-brand-orange text-white hover:bg-orange-600"
+              }`}
+            >
+              Previous
+            </button>
+            <div className="flex gap-2">
+              {Array.from({ length: totalPages }).map((_, idx) => {
+                const pageNum = idx + 1;
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`w-10 h-10 rounded-md flex items-center justify-center font-medium transition-colors ${
+                      currentPage === pageNum
+                        ? "bg-brand-orange text-white"
+                        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                currentPage === totalPages
+                  ? "bg-slate-800 text-slate-500 cursor-not-allowed"
+                  : "bg-brand-orange text-white hover:bg-orange-600"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
