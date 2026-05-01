@@ -15,10 +15,10 @@ const kudiflow = "/assets/images/kudiflow.webp";
 export const projects = [
   {
     id: 1,
-    title: "Novluma AI: Content Orchestration SaaS",
-    category: "Generative AI Platform & B2B SaaS",
+    title: "KudiFlow: The Offline-First App for Smart Vendors",
+    category: "Fintech & Offline-First B2B SaaS",
     description:
-      "A production-ready AI content workspace built with React and Google Gemini. Features a custom credit-based consumption model, real-time content generation streams, and a secure serverless architecture (Firebase) for managing user authentication and data persistence.",
+      "An offline-first business operating system engineered to digitize retail shops and market vendors. Built with a robust React and Firebase architecture, the platform transitions users from traditional paper ledgers to secure, cloud-backed inventory and debtor management. Features include a fully automated serverless email onboarding pipeline (Resend), custom-routed Firebase authentication flows, automated WhatsApp reminders, and build-time SEO prerendering for a dynamic in-house content management system.",
     tech: [
       "React",
       "Firebase (Firestore DB/Auth)",
@@ -26,11 +26,11 @@ export const projects = [
       "TypeScript",
       "Framer Motion",
       "Zustand (State)",
-      "Google Gemini API (AI)",
-      "Vercel (Deployment)",
+      "Resend API",
+      "React Helmet (SEO)",
     ],
-    link: "https://novluma-saas.vercel.app/",
-    image: novluma,
+    link: "https://kudiflow.vercel.app/",
+    image: kudiflow,
   },
   {
     id: 2,
@@ -50,10 +50,10 @@ export const projects = [
   },
   {
     id: 3,
-    title: "KudiFlow: The Offline-First App for Smart Vendors",
-    category: "Fintech & Offline-First B2B SaaS",
+    title: "Novluma AI: Content Orchestration SaaS",
+    category: "Generative AI Platform & B2B SaaS",
     description:
-      "An offline-first business operating system engineered to digitize retail shops and market vendors. Built with a robust React and Firebase architecture, the platform transitions users from traditional paper ledgers to secure, cloud-backed inventory and debtor management. Features include a fully automated serverless email onboarding pipeline (Resend), custom-routed Firebase authentication flows, automated WhatsApp reminders, and build-time SEO prerendering for a dynamic in-house content management system.",
+      "A production-ready AI content workspace built with React and Google Gemini. Features a custom credit-based consumption model, real-time content generation streams, and a secure serverless architecture (Firebase) for managing user authentication and data persistence.",
     tech: [
       "React",
       "Firebase (Firestore DB/Auth)",
@@ -61,11 +61,11 @@ export const projects = [
       "TypeScript",
       "Framer Motion",
       "Zustand (State)",
-      "Resend API",
-      "React Helmet (SEO)",
+      "Google Gemini API (AI)",
+      "Vercel (Deployment)",
     ],
-    link: "https://kudiflow.vercel.app/",
-    image: kudiflow,
+    link: "https://novluma-saas.vercel.app/",
+    image: novluma,
   },
   {
     id: 4,
