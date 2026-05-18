@@ -68,14 +68,14 @@ const Hero = () => {
           <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
             <Link
               to="/works"
-              className="group flex items-center gap-2 bg-white text-brand-dark px-8 py-4 rounded-full font-bold text-lg hover:bg-brand-orange hover:text-white transition-all duration-300"
+              className="magnetic group flex items-center gap-2 bg-white text-brand-dark px-8 py-4 rounded-full font-bold text-lg hover:bg-brand-orange hover:text-white transition-all duration-300"
             >
               View Work
               <ArrowRight className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               to="/contact"
-              className="flex items-center gap-2 border border-slate-700 text-white px-8 py-4 rounded-full font-bold text-lg hover:border-brand-orange hover:text-brand-orange transition-colors"
+              className="magnetic flex items-center gap-2 border border-slate-700 text-white px-8 py-4 rounded-full font-bold text-lg hover:border-brand-orange hover:text-brand-orange transition-colors"
             >
               Contact Me
             </Link>

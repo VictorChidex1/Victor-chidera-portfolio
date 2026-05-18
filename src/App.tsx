@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import StarBackground from "./components/StarBackground";
 import SmoothScroll from "./components/SmoothScroll";
+import CustomCursor from "./components/CustomCursor";
 
 // Import Pages
 import Home from "./pages/Home";
@@ -17,6 +18,7 @@ import Contact from "./pages/Contact";
 function App() {
   return (
     <SmoothScroll>
+      <CustomCursor />
       <div className="min-h-screen bg-brand-dark text-slate-200 font-sans flex flex-col relative">
       <StarBackground />
       {/* Navbar stays at the top */}

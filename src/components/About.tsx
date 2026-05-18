@@ -96,7 +96,10 @@ const About = () => {
                 <span className="text-green-400">'Fullstack Dev'</span>,<br />
                 &nbsp;&nbsp;skills: [
                 <span className="text-green-400">'React'</span>,{" "}
-                <span className="text-green-400">'Firebase'</span>,{" "}
+                <span className="text-green-400">'Firebase'</span>,
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span className="text-green-400">'Next.js'</span>,
+                <span className="text-green-400">'PostgreSQL'</span>,
                 <span className="text-green-400">'Tailwind'</span>],
                 <br />
                 &nbsp;&nbsp;backend: [

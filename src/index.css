@@ -19,3 +19,9 @@ body {
     transform: scale(1.2);
   }
 }
+
+@media (pointer: fine) {
+  body, a, button, input, textarea, select, .magnetic {
+    cursor: none !important;
+  }
+}
