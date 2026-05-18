@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { fadeInUp, staggerContainer, textReveal } from "../utils/animations";
+import { fadeInUp, staggerContainer } from "../utils/animations";
+import KineticText from "./KineticText";
 const profileImage = "/assets/images/profile.webp";
 
 const Hero = () => {
@@ -18,30 +19,27 @@ const Hero = () => {
       >
         {/* Left Column: Text */}
         <div className="lg:col-span-7 flex flex-col gap-4">
-          <div className="overflow-hidden">
-            <motion.h1
-              variants={textReveal}
-              className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter leading-none"
-            >
-              DESIGNING
-            </motion.h1>
-          </div>
-          <div className="overflow-hidden">
-            <motion.h1
-              variants={textReveal}
-              className="text-6xl md:text-8xl lg:text-9xl font-bold text-slate-500 tracking-tighter leading-none"
-            >
-              DIGITAL
-            </motion.h1>
-          </div>
-          <div className="overflow-hidden">
-            <motion.h1
-              variants={textReveal}
-              className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter leading-none mb-8"
-            >
-              DREAMS
-            </motion.h1>
-          </div>
+          <KineticText
+            as="h1"
+            delay={0.1}
+            className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter leading-none"
+          >
+            DESIGNING
+          </KineticText>
+          <KineticText
+            as="h1"
+            delay={0.3}
+            className="text-6xl md:text-8xl lg:text-9xl font-bold text-slate-500 tracking-tighter leading-none"
+          >
+            DIGITAL
+          </KineticText>
+          <KineticText
+            as="h1"
+            delay={0.5}
+            className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter leading-none mb-8"
+          >
+            DREAMS
+          </KineticText>
 
           <motion.p
             variants={fadeInUp}
