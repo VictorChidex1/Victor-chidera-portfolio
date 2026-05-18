@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 // Import Components
 import Navbar from "./components/Navbar";
@@ -6,6 +7,7 @@ import Footer from "./components/Footer";
 import StarBackground from "./components/StarBackground";
 import SmoothScroll from "./components/SmoothScroll";
 import CustomCursor from "./components/CustomCursor";
+import PageTransition from "./components/PageTransition";
 
 // Import Pages
 import Home from "./pages/Home";
@@ -16,6 +18,8 @@ import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 
 function App() {
+  const location = useLocation();
+
   return (
     <SmoothScroll>
       <CustomCursor />
@@ -26,14 +30,16 @@ function App() {
 
       {/* Main content grows to fill space */}
       <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/works" element={<Works />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/testimonials" element={<Testimonials />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+            <Route path="/works" element={<PageTransition><Works /></PageTransition>} />
+            <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
+            <Route path="/testimonials" element={<PageTransition><Testimonials /></PageTransition>} />
+            <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
+            <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+          </Routes>
+        </AnimatePresence>
       </main>
 
       {/* Footer stays at the bottom */}
