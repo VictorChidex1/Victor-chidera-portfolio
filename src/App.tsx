@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import StarBackground from "./components/StarBackground";
+import SmoothScroll from "./components/SmoothScroll";
 
 // Import Pages
 import Home from "./pages/Home";
@@ -15,7 +16,8 @@ import Contact from "./pages/Contact";
 
 function App() {
   return (
-    <div className="min-h-screen bg-brand-dark text-slate-200 font-sans flex flex-col relative">
+    <SmoothScroll>
+      <div className="min-h-screen bg-brand-dark text-slate-200 font-sans flex flex-col relative">
       <StarBackground />
       {/* Navbar stays at the top */}
       <Navbar />
@@ -34,7 +36,8 @@ function App() {
 
       {/* Footer stays at the bottom */}
       <Footer />
-    </div>
+      </div>
+    </SmoothScroll>
   );
 }
 

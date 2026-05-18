@@ -1,5 +1,7 @@
-export default async function handler(req, res) {
-  const urlPath = req.url;
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const urlPath = req.url || "";
 
   // SEO Configurations Map
   const defaults = {
@@ -8,7 +10,7 @@ export default async function handler(req, res) {
     image: "https://victor-chidera-25.vercel.app/og-image.webp" 
   };
 
-  const routes = {
+  const routes: Record<string, typeof defaults> = {
     "/": defaults,
     "/works": {
       title: "Selected Works | Victor Chidera",
