@@ -49,7 +49,7 @@ const benefits = [
 
 const Benefits = () => {
   return (
-    <section className="py-32 bg-brand-dark relative overflow-hidden">
+    <section className="py-32 bg-transparent relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-brand-orange/5 rounded-full blur-[100px] pointer-events-none" />
 
