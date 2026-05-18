@@ -1,6 +1,7 @@
 import { useState  } from "react";
 import { ExternalLink, Code } from "lucide-react";
 import { motion } from "framer-motion";
+import WebGLImageHover from "../components/WebGLImageHover";
 const foodflowImg = "/assets/images/foodflow.webp";
 const eventflow = "/assets/images/eventflow.webp";
 const healthpoint = "/assets/images/healthpoint.webp";
@@ -244,17 +245,11 @@ const Works = () => {
               {/* IMAGE AREA */}
               <div className="h-48 bg-slate-800 relative overflow-hidden group">
                 {/* Dark Overlay that disappears on hover */}
-                <div className="absolute inset-0 bg-brand-dark/20 group-hover:bg-transparent transition-all duration-300 z-10" />
+                <div className="absolute inset-0 bg-brand-dark/20 group-hover:bg-transparent transition-all duration-300 z-10 pointer-events-none" />
 
-                <img
+                <WebGLImageHover
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                  // Fallback logic if image fails to load
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = "none";
-                    ((e.target as HTMLElement).nextSibling as HTMLElement).style.display = "flex";
-                  }}
                 />
 
                 {/* Fallback Icon (Hidden unless image fails) */}
