@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef  } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const steps = [
@@ -49,7 +49,7 @@ const steps = [
   },
 ];
 
-const ProcessCard = ({ step, index, scrollProgress }) => {
+const ProcessCard = ({ step, index, scrollProgress }: any) => {
   const cardRef = useRef(null);
 
   // Calculate scale based on scroll position

@@ -1,5 +1,4 @@
-import React from "react";
-import { ChevronRight, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 const blog1 = "/assets/images/blog1.webp";
 const blog2 = "/assets/images/blog2.webp";
@@ -79,7 +78,7 @@ const Blog = () => {
                     alt={post.title}
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                     onError={(e) => {
-                      e.target.src =
+                      (e.target as HTMLImageElement).src =
                         "https://placehold.co/600x400/1e293b/cbd5e1?text=No+Image"; // Fallback if image missing
                     }}
                   />

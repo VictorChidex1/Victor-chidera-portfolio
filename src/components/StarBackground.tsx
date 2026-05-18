@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect  } from "react";
 
 const StarBackground = () => {
-  const [stars, setStars] = useState([]);
+  const [stars, setStars] = useState<any[]>([]);
 
   useEffect(() => {
     const generateStars = () => {

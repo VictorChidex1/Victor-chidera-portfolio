@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState  } from "react";
 import emailjs from "@emailjs/browser";
 import { EMAIL_CONFIG } from "../config/email";
 
@@ -10,7 +10,7 @@ const Contact = () => {
   });
   const [status, setStatus] = useState("idle");
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -18,7 +18,7 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     setStatus("sending");
 
@@ -99,7 +99,7 @@ const Contact = () => {
                 Message
               </label>
               <textarea
-                rows="4"
+                rows={4}
                 name="message"
                 value={formData.message}
                 onChange={handleChange}

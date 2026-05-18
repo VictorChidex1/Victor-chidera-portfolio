@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "vite build --mode gh-pages",
     "deploy": "gh-pages -d dist"
@@ -23,6 +23,7 @@
     "react-router-dom": "^6.30.2"
   },
   "devDependencies": {
+    "@types/node": "^25.8.0",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.2.0",
@@ -34,6 +35,7 @@
     "gh-pages": "^6.1.0",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.4.1",
+    "typescript": "^6.0.3",
     "vite": "^5.0.0"
   }
 }

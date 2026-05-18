@@ -1,11 +1,8 @@
-import React from "react";
 import {
-  Code,
   Palette,
   Smartphone,
   Globe,
   Database,
-  Layout,
   ArrowUpRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -65,7 +62,7 @@ const Services = () => {
           </div>
 
           <div className="md:w-2/3 flex flex-col gap-8">
-            {services.map((service, index) => (
+            {services.map((service) => (
               <motion.div
                 key={service.id}
                 variants={fadeInUp}

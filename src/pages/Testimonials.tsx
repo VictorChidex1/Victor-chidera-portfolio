@@ -1,18 +1,17 @@
-import React from "react";
-import ServicesComponent from "../components/Services";
+import TestimonialsComponent from "../components/Testimonials";
 import CallToAction from "../components/CallToAction";
 import ScrollToTop from "../components/ScrollToTop";
 
-const Services = () => {
+const Testimonials = () => {
   return (
     <>
       <ScrollToTop />
       <div className="pt-20">
-        <ServicesComponent />
+        <TestimonialsComponent />
         <CallToAction />
       </div>
     </>
   );
 };
 
-export default Services;
+export default Testimonials;

@@ -1,4 +1,3 @@
-import React from "react";
 import { Quote } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeInUp, staggerContainer } from "../utils/animations";

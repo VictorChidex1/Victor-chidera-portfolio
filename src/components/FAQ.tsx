@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState  } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 import { fadeInUp, staggerContainer } from "../utils/animations";
@@ -31,7 +31,7 @@ const faqs = [
   },
 ];
 
-const FAQItem = ({ question, answer, isOpen, onClick }) => {
+const FAQItem = ({ question, answer, isOpen, onClick }: any) => {
   return (
     <motion.div
       variants={fadeInUp}
@@ -66,7 +66,7 @@ const FAQItem = ({ question, answer, isOpen, onClick }) => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.3, ease: "easeInOut" as any }}
             className="overflow-hidden"
           >
             <p className="text-slate-400 text-lg leading-relaxed pb-6 pr-12">
@@ -80,9 +80,9 @@ const FAQItem = ({ question, answer, isOpen, onClick }) => {
 };
 
 const FAQ = () => {
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const toggleFAQ = (index) => {
+  const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { Code2, Database, Layout, Smartphone } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -18,7 +17,14 @@ const skillsData = [
   {
     category: "Backend & Data",
     icon: Database,
-    skills: ["Node.js", "Express", "Firebase", "MongoDB", "REST APIs"],
+    skills: [
+      "Node.js",
+      "Express",
+      "Firebase",
+      "PostgreSQL",
+      "MongoDB",
+      "REST APIs",
+    ],
   },
   {
     category: "Tools & DevOps",

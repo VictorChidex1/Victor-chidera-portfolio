@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState  } from "react";
 import { ExternalLink, Code } from "lucide-react";
 import { motion } from "framer-motion";
 const foodflowImg = "/assets/images/foodflow.webp";
@@ -208,7 +208,7 @@ const Works = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentProjects = projects.slice(startIndex, startIndex + itemsPerPage);
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -252,8 +252,8 @@ const Works = () => {
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   // Fallback logic if image fails to load
                   onError={(e) => {
-                    e.target.style.display = "none";
-                    e.target.nextSibling.style.display = "flex";
+                    (e.target as HTMLElement).style.display = "none";
+                    ((e.target as HTMLElement).nextSibling as HTMLElement).style.display = "flex";
                   }}
                 />
 
