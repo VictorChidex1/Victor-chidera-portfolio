@@ -5,7 +5,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-brand-dark pt-24 pb-12 border-t border-slate-800">
+    <footer className="bg-brand-dark pt-24 pb-12 border-t border-slate-800 relative z-20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start mb-20 gap-12">
           <div className="max-w-xl">
@@ -21,7 +21,7 @@ const Footer = () => {
                 href="https://github.com/VictorChidex1"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-white transition-colors"
+                className="magnetic text-slate-400 hover:text-white transition-colors inline-block"
               >
                 <Github size={24} />
               </a>
@@ -29,7 +29,7 @@ const Footer = () => {
                 href="https://www.linkedin.com/in/victor-chidera-255526b9"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-white transition-colors"
+                className="magnetic text-slate-400 hover:text-white transition-colors inline-block"
               >
                 <Linkedin size={24} />
               </a>
@@ -37,13 +37,13 @@ const Footer = () => {
                 href="https://x.com/Iamkingchidex"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-white transition-colors"
+                className="magnetic text-slate-400 hover:text-white transition-colors inline-block"
               >
                 <Twitter size={24} />
               </a>
               <a
                 href="mailto:donchid.online@gmail.com"
-                className="text-slate-400 hover:text-brand-orange transition-colors duration-300 transform hover:-translate-y-1"
+                className="magnetic text-slate-400 hover:text-brand-orange transition-colors duration-300 transform hover:-translate-y-1 inline-block"
                 aria-label="Email"
               >
                 <Mail size={20} />
@@ -53,31 +53,31 @@ const Footer = () => {
             <div className="flex flex-col gap-2 text-slate-400 text-sm">
               <Link
                 to="/"
-                className="hover:text-brand-orange transition-colors"
+                className="magnetic hover:text-brand-orange transition-colors inline-block"
               >
                 Home
               </Link>
               <Link
                 to="/works"
-                className="hover:text-brand-orange transition-colors"
+                className="magnetic hover:text-brand-orange transition-colors inline-block"
               >
                 Work
               </Link>
               <Link
                 to="/services"
-                className="hover:text-brand-orange transition-colors"
+                className="magnetic hover:text-brand-orange transition-colors inline-block"
               >
                 Services
               </Link>
               <Link
                 to="/testimonials"
-                className="hover:text-brand-orange transition-colors"
+                className="magnetic hover:text-brand-orange transition-colors inline-block"
               >
                 Testimonials
               </Link>
               <Link
                 to="/contact"
-                className="hover:text-brand-orange transition-colors"
+                className="magnetic hover:text-brand-orange transition-colors inline-block"
               >
                 Contact
               </Link>

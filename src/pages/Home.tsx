@@ -6,8 +6,6 @@ import Process from "../components/Process";
 import Services from "../components/Services";
 import Testimonials from "../components/Testimonials";
 import CallToAction from "../components/CallToAction";
-import WhatsAppButton from "../components/WhatsAppButton";
-import ScrollToTop from "../components/ScrollToTop";
 import FAQ from "../components/FAQ";
 
 const Home = () => {
@@ -22,8 +20,6 @@ const Home = () => {
       <Testimonials />
       <FAQ />
       <CallToAction />
-      <WhatsAppButton />
-      <ScrollToTop />
     </main>
   );
 };

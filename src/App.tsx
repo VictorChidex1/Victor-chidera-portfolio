@@ -8,6 +8,8 @@ import StarBackground from "./components/StarBackground";
 import SmoothScroll from "./components/SmoothScroll";
 import CustomCursor from "./components/CustomCursor";
 import PageTransition from "./components/PageTransition";
+import WhatsAppButton from "./components/WhatsAppButton";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Import Pages
 import Home from "./pages/Home";
@@ -45,6 +47,8 @@ function App() {
       {/* Footer stays at the bottom */}
       <Footer />
       </div>
+      <WhatsAppButton />
+      <ScrollToTop />
     </SmoothScroll>
   );
 }
