@@ -1,4 +1,4 @@
-import { useState  } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 import { fadeInUp, staggerContainer } from "../utils/animations";
@@ -88,7 +88,7 @@ const FAQ = () => {
 
   return (
     <section
-      className="py-20 px-6 bg-brand-dark relative overflow-hidden"
+      className="py-20 px-6 bg-transparent relative overflow-hidden"
       id="faq"
     >
       {/* Background Elements */}

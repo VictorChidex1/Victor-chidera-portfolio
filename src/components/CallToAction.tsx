@@ -5,7 +5,7 @@ import { scaleIn } from "../utils/animations";
 
 const CallToAction = () => {
   return (
-    <section className="py-32 bg-brand-dark border-t border-slate-800 relative overflow-hidden">
+    <section className="py-32 bg-transparent border-t border-slate-800 relative overflow-hidden">
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
         <motion.div
           variants={scaleIn}
