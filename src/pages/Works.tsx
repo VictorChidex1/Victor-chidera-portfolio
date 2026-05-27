@@ -1,4 +1,4 @@
-import { useState  } from "react";
+import { useState } from "react";
 import { ExternalLink, Code } from "lucide-react";
 import { motion } from "framer-motion";
 import WebGLImageHover from "../components/WebGLImageHover";
@@ -12,6 +12,7 @@ const kelvinsGrid = "/assets/images/kelvins-grid.webp";
 const canManHero = "/assets/images/canman-hero.webp";
 const oxygenHealth = "/assets/images/oxygen-health.webp";
 const kudiflow = "/assets/images/kudiflow.webp";
+const houseOfAnna = "/assets/images/houseofanna.webp";
 
 export const projects = [
   {
@@ -48,6 +49,25 @@ export const projects = [
     ],
     link: "https://oxygen-health.vercel.app/",
     image: oxygenHealth,
+  },
+  {
+    id: 3,
+    title: "House of Anna: Digital Atelier & Luxury Fashion Portfolio",
+    category: "Bespoke Fashion, High-End Portfolio & Lead Generation",
+    description:
+      "A luxury digital atelier engineered for an elite custom fashion designer and tailor. Designed to transition a traditional physical brand identity into a highly editorial, premium web experience. Built with a performant, non-Next.js serverless architecture, the platform features an automated image optimization pipeline using Firebase Extensions to serve high-fidelity, fluid layout assets instantly. It includes filterable masonry lookbook grids, asynchronous multi-step bespoke inquiry models, full Firebase administrative controls, and an automated lead routing system powered by the Resend API.",
+    tech: [
+      "React (Vite)",
+      "Firebase (Firestore DB/Auth/Hosting)",
+      "Tailwind CSS v4",
+      "TypeScript",
+      "Framer Motion",
+      "Resend API",
+      "Vercel (Deployment)",
+      "puppeteer",
+    ],
+    link: "https://house-of-anna.vercel.app/",
+    image: houseOfAnna,
   },
   {
     id: 3,
@@ -247,10 +267,7 @@ const Works = () => {
                 {/* Dark Overlay that disappears on hover */}
                 <div className="absolute inset-0 bg-brand-dark/20 group-hover:bg-transparent transition-all duration-300 z-10 pointer-events-none" />
 
-                <WebGLImageHover
-                  src={project.image}
-                  alt={project.title}
-                />
+                <WebGLImageHover src={project.image} alt={project.title} />
 
                 {/* Fallback Icon (Hidden unless image fails) */}
                 <div className="absolute inset-0 flex items-center justify-center hidden bg-slate-800">
