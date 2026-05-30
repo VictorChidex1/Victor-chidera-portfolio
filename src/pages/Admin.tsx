@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import {
   collection,
   getDocs,
@@ -37,8 +37,18 @@ const Admin: React.FC = () => {
 
   // Track authentication state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser && currentUser.email !== "donchid.online@gmail.com") {
+        try {
+          await signOut(auth);
+        } catch (signOutErr) {
+          console.error("Error signing out unverified admin:", signOutErr);
+        }
+        setUser(null);
+        setLoginError("Access Denied: You do not have administrator clearance.");
+      } else {
+        setUser(currentUser);
+      }
       setAuthLoading(false);
     });
     return () => unsubscribe();
