@@ -13,6 +13,7 @@ import {
   query,
   orderBy,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -25,6 +26,7 @@ import {
   Lock,
   PlusCircle,
   CheckCircle,
+  Edit2,
 } from "lucide-react";
 import { auth, db } from "../firebase";
 import { STATIC_PROJECTS, STATIC_BLOGS, sortProjects } from "../hooks/useFirebaseData";
@@ -44,6 +46,11 @@ const Admin = () => {
   const [projectsList, setProjectsList] = useState<any[]>([]);
   const [blogsList, setBlogsList] = useState<any[]>([]);
   const [leadsList, setLeadsList] = useState<any[]>([]);
+
+  // Editing & Pagination States
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
+  const [adminProjectsPage, setAdminProjectsPage] = useState(1);
+  const projectsPerPage = 10;
 
   // Forms State
   const [newProject, setNewProject] = useState({
@@ -188,22 +195,37 @@ const Admin = () => {
     }));
   };
 
-  // Create Project Submission
+  // Create or Update Project Submission
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newProject.title || !newProject.category || !newProject.description) return;
 
     try {
-      await addDoc(collection(db, "projects"), {
-        title: newProject.title,
-        category: newProject.category,
-        description: newProject.description,
-        tech: newProject.tech,
-        link: newProject.link || "#",
-        image: newProject.image || "https://placehold.co/600x400/1e293b/cbd5e1?text=No+Image",
-        order: newProject.order !== "" ? Number(newProject.order) : 99999,
-        createdAt: serverTimestamp(),
-      });
+      if (editingProjectId) {
+        // Edit Mode
+        await updateDoc(doc(db, "projects", editingProjectId), {
+          title: newProject.title,
+          category: newProject.category,
+          description: newProject.description,
+          tech: newProject.tech,
+          link: newProject.link || "#",
+          image: newProject.image || "https://placehold.co/600x400/1e293b/cbd5e1?text=No+Image",
+          order: newProject.order !== "" ? Number(newProject.order) : 99999,
+        });
+        setEditingProjectId(null);
+      } else {
+        // Create Mode
+        await addDoc(collection(db, "projects"), {
+          title: newProject.title,
+          category: newProject.category,
+          description: newProject.description,
+          tech: newProject.tech,
+          link: newProject.link || "#",
+          image: newProject.image || "https://placehold.co/600x400/1e293b/cbd5e1?text=No+Image",
+          order: newProject.order !== "" ? Number(newProject.order) : 99999,
+          createdAt: serverTimestamp(),
+        });
+      }
       // Reset Form
       setNewProject({
         title: "",
@@ -217,8 +239,40 @@ const Admin = () => {
       });
       fetchAllData();
     } catch (err) {
-      console.error("Failed to add project:", err);
+      console.error("Failed to save project:", err);
     }
+  };
+
+  // Start Editing Project
+  const handleStartEdit = (proj: any) => {
+    setEditingProjectId(proj.id);
+    setNewProject({
+      title: proj.title || "",
+      category: proj.category || "",
+      description: proj.description || "",
+      techInput: "",
+      tech: proj.tech || [],
+      link: proj.link || "",
+      image: proj.image || "",
+      order: proj.order !== undefined && proj.order !== 99999 ? String(proj.order) : "",
+    });
+    // Smooth scroll back to form
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Cancel Editing Project
+  const handleCancelEdit = () => {
+    setEditingProjectId(null);
+    setNewProject({
+      title: "",
+      category: "",
+      description: "",
+      techInput: "",
+      tech: [],
+      link: "",
+      image: "",
+      order: "",
+    });
   };
 
   // Delete Project
@@ -574,8 +628,17 @@ const Admin = () => {
                 >
                   {/* Create Project Card */}
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-                    <h3 className="text-lg font-bold text-white mb-6">
-                      Add New Portfolio Project
+                    <h3 className="text-lg font-bold text-white mb-6 flex justify-between items-center">
+                      <span>{editingProjectId ? "Edit Portfolio Project" : "Add New Portfolio Project"}</span>
+                      {editingProjectId && (
+                        <button
+                          type="button"
+                          onClick={handleCancelEdit}
+                          className="px-3 py-1 bg-slate-800 text-slate-400 hover:text-white rounded text-xs font-mono border border-slate-700"
+                        >
+                          Cancel Edit
+                        </button>
+                      )}
                     </h3>
                     <form onSubmit={handleCreateProject} className="space-y-5">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -705,7 +768,15 @@ const Admin = () => {
                         type="submit"
                         className="px-5 py-3 font-semibold rounded-lg bg-brand-orange hover:bg-orange-600 text-white transition-all text-sm flex items-center gap-2"
                       >
-                        <Plus size={16} /> Deploy Project Document
+                        {editingProjectId ? (
+                          <>
+                            <Edit2 size={16} /> Update Project Document
+                          </>
+                        ) : (
+                          <>
+                            <Plus size={16} /> Deploy Project Document
+                          </>
+                        )}
                       </button>
                     </form>
                   </div>
@@ -719,29 +790,84 @@ const Admin = () => {
                     {projectsList.length === 0 ? (
                       <p className="text-slate-500 text-sm italic">No dynamic projects found in database. Currently fallback cards are displayed on the Works page.</p>
                     ) : (
-                      <div className="divide-y divide-slate-800">
-                        {projectsList.map((proj) => (
-                          <div key={proj.id} className="py-4 flex justify-between items-center gap-4">
-                            <div>
-                              <h5 className="font-bold text-white text-sm flex items-center gap-2">
-                                {proj.order !== undefined && proj.order !== "" && (
-                                  <span className="px-2 py-0.5 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-xs rounded font-mono">
-                                    Priority: {proj.order}
-                                  </span>
-                                )}
-                                {proj.title}
-                              </h5>
-                              <p className="text-slate-400 text-xs mt-1">{proj.category}</p>
+                      (() => {
+                        const totalAdminPages = Math.ceil(projectsList.length / projectsPerPage);
+                        const currentAdminProjects = projectsList.slice(
+                          (adminProjectsPage - 1) * projectsPerPage,
+                          adminProjectsPage * projectsPerPage
+                        );
+                        
+                        return (
+                          <>
+                            <div className="divide-y divide-slate-800">
+                              {currentAdminProjects.map((proj) => (
+                                <div key={proj.id} className="py-4 flex justify-between items-center gap-4">
+                                  <div>
+                                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                                      {proj.order !== undefined && proj.order !== "" && (
+                                        <span className="px-2 py-0.5 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-xs rounded font-mono">
+                                          Priority: {proj.order}
+                                        </span>
+                                      )}
+                                      {proj.title}
+                                    </h5>
+                                    <p className="text-slate-400 text-xs mt-1">{proj.category}</p>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      onClick={() => handleStartEdit(proj)}
+                                      className="w-9 h-9 flex items-center justify-center bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-lg hover:bg-brand-orange hover:text-white transition-all"
+                                      title="Edit Project"
+                                    >
+                                      <Edit2 size={15} />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteProject(proj.id)}
+                                      className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg hover:bg-red-500 hover:text-white transition-all"
+                                      title="Delete Project"
+                                    >
+                                      <Trash2 size={15} />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
                             </div>
-                            <button
-                              onClick={() => handleDeleteProject(proj.id)}
-                              className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg hover:bg-red-500 hover:text-white transition-all"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
+                            
+                            {/* Paginator */}
+                            {totalAdminPages > 1 && (
+                              <div className="flex justify-center items-center gap-2 mt-6 pt-6 border-t border-slate-800">
+                                <button
+                                  disabled={adminProjectsPage === 1}
+                                  onClick={() => setAdminProjectsPage((p) => Math.max(p - 1, 1))}
+                                  className="px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400 hover:text-white disabled:opacity-40 transition-all"
+                                >
+                                  Prev
+                                </button>
+                                {Array.from({ length: totalAdminPages }).map((_, i) => (
+                                  <button
+                                    key={i}
+                                    onClick={() => setAdminProjectsPage(i + 1)}
+                                    className={`w-8 h-8 rounded-lg text-xs font-semibold font-mono border transition-all ${
+                                      adminProjectsPage === i + 1
+                                        ? "bg-brand-orange/10 border-brand-orange/30 text-brand-orange font-bold"
+                                        : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                                      }`}
+                                  >
+                                    {i + 1}
+                                  </button>
+                                ))}
+                                <button
+                                  disabled={adminProjectsPage === totalAdminPages}
+                                  onClick={() => setAdminProjectsPage((p) => Math.min(p + 1, totalAdminPages))}
+                                  className="px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400 hover:text-white disabled:opacity-40 transition-all"
+                                >
+                                  Next
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()
                     )}
                   </div>
                 </motion.div>
