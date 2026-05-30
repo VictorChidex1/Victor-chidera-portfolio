@@ -27,7 +27,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { auth, db } from "../firebase";
-import { STATIC_PROJECTS, STATIC_BLOGS } from "../hooks/useFirebaseData";
+import { STATIC_PROJECTS, STATIC_BLOGS, sortProjects } from "../hooks/useFirebaseData";
 
 const Admin = () => {
   const [user, setUser] = useState<any>(null);
@@ -54,6 +54,7 @@ const Admin = () => {
     tech: [] as string[],
     link: "",
     image: "",
+    order: "",
   });
 
   const [newBlog, setNewBlog] = useState({
@@ -77,11 +78,9 @@ const Admin = () => {
   const fetchAllData = async () => {
     try {
       // 1. Projects
-      const projSnap = await getDocs(
-        query(collection(db, "projects"), orderBy("createdAt", "desc"))
-      );
+      const projSnap = await getDocs(collection(db, "projects"));
       const projs = projSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setProjectsList(projs);
+      setProjectsList(sortProjects(projs));
 
       // 2. Blogs
       const blogSnap = await getDocs(
@@ -158,6 +157,7 @@ const Admin = () => {
         tech: newProject.tech,
         link: newProject.link || "#",
         image: newProject.image || "https://placehold.co/600x400/1e293b/cbd5e1?text=No+Image",
+        order: newProject.order !== "" ? Number(newProject.order) : 99999,
         createdAt: serverTimestamp(),
       });
       // Reset Form
@@ -169,6 +169,7 @@ const Admin = () => {
         tech: [],
         link: "",
         image: "",
+        order: "",
       });
       fetchAllData();
     } catch (err) {
@@ -588,7 +589,7 @@ const Admin = () => {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <div>
                           <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                             Deployment / Target Link (Optional)
@@ -611,6 +612,19 @@ const Admin = () => {
                             onChange={(e) => setNewProject((prev) => ({ ...prev, image: e.target.value }))}
                             className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
                             placeholder="/assets/images/proj.webp"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                            Order Priority (e.g. 1 for first)
+                          </label>
+                          <input
+                            type="number"
+                            value={newProject.order}
+                            onChange={(e) => setNewProject((prev) => ({ ...prev, order: e.target.value }))}
+                            className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+                            placeholder="1"
+                            min="1"
                           />
                         </div>
                       </div>
@@ -637,7 +651,14 @@ const Admin = () => {
                         {projectsList.map((proj) => (
                           <div key={proj.id} className="py-4 flex justify-between items-center gap-4">
                             <div>
-                              <h5 className="font-bold text-white text-sm">{proj.title}</h5>
+                              <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                                {proj.order !== undefined && proj.order !== "" && (
+                                  <span className="px-2 py-0.5 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-xs rounded font-mono">
+                                    Priority: {proj.order}
+                                  </span>
+                                )}
+                                {proj.title}
+                              </h5>
                               <p className="text-slate-400 text-xs mt-1">{proj.category}</p>
                             </div>
                             <button
