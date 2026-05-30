@@ -125,6 +125,50 @@ const Admin = () => {
     signOut(auth);
   };
 
+  // Seed Database Handler - Copies static staging records to live database
+  const [seedLoading, setSeedLoading] = useState(false);
+  const handleSeedDatabase = async () => {
+    if (!window.confirm("This will copy all 11 static projects and 3 blog articles from your staging files into your live Firestore database in 1 click. Proceed?")) return;
+    
+    setSeedLoading(true);
+    try {
+      // 1. Seed Projects
+      for (const proj of STATIC_PROJECTS) {
+        await addDoc(collection(db, "projects"), {
+          title: proj.title,
+          category: proj.category,
+          description: proj.description,
+          tech: proj.tech,
+          link: proj.link,
+          image: proj.image,
+          order: proj.order,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      // 2. Seed Blogs
+      for (const blog of STATIC_BLOGS) {
+        await addDoc(collection(db, "blogs"), {
+          title: blog.title,
+          excerpt: blog.excerpt,
+          date: blog.date,
+          readTime: blog.readTime,
+          link: blog.link,
+          image: blog.image,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      alert("Staging database successfully seeded! All 11 projects and 3 articles are now live in your Firestore.");
+      fetchAllData();
+    } catch (err) {
+      console.error("Seeding failed:", err);
+      alert("Failed to seed database. Verify your environment keys and database rules.");
+    } finally {
+      setSeedLoading(false);
+    }
+  };
+
   // Add Tech Pill to New Project
   const addTechPill = () => {
     if (newProject.techInput.trim()) {
@@ -468,6 +512,34 @@ const Admin = () => {
                       </p>
                     </div>
                   </div>
+
+                  {projectsList.length === 0 && blogsList.length === 0 && (
+                    <div className="bg-brand-orange/5 border border-brand-orange/20 rounded-2xl p-6 shadow-lg relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-r from-brand-orange/5 to-transparent opacity-50 pointer-events-none" />
+                      <div className="relative z-10">
+                        <span className="text-brand-orange font-mono text-[10px] uppercase tracking-wider block mb-2">[DATABASE.EMPTY_STATE_ALERT]</span>
+                        <h4 className="text-white font-bold text-base mb-2">Initialize Firestore Staging Data</h4>
+                        <p className="text-slate-400 text-xs leading-relaxed max-w-2xl mb-4">
+                          Your live Firestore collections are currently empty. If you would like to transition seamlessly to the database backend without manual re-typing, you can copy all 11 static projects and 3 blog articles from staging directly into your live Firestore collections in 1 click.
+                        </p>
+                        <button
+                          onClick={handleSeedDatabase}
+                          disabled={seedLoading}
+                          className="px-4 py-2.5 bg-brand-orange hover:bg-orange-600 disabled:bg-slate-800 text-white rounded-lg text-xs font-semibold flex items-center gap-2 transition-all transform hover:scale-[1.01]"
+                        >
+                          {seedLoading ? (
+                            <>
+                              <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Seeding Database...
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle size={14} /> Seed Database (1-Click)
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
                     <h3 className="text-lg font-bold text-white mb-4">
