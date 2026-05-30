@@ -1,10 +1,12 @@
 import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import { useBlogs } from "../hooks/useFirebaseData";
+
 const blog1 = "/assets/images/blog1.webp";
 const blog2 = "/assets/images/blog2.webp";
 const blog3 = "/assets/images/blog3.webp";
 
-const blogPosts = [
+export const blogPosts = [
   {
     id: 1,
     title:
@@ -39,6 +41,8 @@ const blogPosts = [
 ];
 
 const Blog = () => {
+  const { blogs } = useBlogs();
+
   return (
     <section className="py-24 pt-32 bg-brand-dark min-h-screen">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,7 +61,7 @@ const Blog = () => {
         </motion.div>
 
         <div className="space-y-8">
-          {blogPosts.map((post, index) => (
+          {blogs.map((post, index) => (
             <motion.a
               key={post.id}
               href={post.link}

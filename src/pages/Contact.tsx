@@ -1,6 +1,8 @@
-import { useState  } from "react";
+import { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { EMAIL_CONFIG } from "../config/email";
+import { db } from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -18,7 +20,7 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setStatus("sending");
 
@@ -29,24 +31,31 @@ const Contact = () => {
       to_name: "Victor Chidera",
     };
 
-    emailjs
-      .send(
+    try {
+      // 1. Submit to Firestore contacts collection
+      await addDoc(collection(db, "contacts"), {
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+        createdAt: serverTimestamp(),
+      });
+
+      // 2. Submit to EmailJS for email notification
+      await emailjs.send(
         EMAIL_CONFIG.SERVICE_ID,
         EMAIL_CONFIG.TEMPLATE_ID,
         templateParams,
         EMAIL_CONFIG.PUBLIC_KEY
-      )
-      .then((response) => {
-        console.log("SUCCESS!", response.status, response.text);
-        setStatus("success");
-        setFormData({ name: "", email: "", message: "" });
-        setTimeout(() => setStatus("idle"), 3000);
-      })
-      .catch((err) => {
-        console.error("FAILED...", err);
-        setStatus("error");
-        setTimeout(() => setStatus("idle"), 3000);
-      });
+      );
+
+      setStatus("success");
+      setFormData({ name: "", email: "", message: "" });
+      setTimeout(() => setStatus("idle"), 3000);
+    } catch (err) {
+      console.error("Contact Submission Error:", err);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 3000);
+    }
   };
 
   return (

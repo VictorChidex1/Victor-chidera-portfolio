@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { projects } from "../pages/Works";
+import { useProjects } from "../hooks/useFirebaseData";
 import { fadeInUp, staggerContainer } from "../utils/animations";
 
 const FeaturedProjects = () => {
+  const { projects } = useProjects();
   const featured = projects.slice(0, 3);
 
   return (
@@ -83,7 +84,7 @@ const FeaturedProjects = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-3 mb-8">
-                  {project.tech.map((t, i) => (
+                  {project.tech.map((t: string, i: number) => (
                     <span
                       key={i}
                       className="px-4 py-2 bg-slate-800/50 text-slate-300 text-sm rounded-full border border-slate-700"

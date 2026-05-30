@@ -2,6 +2,8 @@ import { useState } from "react";
 import { ExternalLink, Code } from "lucide-react";
 import { motion } from "framer-motion";
 import WebGLImageHover from "../components/WebGLImageHover";
+import { useProjects } from "../hooks/useFirebaseData";
+
 const foodflowImg = "/assets/images/foodflow.webp";
 const eventflow = "/assets/images/eventflow.webp";
 const healthpoint = "/assets/images/healthpoint.webp";
@@ -222,12 +224,13 @@ export const projects = [
 ];
 
 const Works = () => {
+  const { projects: liveProjects } = useProjects();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  const totalPages = Math.ceil(projects.length / itemsPerPage);
+  const totalPages = Math.ceil(liveProjects.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentProjects = projects.slice(startIndex, startIndex + itemsPerPage);
+  const currentProjects = liveProjects.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -291,7 +294,7 @@ const Works = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((t, i) => (
+                  {project.tech.map((t: string, i: number) => (
                     <span
                       key={i}
                       className="px-2 py-1 bg-brand-dark text-slate-300 text-xs rounded border border-slate-700"

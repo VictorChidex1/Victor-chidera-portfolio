@@ -19,10 +19,13 @@ import Services from "./pages/Services";
 import Testimonials from "./pages/Testimonials";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
+import Admin from "./pages/Admin";
 
 function App() {
   const location = useLocation();
   useDocumentTitle();
+
+  const isControlPanel = location.pathname === "/admin";
 
   return (
     <SmoothScroll>
@@ -30,7 +33,7 @@ function App() {
       <div className="min-h-screen bg-brand-dark text-slate-200 font-sans flex flex-col relative">
       <StarBackground />
       {/* Navbar stays at the top */}
-      <Navbar />
+      {!isControlPanel && <Navbar />}
 
       {/* Main content grows to fill space */}
       <main className="flex-grow">
@@ -42,12 +45,13 @@ function App() {
             <Route path="/testimonials" element={<PageTransition><Testimonials /></PageTransition>} />
             <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
             <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+            <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>
 
       {/* Footer stays at the bottom */}
-      <Footer />
+      {!isControlPanel && <Footer />}
       </div>
       <WhatsAppButton />
       <ScrollToTop />
