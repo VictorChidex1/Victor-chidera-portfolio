@@ -10,6 +10,7 @@ import CustomCursor from "./components/CustomCursor";
 import PageTransition from "./components/PageTransition";
 import WhatsAppButton from "./components/WhatsAppButton";
 import ScrollToTop from "./components/ScrollToTop";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 
 // Import Pages
 import Home from "./pages/Home";
@@ -21,6 +22,7 @@ import Contact from "./pages/Contact";
 
 function App() {
   const location = useLocation();
+  useDocumentTitle();
 
   return (
     <SmoothScroll>

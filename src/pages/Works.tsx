@@ -70,7 +70,7 @@ export const projects = [
     image: houseOfAnna,
   },
   {
-    id: 3,
+    id: 4,
     title: "Novluma AI: Content Orchestration SaaS",
     category: "Generative AI Platform & B2B SaaS",
     description:
@@ -89,7 +89,7 @@ export const projects = [
     image: novluma,
   },
   {
-    id: 4,
+    id: 5,
     title: "VeraVox AI: Automated Reputation Engine",
     category: "Serverless Micro-SaaS & AI Automation",
     description:
@@ -108,7 +108,7 @@ export const projects = [
     image: veravox,
   },
   {
-    id: 5,
+    id: 6,
     title: "Raploard official Website",
     category: "Artist Portfolio Website for bookings and contact",
     description:
@@ -126,7 +126,7 @@ export const projects = [
     image: raploard,
   },
   {
-    id: 6,
+    id: 7,
     title: "Kelvin's Grid: Serverless Solar Utility Platform",
     category: "Renewable Energy CRM & Customer Portal (SaaS)",
     description:
@@ -144,7 +144,7 @@ export const projects = [
     image: kelvinsGrid,
   },
   {
-    id: 7,
+    id: 8,
     title: "The CanMan: Operations & Recruitment Platform",
     category: "Service Business Management System (SaaS)",
     description:
@@ -162,7 +162,7 @@ export const projects = [
     image: canManHero,
   },
   {
-    id: 8,
+    id: 9,
     title: "EventFlow: Event Booking & Management Platform",
     category: "Advanced React Architecture & E-commerce Simulation",
     description:
@@ -181,7 +181,7 @@ export const projects = [
     image: eventflow,
   },
   {
-    id: 9,
+    id: 10,
     title: "HealthPoint: Hospital Management System",
     category: "Advanced Healthcare UI & Workflow Simulation",
     description:
@@ -200,7 +200,7 @@ export const projects = [
     image: healthpoint,
   },
   {
-    id: 10,
+    id: 11,
     title: "FoodFlow: Restaurant Management and Delivery Logistics Platform",
     category: "Advanced Frontend Simulation & Geospatial UI",
     description:
