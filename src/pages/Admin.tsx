@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -448,12 +449,20 @@ const Admin = () => {
               Connected account: {user.email}
             </p>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="px-4 py-2 border border-slate-800 bg-slate-950 text-slate-400 rounded-lg hover:text-white hover:bg-slate-900 transition-colors flex items-center gap-2 text-sm"
-          >
-            <LogOut size={16} /> Sign Out
-          </button>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/"
+              className="px-4 py-2 border border-slate-800 bg-slate-950 text-slate-400 rounded-lg hover:text-white hover:bg-slate-900 transition-colors flex items-center gap-2 text-sm font-semibold"
+            >
+              Back to Home
+            </Link>
+            <button
+              onClick={handleSignOut}
+              className="px-4 py-2 border border-slate-800 bg-slate-950 text-slate-400 rounded-lg hover:text-white hover:bg-slate-900 transition-colors flex items-center gap-2 text-sm"
+            >
+              <LogOut size={16} /> Sign Out
+            </button>
+          </div>
         </div>
 
         {/* Dynamic Workspace Container */}
@@ -525,7 +534,10 @@ const Admin = () => {
                 >
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Stats Box 1 */}
-                    <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl relative overflow-hidden shadow-lg group">
+                    <div
+                      onClick={() => setActiveTab("projects")}
+                      className="bg-slate-900 border border-slate-800 p-6 rounded-2xl relative overflow-hidden shadow-lg group cursor-pointer hover:border-brand-orange/30 transform hover:scale-[1.01] transition-all"
+                    >
                       <div className="absolute right-4 top-4 text-brand-orange/10 group-hover:text-brand-orange/20 transition-colors">
                         <PlusCircle size={54} />
                       </div>
@@ -539,7 +551,10 @@ const Admin = () => {
                     </div>
 
                     {/* Stats Box 2 */}
-                    <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl relative overflow-hidden shadow-lg group">
+                    <div
+                      onClick={() => setActiveTab("blogs")}
+                      className="bg-slate-900 border border-slate-800 p-6 rounded-2xl relative overflow-hidden shadow-lg group cursor-pointer hover:border-brand-orange/30 transform hover:scale-[1.01] transition-all"
+                    >
                       <div className="absolute right-4 top-4 text-brand-orange/10 group-hover:text-brand-orange/20 transition-colors">
                         <FileText size={54} />
                       </div>
@@ -553,7 +568,10 @@ const Admin = () => {
                     </div>
 
                     {/* Stats Box 3 */}
-                    <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl relative overflow-hidden shadow-lg group">
+                    <div
+                      onClick={() => setActiveTab("leads")}
+                      className="bg-slate-900 border border-slate-800 p-6 rounded-2xl relative overflow-hidden shadow-lg group cursor-pointer hover:border-brand-orange/30 transform hover:scale-[1.01] transition-all"
+                    >
                       <div className="absolute right-4 top-4 text-brand-orange/10 group-hover:text-brand-orange/20 transition-colors">
                         <Mail size={54} />
                       </div>
