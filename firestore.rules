@@ -36,8 +36,9 @@ service cloud.firestore {
 
       // Public visitor form submission validation (Bot & Payload Injection filtering)
       allow create: if 
-        // 1. Mandatory structural presence
+        // 1. Mandatory structural presence and exact schema match
         request.resource.data.keys().hasAll(['name', 'email', 'message', 'createdAt']) &&
+        request.resource.data.keys().hasOnly(['name', 'email', 'message', 'createdAt']) &&
         
         // 2. Name validation: Non-empty string
         request.resource.data.name is string && 

@@ -20,9 +20,21 @@ const Contact = () => {
     }));
   };
 
+  const [lastSubmitTime, setLastSubmitTime] = useState(0);
+  const COOLDOWN_MS = 30000; // 30-second cooldown
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    const now = Date.now();
+    if (now - lastSubmitTime < COOLDOWN_MS) {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 3000);
+      return;
+    }
+
     setStatus("sending");
+    setLastSubmitTime(now);
 
     const templateParams = {
       from_name: formData.name,
