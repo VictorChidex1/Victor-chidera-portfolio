@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { Component, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
@@ -99,6 +99,41 @@ const ImagePlane = ({ src }: { src: string }) => {
   );
 };
 
+/* ------------------------------------------------------------------ */
+/*  Error Boundary — catches WebGL texture load failures (CORS, 404)  */
+/*  and renders nothing, letting the fallback <img> show through.     */
+/* ------------------------------------------------------------------ */
+
+interface CanvasErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+interface CanvasErrorBoundaryState {
+  hasError: boolean;
+}
+
+class CanvasErrorBoundary extends Component<CanvasErrorBoundaryProps, CanvasErrorBoundaryState> {
+  constructor(props: CanvasErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): CanvasErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.warn('[WebGLImageHover] Texture load failed, falling back to <img>:', error.message);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null;
+    }
+    return this.props.children;
+  }
+}
+
 interface WebGLImageHoverProps {
   src: string;
   className?: string;
@@ -108,18 +143,20 @@ interface WebGLImageHoverProps {
 const WebGLImageHover = ({ src, className, alt }: WebGLImageHoverProps) => {
   return (
     <div className={`relative overflow-hidden w-full h-full ${className || ''}`}>
-      {/* Fallback image */}
-      <img src={src} alt={alt || ''} className="absolute inset-0 w-full h-full object-cover opacity-0" />
-      <Canvas
-        orthographic
-        camera={{ position: [0, 0, 1], left: -0.5, right: 0.5, top: 0.5, bottom: -0.5, zoom: 1 }}
-        style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
-        gl={{ alpha: true }}
-      >
-        <React.Suspense fallback={null}>
-          <ImagePlane src={src} />
-        </React.Suspense>
-      </Canvas>
+      {/* Fallback image — always rendered; Canvas overlays it when healthy */}
+      <img src={src} alt={alt || ''} className="absolute inset-0 w-full h-full object-cover" />
+      <CanvasErrorBoundary>
+        <Canvas
+          orthographic
+          camera={{ position: [0, 0, 1], left: -0.5, right: 0.5, top: 0.5, bottom: -0.5, zoom: 1 }}
+          style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
+          gl={{ alpha: true }}
+        >
+          <React.Suspense fallback={null}>
+            <ImagePlane src={src} />
+          </React.Suspense>
+        </Canvas>
+      </CanvasErrorBoundary>
     </div>
   );
 };
