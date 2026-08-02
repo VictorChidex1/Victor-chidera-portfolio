@@ -1,26 +1,27 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import { useEffect } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const CustomCursor = () => {
-  const cursorRef = useRef<HTMLDivElement>(null);
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  
+  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
+
+  const scale = useMotionValue(1);
+  const scaleSpring = useSpring(scale, { damping: 20, stiffness: 300 });
+
+  const bg = useMotionValue('white');
+  const border = useMotionValue('none');
 
   useEffect(() => {
     // Disable on touch devices
     if (window.matchMedia('(pointer: coarse)').matches) return;
 
-    const cursor = cursorRef.current;
-    if (!cursor) return;
-
-    const xSet = gsap.quickSetter(cursor, 'x', 'px');
-    const ySet = gsap.quickSetter(cursor, 'y', 'px');
-
-    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    let pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const speed = 0.2;
-
     const onMouseMove = (e: MouseEvent) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
+      let targetX = e.clientX;
+      let targetY = e.clientY;
       
       const target = e.target as HTMLElement;
       const magneticEl = target.closest('.magnetic') as HTMLElement;
@@ -30,43 +31,29 @@ const CustomCursor = () => {
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
         
-        const distX = mouse.x - centerX;
-        const distY = mouse.y - centerY;
+        const distX = e.clientX - centerX;
+        const distY = e.clientY - centerY;
         
-        gsap.to(magneticEl, {
-          x: distX * 0.3,
-          y: distY * 0.3,
-          duration: 0.4,
-          ease: 'power2.out'
-        });
+        magneticEl.animate([
+          { transform: `translate(${distX * 0.3}px, ${distY * 0.3}px)` }
+        ], { duration: 400, fill: 'forwards', easing: 'ease-out' });
         
-        mouse.x = centerX + distX * 0.1;
-        mouse.y = centerY + distY * 0.1;
+        targetX = centerX + distX * 0.1;
+        targetY = centerY + distY * 0.1;
       }
+      
+      cursorX.set(targetX);
+      cursorY.set(targetY);
     };
-
-    window.addEventListener('mousemove', onMouseMove);
-
-    const ticker = gsap.ticker.add(() => {
-      const dt = 1.0 - Math.pow(1.0 - speed, gsap.ticker.deltaRatio());
-      pos.x += (mouse.x - pos.x) * dt;
-      pos.y += (mouse.y - pos.y) * dt;
-      xSet(pos.x);
-      ySet(pos.y);
-    });
 
     const onMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const interactable = target.closest('a, button, .magnetic, input, textarea');
       
       if (interactable) {
-        gsap.to(cursor, {
-          scale: 3.5,
-          backgroundColor: 'transparent',
-          border: '1px solid white',
-          duration: 0.3,
-          ease: 'power2.out'
-        });
+        scale.set(3.5);
+        bg.set('transparent');
+        border.set('1px solid white');
       }
     };
 
@@ -75,26 +62,20 @@ const CustomCursor = () => {
       const interactable = target.closest('a, button, .magnetic, input, textarea');
       
       if (interactable) {
-        gsap.to(cursor, {
-          scale: 1,
-          backgroundColor: 'white',
-          border: 'none',
-          duration: 0.3,
-          ease: 'power2.out'
-        });
+        scale.set(1);
+        bg.set('white');
+        border.set('none');
         
         const magneticEl = target.closest('.magnetic') as HTMLElement;
         if (magneticEl) {
-          gsap.to(magneticEl, {
-            x: 0,
-            y: 0,
-            duration: 0.7,
-            ease: 'elastic.out(1, 0.3)'
-          });
+          magneticEl.animate([
+            { transform: 'translate(0px, 0px)' }
+          ], { duration: 700, fill: 'forwards', easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' });
         }
       }
     };
 
+    window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseover', onMouseOver);
     window.addEventListener('mouseout', onMouseOut);
 
@@ -102,15 +83,21 @@ const CustomCursor = () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseover', onMouseOver);
       window.removeEventListener('mouseout', onMouseOut);
-      gsap.ticker.remove(ticker);
     };
-  }, []);
+  }, [cursorX, cursorY, scale, bg, border]);
 
   return (
-    <div
-      ref={cursorRef}
-      className="fixed top-0 left-0 w-4 h-4 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block will-change-transform"
-      style={{ transform: 'translate(-50%, -50%)' }}
+    <motion.div
+      className="fixed top-0 left-0 w-4 h-4 rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block will-change-transform"
+      style={{
+        x: cursorXSpring,
+        y: cursorYSpring,
+        translateX: '-50%',
+        translateY: '-50%',
+        scale: scaleSpring,
+        backgroundColor: bg,
+        border: border,
+      }}
     />
   );
 };

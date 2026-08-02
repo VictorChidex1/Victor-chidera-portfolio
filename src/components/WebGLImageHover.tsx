@@ -2,7 +2,6 @@ import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
-import gsap from 'gsap';
 
 const vertexShader = `
 varying vec2 vUv;
@@ -51,7 +50,9 @@ const ImagePlane = ({ src }: { src: string }) => {
     uHoverState: { value: 0.0 }
   }), [texture]);
 
-  useFrame((state) => {
+  const targetHoverState = useRef(0.0);
+
+  useFrame((state, delta) => {
     if (materialRef.current) {
       // Smoothly interpolate mouse
       // Normalize pointer from [-1, 1] to [0, 1]
@@ -61,27 +62,24 @@ const ImagePlane = ({ src }: { src: string }) => {
       const uMouse = materialRef.current.uniforms.uMouse.value;
       uMouse.x += (targetX - uMouse.x) * 0.1;
       uMouse.y += (targetY - uMouse.y) * 0.1;
+      
+      // Smoothly interpolate hover state
+      const currentHover = materialRef.current.uniforms.uHoverState.value;
+      materialRef.current.uniforms.uHoverState.value = THREE.MathUtils.damp(
+        currentHover,
+        targetHoverState.current,
+        5.0, // speed
+        delta
+      );
     }
   });
 
   const handlePointerOver = () => {
-    if (materialRef.current) {
-      gsap.to(materialRef.current.uniforms.uHoverState, {
-        value: 1.0,
-        duration: 0.8,
-        ease: 'power2.out'
-      });
-    }
+    targetHoverState.current = 1.0;
   };
 
   const handlePointerOut = () => {
-    if (materialRef.current) {
-      gsap.to(materialRef.current.uniforms.uHoverState, {
-        value: 0.0,
-        duration: 0.8,
-        ease: 'power2.out'
-      });
-    }
+    targetHoverState.current = 0.0;
   };
 
   return (

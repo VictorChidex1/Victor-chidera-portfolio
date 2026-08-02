@@ -1,60 +1,63 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 interface KineticTextProps {
   children: string;
-  as?: React.ElementType;
+  as?: keyof JSX.IntrinsicElements;
   className?: string;
   delay?: number;
 }
 
 const KineticText = ({ children, as: Tag = 'div', className = '', delay = 0 }: KineticTextProps) => {
   const containerRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const words = el.querySelectorAll('.kinetic-word');
-
-    const ctx = gsap.context(() => {
-      gsap.to(words, {
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse',
-        },
-        y: '0%',
-        rotate: 0,
-        opacity: 1,
-        duration: 1.2,
-        ease: 'power4.out',
-        stagger: 0.04,
-        delay: delay,
-      });
-    }, el);
-
-    return () => ctx.revert();
-  }, [delay, children]);
+  const isInView = useInView(containerRef, { once: true, margin: "0px 0px -15% 0px" });
 
   const words = children.split(' ');
 
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.04,
+        delayChildren: delay,
+      }
+    }
+  };
+
+  const childVariants = {
+    hidden: { y: '110%', rotate: 6, opacity: 0 },
+    visible: { 
+      y: '0%', 
+      rotate: 0, 
+      opacity: 1,
+      transition: { duration: 1.2, ease: "easeOut" as const } 
+    }
+  };
+
+  const MotionTag = motion(Tag as any) as any;
+
   return (
-    <Tag ref={containerRef} className={`${className} flex flex-wrap`}>
+    <MotionTag 
+      ref={containerRef} 
+      className={`${className} flex flex-wrap`}
+      variants={containerVariants}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+    >
       {words.map((word, index) => (
         <span
           key={index}
           className="inline-block overflow-hidden align-bottom mr-[0.25em] pb-2"
         >
-          <span className="inline-block kinetic-word translate-y-[110%] rotate-6 opacity-0 origin-bottom-left will-change-transform">
+          <motion.span 
+            variants={childVariants}
+            className="inline-block origin-bottom-left will-change-transform"
+          >
             {word}
-          </span>
+          </motion.span>
         </span>
       ))}
-    </Tag>
+    </MotionTag>
   );
 };
 

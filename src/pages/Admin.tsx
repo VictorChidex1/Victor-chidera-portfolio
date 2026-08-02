@@ -3,12 +3,10 @@ import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebas
 import {
   collection,
   getDocs,
-  addDoc,
-  serverTimestamp,
 } from "firebase/firestore";
 import { AnimatePresence } from "framer-motion";
 import { auth, db } from "../firebase";
-import { STATIC_PROJECTS, STATIC_BLOGS, sortProjects } from "../hooks/useFirebaseData";
+import { sortProjects } from "../hooks/useFirebaseData";
 
 // Modular Subcomponents
 import { AdminLogin } from "../components/admin/AdminLogin";
@@ -107,49 +105,7 @@ const Admin: React.FC = () => {
     }
   };
 
-  // Seed Database Handler
-  const [seedLoading, setSeedLoading] = useState(false);
-  const handleSeedDatabase = async () => {
-    if (!window.confirm("This will copy all 11 static projects and 3 blog articles from staging directly into your live Firestore collections. Proceed?")) return;
 
-    setSeedLoading(true);
-    try {
-      // 1. Seed Projects
-      for (const proj of STATIC_PROJECTS) {
-        await addDoc(collection(db, "projects"), {
-          title: proj.title,
-          category: proj.category,
-          description: proj.description,
-          tech: proj.tech,
-          link: proj.link,
-          image: proj.image,
-          order: proj.order,
-          createdAt: serverTimestamp(),
-        });
-      }
-
-      // 2. Seed Blogs
-      for (const blog of STATIC_BLOGS) {
-        await addDoc(collection(db, "blogs"), {
-          title: blog.title,
-          excerpt: blog.excerpt,
-          date: blog.date,
-          readTime: blog.readTime,
-          link: blog.link,
-          image: blog.image,
-          createdAt: serverTimestamp(),
-        });
-      }
-
-      alert("Staging database successfully seeded! All 11 projects and 3 articles are now live in Firestore.");
-      await fetchAllData();
-    } catch (err) {
-      console.error("Seeding failed:", err);
-      alert("Failed to seed database. Verify your connection and security rules.");
-    } finally {
-      setSeedLoading(false);
-    }
-  };
 
   if (authLoading) {
     return (
@@ -195,8 +151,6 @@ const Admin: React.FC = () => {
                   blogsList={blogsList}
                   leadsList={leadsList}
                   setActiveTab={setActiveTab}
-                  handleSeedDatabase={handleSeedDatabase}
-                  seedLoading={seedLoading}
                 />
               )}
 
