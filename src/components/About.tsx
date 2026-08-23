@@ -22,7 +22,8 @@ const About = () => {
               variants={fadeInUp}
               className="text-5xl md:text-7xl font-bold font-display text-brand-ink mb-8 leading-tight"
             >
-              PASSIONATE <br /> <span className="text-brand-muted">CREATOR</span>
+              PASSIONATE <br />{" "}
+              <span className="text-brand-muted">CREATOR</span>
             </motion.h2>
 
             <motion.div
@@ -32,8 +33,7 @@ const About = () => {
               <p>
                 Hello! I'm Victor Chidera, a Full-Stack Product Engineer with a
                 deep passion for building pixel-perfect, accessible, and
-                performant web experiences. I specialize in the React and
-                Firebase ecosystem.
+                performant web experiences.
               </p>
               <p>
                 Expert in taking applications from concept to production (0 to
@@ -68,13 +68,17 @@ const About = () => {
               className="grid grid-cols-2 gap-8 mt-12"
             >
               <div>
-                <h4 className="text-5xl font-bold font-display text-brand-ink mb-2">3+</h4>
+                <h4 className="text-5xl font-bold font-display text-brand-ink mb-2">
+                  3+
+                </h4>
                 <p className="text-brand-muted font-medium uppercase tracking-wider text-sm">
                   Years Exp.
                 </p>
               </div>
               <div>
-                <h4 className="text-5xl font-bold font-display text-brand-ink mb-2">10+</h4>
+                <h4 className="text-5xl font-bold font-display text-brand-ink mb-2">
+                  10+
+                </h4>
                 <p className="text-brand-muted font-medium uppercase tracking-wider text-sm">
                   Projects
                 </p>
@@ -87,8 +91,7 @@ const About = () => {
             <div className="relative bg-white p-10 rounded-3xl border border-brand-line">
               <code className="text-sm md:text-base text-slate-700 font-mono">
                 <span className="text-slate-500">const</span>{" "}
-                <span className="text-brand-ink">developer</span> = {"{"}{" "}
-                <br />
+                <span className="text-brand-ink">developer</span> = {"{"} <br />
                 &nbsp;&nbsp;name:{" "}
                 <span className="text-slate-600">'Victor Chidera'</span>,<br />
                 &nbsp;&nbsp;role:{" "}
