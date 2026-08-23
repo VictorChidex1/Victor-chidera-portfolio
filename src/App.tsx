@@ -1,10 +1,11 @@
+import { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
 // Import Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import SmoothScroll from "./components/SmoothScroll";
+import SmoothScroll, { lenisRef } from "./components/SmoothScroll";
 import CustomCursor from "./components/CustomCursor";
 import PageTransition from "./components/PageTransition";
 import WhatsAppButton from "./components/WhatsAppButton";
@@ -23,6 +24,16 @@ import Admin from "./pages/Admin";
 function App() {
   const location = useLocation();
   useDocumentTitle();
+
+  // Reset scroll to top instantly whenever the route changes so the
+  // newly loaded page always opens from its top, not a mid-page position.
+  useEffect(() => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
 
   const isControlPanel = location.pathname === "/admin";
 

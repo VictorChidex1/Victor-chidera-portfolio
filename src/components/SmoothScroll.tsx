@@ -5,6 +5,8 @@ interface SmoothScrollProps {
   children: ReactNode;
 }
 
+export const lenisRef: { current: Lenis | null } = { current: null };
+
 const SmoothScroll = ({ children }: SmoothScrollProps) => {
   useEffect(() => {
     const lenis = new Lenis({
@@ -26,10 +28,12 @@ const SmoothScroll = ({ children }: SmoothScrollProps) => {
     }
     
     rafId = requestAnimationFrame(raf);
+    lenisRef.current = lenis;
 
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
 
