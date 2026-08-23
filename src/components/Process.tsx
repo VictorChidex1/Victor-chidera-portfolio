@@ -42,32 +42,31 @@ const steps = [
 const ProcessCard = ({ step, index, scrollProgress }: any) => {
   const cardRef = useRef(null);
 
-  // Calculate scale based on scroll position
+  // Center the active state and hold it for a duration
+  // For index 0, it stays at scale 1 from scroll 0 to 0.1, then shrinks as the next card arrives.
   const scale = useTransform(
     scrollProgress,
-    [index * 0.2, index * 0.2 + 0.1, index * 0.2 + 0.3],
-    [0.92, 1, 0.92]
+    [index * 0.2 - 0.1, index * 0.2, index * 0.2 + 0.1, index * 0.2 + 0.2],
+    [0.85, 1, 1, 0.85]
   );
 
-  // Opacity based on scroll position
   const opacity = useTransform(
     scrollProgress,
-    [index * 0.2 - 0.1, index * 0.2, index * 0.2 + 0.4, index * 0.2 + 0.5],
-    [0.4, 1, 1, 0.4]
+    [index * 0.2 - 0.1, index * 0.2, index * 0.2 + 0.1, index * 0.2 + 0.2],
+    [0, 1, 1, 0.2]
   );
 
-  // Y position for stacking effect
+  // Next card slides up exactly as the previous one shrinks
   const y = useTransform(
     scrollProgress,
-    [index * 0.2, index * 0.2 + 0.3],
-    [50, 0]
+    [index * 0.2 - 0.1, index * 0.2],
+    [100, 0]
   );
 
-  // Rotation for subtle 3D effect
   const rotateX = useTransform(
     scrollProgress,
-    [index * 0.2, index * 0.2 + 0.3],
-    [5, 0]
+    [index * 0.2 - 0.1, index * 0.2, index * 0.2 + 0.1, index * 0.2 + 0.2],
+    [10, 0, 0, 10]
   );
 
   return (
@@ -79,51 +78,57 @@ const ProcessCard = ({ step, index, scrollProgress }: any) => {
         y,
         rotateX,
       }}
-      className={`sticky top-1/4 h-[60vh] flex items-center justify-center mx-auto max-w-4xl px-6`}
+      className={`sticky top-[15vh] h-[70vh] md:h-[75vh] flex items-center justify-center mx-auto max-w-5xl px-4 md:px-6 perspective-1000`}
     >
-      {/* Main Card */}
-      <div className="relative w-full h-full bg-white rounded-2xl border border-brand-line p-8 md:p-12 overflow-hidden shadow-sm group">
+      {/* Glassmorphic Main Card */}
+      <div className="relative w-full h-full bg-white/5 backdrop-blur-2xl rounded-[2rem] md:rounded-[2.5rem] border border-white/10 p-6 md:p-14 overflow-hidden shadow-2xl shadow-black/80 group">
+        
+        {/* Massive Background Number */}
+        <div className="absolute -bottom-16 -right-10 text-[200px] md:text-[300px] font-bold font-display text-white/[0.03] leading-none select-none pointer-events-none group-hover:scale-105 transition-transform duration-700">
+          {String(step.id).padStart(2, "0")}
+        </div>
+
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col justify-between">
           {/* Header Section */}
           <div>
             {/* Phase Label */}
             <div className="inline-flex items-center mb-6">
-              <span className="text-brand-muted text-sm tracking-widest uppercase mr-4">
+              <span className="text-brand-accent font-bold tracking-widest uppercase mr-4 text-xs md:text-sm">
                 {step.phase}
               </span>
-              <div className="h-px w-12 bg-brand-line" />
+              <div className="h-px w-16 bg-brand-accent/50" />
             </div>
 
             {/* Title */}
-            <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold font-display text-brand-ink mb-6 leading-tight tracking-tight">
+            <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white mb-8 leading-tight tracking-tighter">
               {step.title}
             </h3>
           </div>
 
           {/* Description */}
-          <div className="max-w-2xl relative">
-            <div className="absolute -left-4 top-0 bottom-0 w-[2px] bg-brand-line" />
-            <p className="text-brand-muted text-base md:text-lg leading-relaxed font-light pl-6">
+          <div className="max-w-3xl relative">
+            <div className="absolute -left-4 md:-left-6 top-0 bottom-0 w-[2px] bg-brand-accent/30" />
+            <p className="text-white/70 text-base md:text-xl leading-relaxed font-light pl-4 md:pl-6">
               {step.description}
             </p>
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-brand-line">
-            <div className="flex items-center space-x-2 text-xs font-mono text-brand-muted">
-              <span>{String(step.id).padStart(2, "0")}</span>
-              <span>/</span>
+          <div className="flex items-center justify-between mt-12 pt-6 border-t border-white/10">
+            <div className="flex items-center space-x-3 text-sm font-mono text-white/50">
+              <span className="text-white">{String(step.id).padStart(2, "0")}</span>
+              <span className="text-white/20">/</span>
               <span>{String(steps.length).padStart(2, "0")}</span>
             </div>
 
             {/* Progress Dots */}
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-2">
               {steps.map((_, dotIndex) => (
                 <div
                   key={dotIndex}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    dotIndex === index ? "bg-brand-ink" : "bg-brand-line"
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${
+                    dotIndex === index ? "bg-brand-accent w-4" : "bg-white/20"
                   }`}
                 />
               ))}
@@ -145,31 +150,41 @@ const Process = () => {
   return (
     <section
       ref={containerRef}
-      className="relative bg-brand-surface min-h-[300vh]"
+      className="relative bg-[#0d1117] min-h-[300vh]"
     >
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-40 flex flex-col items-center justify-center bg-brand-surface/90 backdrop-blur-xl py-16 h-[30vh] border-b border-brand-line">
+      {/* Background layer that doesn't affect normal flow */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Animated Glowing Orb for Glass Refraction */}
+        <div className="sticky top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[1000px] h-[600px] md:h-[1000px] bg-brand-accent/10 rounded-full blur-[150px]"></div>
+      </div>
+
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 bg-[url('/assets/images/grid-pattern.svg')] opacity-[0.03] pointer-events-none mix-blend-overlay z-0"></div>
+
+      {/* Section Header - Normal Flow */}
+      <div className="relative z-10 flex flex-col items-center justify-center pt-32 pb-16 md:pt-40 md:pb-24">
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-5xl md:text-7xl font-bold font-display text-brand-ink mb-4 text-center"
+          className="text-5xl md:text-7xl lg:text-8xl font-bold font-display text-white mb-2 md:mb-4 text-center tracking-tighter leading-[0.9]"
         >
-          Process
+          THE <br className="hidden md:block" />
+          <span className="text-white/20">PROCESS</span>
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="text-brand-muted text-lg md:text-xl max-w-xl mx-auto text-center font-light"
+          className="text-white/60 text-base md:text-xl max-w-xl mx-auto text-center font-light px-4"
         >
-          My systematic, tailored process.
+          My systematic, tailored approach to engineering high-performance digital solutions.
         </motion.p>
       </div>
 
       {/* Process Cards Container */}
-      <div className="relative">
+      <div className="relative z-10 pb-[20vh]">
         {steps.map((step, index) => (
           <ProcessCard
             key={step.id}
@@ -180,25 +195,26 @@ const Process = () => {
         ))}
       </div>
 
-      {/* Scroll Progress Bar */}
-      <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 hidden lg:flex">
+      {/* Scroll Progress Bar (Glowing Track) */}
+      <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 hidden xl:flex">
         <div className="flex flex-col items-center space-y-4">
-          <div className="w-1 h-40 bg-brand-line rounded-full overflow-hidden">
+          <div className="w-1 h-64 bg-white/10 rounded-full overflow-hidden relative shadow-[0_0_15px_rgba(255,255,255,0.05)]">
             <motion.div
-              className="w-full bg-brand-ink rounded-full"
+              className="absolute top-0 left-0 w-full bg-brand-accent shadow-[0_0_15px_var(--color-brand-accent)]"
               style={{
                 scaleY: scrollYProgress,
                 transformOrigin: "top",
+                bottom: 0
               }}
             />
           </div>
           <motion.span
-            className="text-xs font-semibold text-brand-muted whitespace-nowrap"
+            className="text-xs font-bold tracking-widest uppercase text-white/50"
             style={{
-              opacity: useTransform(scrollYProgress, [0, 1], [0.5, 1]),
+              opacity: useTransform(scrollYProgress, [0, 1], [0.3, 1]),
             }}
           >
-            Scroll Progress
+            Scroll
           </motion.span>
         </div>
       </div>
