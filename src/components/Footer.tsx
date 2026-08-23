@@ -9,6 +9,9 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start mb-20 gap-12">
           <div className="max-w-xl">
+            <Link to="/" className="inline-block mb-8 hover:opacity-80 transition-opacity">
+              <img src="/vc-logo.webp" alt="Victor Chidera" className="h-14 w-auto brightness-0 invert" />
+            </Link>
             <h2 className="text-4xl md:text-6xl font-bold font-display text-white mb-8 leading-tight">
               Let's build something{" "}
               <span className="text-brand-accent">extraordinary</span> together.

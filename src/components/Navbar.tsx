@@ -36,9 +36,12 @@ const Navbar = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="text-2xl font-bold font-display text-brand-ink tracking-tighter hover:text-brand-muted transition-colors"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          Victor<span className="text-brand-accent">Chidera</span>
+          <img src="/vc-logo.webp" alt="Victor Chidera" className="h-10 w-auto object-contain" />
+          <span className="hidden sm:block text-2xl font-bold font-display text-brand-ink tracking-tighter">
+            Victor<span className="text-brand-accent">Chidera</span>
+          </span>
         </Link>
 
         {/* Desktop Menu */}
