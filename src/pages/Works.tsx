@@ -238,7 +238,7 @@ const Works = () => {
   };
 
   return (
-    <section className="py-24 pt-32 bg-brand-dark min-h-screen">
+    <section className="py-24 pt-32 bg-white min-h-screen">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -248,10 +248,10 @@ const Works = () => {
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold font-display text-brand-ink mb-4">
             Selected Works
           </h2>
-          <div className="w-20 h-1 bg-brand-orange"></div>
+          <div className="w-20 h-1 bg-brand-ink"></div>
         </motion.div>
 
         {/* Projects Grid */}
@@ -263,19 +263,16 @@ const Works = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-brand-orange/50 transition-all duration-300 hover:-translate-y-2 flex flex-col"
+              className="group bg-white rounded-xl overflow-hidden border border-brand-line hover:border-brand-ink transition-all duration-300 hover:-translate-y-2 flex flex-col"
             >
               {/* IMAGE AREA */}
-              <div className="h-48 bg-slate-800 relative overflow-hidden group">
-                {/* Dark Overlay that disappears on hover */}
-                <div className="absolute inset-0 bg-brand-dark/20 group-hover:bg-transparent transition-all duration-300 z-10 pointer-events-none" />
-
+              <div className="h-48 bg-brand-surface relative overflow-hidden group">
                 <WebGLImageHover src={project.image} alt={project.title} />
 
                 {/* Fallback Icon (Hidden unless image fails) */}
-                <div className="absolute inset-0 flex items-center justify-center hidden bg-slate-800">
+                <div className="absolute inset-0 flex items-center justify-center hidden bg-brand-surface">
                   <Code
-                    className="text-slate-600 group-hover:text-brand-orange transition-colors"
+                    className="text-slate-400 group-hover:text-brand-ink transition-colors"
                     size={48}
                   />
                 </div>
@@ -283,13 +280,13 @@ const Works = () => {
 
               {/* CONTENT AREA */}
               <div className="p-6 flex-1 flex flex-col">
-                <span className="text-brand-orange text-xs font-bold uppercase tracking-wider mb-2 block">
+                <span className="text-brand-muted text-xs font-bold uppercase tracking-wider mb-2 block">
                   {project.category}
                 </span>
-                <h3 className="text-xl font-bold text-white mb-3">
+                <h3 className="text-xl font-bold font-display text-brand-ink mb-3">
                   {project.title}
                 </h3>
-                <p className="text-slate-400 text-sm mb-4 flex-grow">
+                <p className="text-brand-muted text-sm mb-4 flex-grow">
                   {project.description}
                 </p>
 
@@ -297,7 +294,7 @@ const Works = () => {
                   {project.tech.map((t: string, i: number) => (
                     <span
                       key={i}
-                      className="px-2 py-1 bg-brand-dark text-slate-300 text-xs rounded border border-slate-700"
+                      className="px-2 py-1 bg-white text-brand-muted text-xs rounded border border-brand-line"
                     >
                       {t}
                     </span>
@@ -309,7 +306,7 @@ const Works = () => {
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center text-white hover:text-brand-orange font-medium transition-colors"
+                  className="inline-flex items-center text-brand-ink hover:text-brand-muted font-medium transition-colors"
                 >
                   View Project <ExternalLink size={16} className="ml-2" />
                 </a>
@@ -326,8 +323,8 @@ const Works = () => {
               disabled={currentPage === 1}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 currentPage === 1
-                  ? "bg-slate-800 text-slate-500 cursor-not-allowed"
-                  : "bg-brand-orange text-white hover:bg-orange-600"
+                  ? "bg-brand-surface text-slate-400 cursor-not-allowed"
+                  : "bg-brand-ink text-white hover:bg-neutral-800"
               }`}
             >
               Previous
@@ -341,8 +338,8 @@ const Works = () => {
                     onClick={() => handlePageChange(pageNum)}
                     className={`w-10 h-10 rounded-md flex items-center justify-center font-medium transition-colors ${
                       currentPage === pageNum
-                        ? "bg-brand-orange text-white"
-                        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                        ? "bg-brand-ink text-white"
+                        : "bg-white text-brand-muted border border-brand-line hover:border-brand-ink"
                     }`}
                   >
                     {pageNum}
@@ -355,8 +352,8 @@ const Works = () => {
               disabled={currentPage === totalPages}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 currentPage === totalPages
-                  ? "bg-slate-800 text-slate-500 cursor-not-allowed"
-                  : "bg-brand-orange text-white hover:bg-orange-600"
+                  ? "bg-brand-surface text-slate-400 cursor-not-allowed"
+                  : "bg-brand-ink text-white hover:bg-neutral-800"
               }`}
             >
               Next

@@ -28,7 +28,7 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-brand-dark/90 backdrop-blur-md py-4 shadow-lg"
+          ? "bg-white/90 backdrop-blur-md py-4 border-b border-brand-line"
           : "bg-transparent py-6"
       }`}
     >
@@ -36,9 +36,9 @@ const Navbar = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="text-2xl font-bold text-white tracking-tighter hover:text-brand-orange transition-colors"
+          className="text-2xl font-bold font-display text-brand-ink tracking-tighter hover:text-brand-muted transition-colors"
         >
-          Victor<span className="text-brand-orange">Chidera</span>
+          Victor<span className="text-brand-accent">Chidera</span>
         </Link>
 
         {/* Desktop Menu */}
@@ -47,7 +47,7 @@ const Navbar = () => {
             <Link
               key={link.name}
               to={link.path}
-              className="text-sm font-medium text-slate-300 hover:text-brand-orange transition-colors uppercase tracking-widest"
+              className="text-sm font-medium text-brand-muted hover:text-brand-ink transition-colors uppercase tracking-widest"
             >
               {link.name}
             </Link>
@@ -55,7 +55,7 @@ const Navbar = () => {
           <a
             href="/victor-chidera-full-stack-cv.pdf"
             download
-            className="flex items-center gap-2 px-5 py-2.5 bg-brand-orange/10 border border-brand-orange/50 rounded-full text-brand-orange text-sm font-medium hover:bg-brand-orange hover:text-white transition-all duration-300"
+            className="flex items-center gap-2 px-5 py-2.5 bg-brand-ink rounded-full text-white text-sm font-medium hover:bg-neutral-800 transition-all duration-300"
           >
             <Download size={16} />
             HIRE ME
@@ -64,7 +64,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-white hover:text-brand-orange transition-colors"
+          className="md:hidden text-brand-ink hover:text-brand-muted transition-colors"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -78,7 +78,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-brand-dark border-t border-slate-800 overflow-hidden"
+            className="md:hidden bg-white border-t border-brand-line overflow-hidden"
           >
             <div className="flex flex-col p-6 gap-4">
               {navLinks.map((link) => (
@@ -86,7 +86,7 @@ const Navbar = () => {
                   key={link.name}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className="text-lg font-medium text-slate-300 hover:text-brand-orange transition-colors uppercase tracking-widest"
+                  className="text-lg font-medium text-brand-muted hover:text-brand-ink transition-colors uppercase tracking-widest"
                 >
                   {link.name}
                 </Link>
@@ -94,7 +94,7 @@ const Navbar = () => {
               <a
                 href="/victor-chidera-full-stack-cv.pdf"
                 download
-                className="flex items-center gap-2 px-5 py-3 bg-brand-orange/10 border border-brand-orange/50 rounded-full text-brand-orange text-lg font-medium hover:bg-brand-orange hover:text-white transition-all duration-300 w-fit"
+                className="flex items-center gap-2 px-5 py-3 bg-brand-ink rounded-full text-white text-lg font-medium hover:bg-neutral-800 transition-all duration-300 w-fit"
               >
                 <Download size={20} />
                 HIRE ME

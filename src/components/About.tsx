@@ -6,7 +6,7 @@ const About = () => {
   return (
     <section
       id="about"
-      className="py-32 bg-transparent relative overflow-hidden"
+      className="py-32 bg-brand-surface relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -20,14 +20,14 @@ const About = () => {
           <div>
             <motion.h2
               variants={fadeInUp}
-              className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight"
+              className="text-5xl md:text-7xl font-bold font-display text-brand-ink mb-8 leading-tight"
             >
-              PASSIONATE <br /> <span className="text-slate-500">CREATOR</span>
+              PASSIONATE <br /> <span className="text-brand-muted">CREATOR</span>
             </motion.h2>
 
             <motion.div
               variants={fadeInUp}
-              className="space-y-6 text-lg text-slate-400 leading-relaxed"
+              className="space-y-6 text-lg text-brand-muted leading-relaxed"
             >
               <p>
                 Hello! I'm Victor Chidera, a Full-Stack Product Engineer with a
@@ -56,7 +56,7 @@ const About = () => {
               <a
                 href="/victor-chidera-full-stack-cv.pdf"
                 download
-                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-orange text-white font-medium rounded-full hover:bg-brand-orange/90 transition-all shadow-lg hover:shadow-brand-orange/20"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-ink text-white font-medium rounded-full hover:bg-neutral-800 transition-all"
               >
                 <Download size={20} />
                 Download CV
@@ -68,14 +68,14 @@ const About = () => {
               className="grid grid-cols-2 gap-8 mt-12"
             >
               <div>
-                <h4 className="text-5xl font-bold text-white mb-2">3+</h4>
-                <p className="text-brand-orange font-medium uppercase tracking-wider text-sm">
+                <h4 className="text-5xl font-bold font-display text-brand-ink mb-2">3+</h4>
+                <p className="text-brand-muted font-medium uppercase tracking-wider text-sm">
                   Years Exp.
                 </p>
               </div>
               <div>
-                <h4 className="text-5xl font-bold text-white mb-2">10+</h4>
-                <p className="text-brand-orange font-medium uppercase tracking-wider text-sm">
+                <h4 className="text-5xl font-bold font-display text-brand-ink mb-2">10+</h4>
+                <p className="text-brand-muted font-medium uppercase tracking-wider text-sm">
                   Projects
                 </p>
               </div>
@@ -84,49 +84,48 @@ const About = () => {
 
           {/* Decorative Visual */}
           <motion.div variants={fadeInUp} className="relative mt-16 lg:mt-0">
-            <div className="absolute inset-0 bg-gradient-to-tr from-brand-orange/20 to-transparent rounded-3xl transform rotate-6 border border-white/5 blur-sm"></div>
-            <div className="relative bg-slate-900/50 p-10 rounded-3xl border border-slate-800 backdrop-blur-sm">
-              <code className="text-sm md:text-base text-slate-300 font-mono">
-                <span className="text-purple-400">const</span>{" "}
-                <span className="text-yellow-200">developer</span> = {"{"}{" "}
+            <div className="relative bg-white p-10 rounded-3xl border border-brand-line">
+              <code className="text-sm md:text-base text-slate-700 font-mono">
+                <span className="text-slate-500">const</span>{" "}
+                <span className="text-brand-ink">developer</span> = {"{"}{" "}
                 <br />
                 &nbsp;&nbsp;name:{" "}
-                <span className="text-green-400">'Victor Chidera'</span>,<br />
+                <span className="text-slate-600">'Victor Chidera'</span>,<br />
                 &nbsp;&nbsp;role:{" "}
-                <span className="text-green-400">'Fullstack Dev'</span>,<br />
+                <span className="text-slate-600">'Fullstack Dev'</span>,<br />
                 &nbsp;&nbsp;skills: [
-                <span className="text-green-400">'React'</span>,{" "}
-                <span className="text-green-400">'Firebase'</span>,
+                <span className="text-slate-600">'React'</span>,{" "}
+                <span className="text-slate-600">'Firebase'</span>,
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-green-400">'Next.js'</span>,
-                <span className="text-green-400">'PostgreSQL'</span>,
-                <span className="text-green-400">'Tailwind'</span>],
+                <span className="text-slate-600">'Next.js'</span>,
+                <span className="text-slate-600">'PostgreSQL'</span>,
+                <span className="text-slate-600">'Tailwind'</span>],
                 <br />
                 &nbsp;&nbsp;backend: [
-                <span className="text-green-400">'Firebase Auth'</span>,{" "}
-                <span className="text-green-400">'Firestore'</span>,
+                <span className="text-slate-600">'Firebase Auth'</span>,{" "}
+                <span className="text-slate-600">'Firestore'</span>,
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-green-400">'Security Rules'</span>,{" "}
-                <span className="text-green-400">'Cloud Functions'</span>],
+                <span className="text-slate-600">'Security Rules'</span>,{" "}
+                <span className="text-slate-600">'Cloud Functions'</span>],
                 <br />
                 &nbsp;&nbsp;tools: [
-                <span className="text-green-400">'Git'</span>,{" "}
-                <span className="text-green-400">'GitHub'</span>,{" "}
-                <span className="text-green-400">'Vercel'</span>,{" "}
-                <span className="text-green-400">'REST API'</span>],
+                <span className="text-slate-600">'Git'</span>,{" "}
+                <span className="text-slate-600">'GitHub'</span>,{" "}
+                <span className="text-slate-600">'Vercel'</span>,{" "}
+                <span className="text-slate-600">'REST API'</span>],
                 <br />
                 &nbsp;&nbsp;competencies: [
-                <span className="text-green-400">'AI Integration'</span>,{" "}
-                <span className="text-green-400">'SaaS Arch'</span>,
+                <span className="text-slate-600">'AI Integration'</span>,{" "}
+                <span className="text-slate-600">'SaaS Arch'</span>,
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-green-400">'API Security'</span>],
+                <span className="text-slate-600">'API Security'</span>],
                 <br />
                 &nbsp;&nbsp;hardWorker:{" "}
-                <span className="text-brand-orange">true</span>,<br />
+                <span className="text-brand-accent">true</span>,<br />
                 &nbsp;&nbsp;quickLearner:{" "}
-                <span className="text-brand-orange">true</span>,
+                <span className="text-brand-accent">true</span>,
                 <br />
                 {"}"};
               </code>

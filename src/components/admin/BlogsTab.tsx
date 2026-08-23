@@ -119,14 +119,14 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
       className="space-y-8"
     >
       {/* Create/Edit Blog Card */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-        <h3 className="text-lg font-bold text-white mb-6 flex justify-between items-center">
+      <div className="bg-white border border-brand-line p-6 rounded-2xl">
+        <h3 className="text-lg font-bold font-display text-brand-ink mb-6 flex justify-between items-center">
           <span>{editingBlogId ? "Edit Blog Post" : "Write New Blog Post / Article Hook"}</span>
           {editingBlogId && (
             <button
               type="button"
               onClick={handleCancelEdit}
-              className="px-3 py-1 bg-slate-800 text-slate-400 hover:text-white rounded text-xs font-mono border border-slate-700"
+              className="px-3 py-1 bg-brand-surface text-brand-muted hover:text-brand-ink rounded text-xs font-mono border border-brand-line"
             >
               Cancel Edit
             </button>
@@ -134,7 +134,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
         </h3>
         <form onSubmit={handleCreateBlog} className="space-y-5">
           <div>
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
               Article Title
             </label>
             <input
@@ -142,13 +142,13 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
               value={newBlog.title}
               onChange={(e) => setNewBlog((prev) => ({ ...prev, title: e.target.value }))}
               required
-              className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+              className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
               placeholder="Blueprint Before Code: Scalable Schema Structures"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
               Brief Hook Excerpt (Summary)
             </label>
             <textarea
@@ -156,45 +156,45 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
               value={newBlog.excerpt}
               onChange={(e) => setNewBlog((prev) => ({ ...prev, excerpt: e.target.value }))}
               required
-              className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+              className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
               placeholder="Why spending hours structuring your schema structure saves your backend in production..."
             ></textarea>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Estimated Reading Time
               </label>
               <input
                 type="text"
                 value={newBlog.readTime}
                 onChange={(e) => setNewBlog((prev) => ({ ...prev, readTime: e.target.value }))}
-                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
                 placeholder="e.g. 5 min read"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Medium / Hashnode Link (Optional)
               </label>
               <input
                 type="text"
                 value={newBlog.link}
                 onChange={(e) => setNewBlog((prev) => ({ ...prev, link: e.target.value }))}
-                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
                 placeholder="https://medium.com/@yourusername"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Featured Cover Image Path (Optional)
               </label>
               <input
                 type="text"
                 value={newBlog.image}
                 onChange={(e) => setNewBlog((prev) => ({ ...prev, image: e.target.value }))}
-                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
                 placeholder="/assets/images/blog.webp"
               />
             </div>
@@ -202,7 +202,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
 
           <button
             type="submit"
-            className="px-5 py-3 font-semibold rounded-lg bg-brand-orange hover:bg-orange-600 text-white transition-all text-sm flex items-center gap-2"
+            className="px-5 py-3 font-semibold rounded-lg bg-brand-ink hover:bg-neutral-800 text-white transition-all text-sm flex items-center gap-2"
           >
             {editingBlogId ? (
               <>
@@ -218,33 +218,33 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
       </div>
 
       {/* Existing Blogs List */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-        <h3 className="text-lg font-bold text-white mb-6">
+      <div className="bg-white border border-brand-line p-6 rounded-2xl">
+        <h3 className="text-lg font-bold font-display text-brand-ink mb-6">
           Existing Dynamic Articles ({blogsList.length})
         </h3>
 
         {blogsList.length === 0 ? (
-          <p className="text-slate-500 text-sm italic">No dynamic articles found in database. Currently fallback cards are displayed on the Blog page.</p>
+          <p className="text-brand-muted text-sm italic">No dynamic articles found in database. Currently fallback cards are displayed on the Blog page.</p>
         ) : (
           <>
-            <div className="divide-y divide-slate-800">
+            <div className="divide-y divide-brand-line">
               {currentAdminBlogs.map((blog) => (
                 <div key={blog.id} className="py-4 flex justify-between items-center gap-4">
                   <div>
-                    <h5 className="font-bold text-white text-sm">{blog.title}</h5>
-                    <p className="text-slate-500 text-xs mt-1">Published: {blog.date} | {blog.readTime}</p>
+                    <h5 className="font-bold text-brand-ink text-sm">{blog.title}</h5>
+                    <p className="text-brand-muted text-xs mt-1">Published: {blog.date} | {blog.readTime}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleStartEdit(blog)}
-                      className="w-9 h-9 flex items-center justify-center bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-lg hover:bg-brand-orange hover:text-white transition-all"
+                      className="w-9 h-9 flex items-center justify-center bg-brand-ink/5 border border-brand-line text-brand-ink rounded-lg hover:bg-brand-ink hover:text-white transition-all"
                       title="Edit Article"
                     >
                       <Edit2 size={15} />
                     </button>
                     <button
                       onClick={() => handleDeleteBlog(blog.id)}
-                      className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg hover:bg-red-500 hover:text-white transition-all"
+                      className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all"
                       title="Delete Article"
                     >
                       <Trash2 size={15} />
@@ -256,11 +256,11 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
 
             {/* Paginator */}
             {totalAdminPages > 1 && (
-              <div className="flex justify-center items-center gap-2 mt-6 pt-6 border-t border-slate-800">
+              <div className="flex justify-center items-center gap-2 mt-6 pt-6 border-t border-brand-line">
                 <button
                   disabled={adminBlogsPage === 1}
                   onClick={() => setAdminBlogsPage((p) => Math.max(p - 1, 1))}
-                  className="px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400 hover:text-white disabled:opacity-40 transition-all"
+                  className="px-3 py-1.5 bg-white border border-brand-line rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-ink disabled:opacity-40 transition-all"
                 >
                   Prev
                 </button>
@@ -270,8 +270,8 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
                     onClick={() => setAdminBlogsPage(i + 1)}
                     className={`w-8 h-8 rounded-lg text-xs font-semibold font-mono border transition-all ${
                       adminBlogsPage === i + 1
-                        ? "bg-brand-orange/10 border-brand-orange/30 text-brand-orange font-bold"
-                        : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                        ? "bg-brand-ink border-brand-ink text-white font-bold"
+                        : "bg-white border-brand-line text-brand-muted hover:text-brand-ink"
                     }`}
                   >
                     {i + 1}
@@ -280,7 +280,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
                 <button
                   disabled={adminBlogsPage === totalAdminPages}
                   onClick={() => setAdminBlogsPage((p) => Math.min(p + 1, totalAdminPages))}
-                  className="px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400 hover:text-white disabled:opacity-40 transition-all"
+                  className="px-3 py-1.5 bg-white border border-brand-line rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-ink disabled:opacity-40 transition-all"
                 >
                   Next
                 </button>

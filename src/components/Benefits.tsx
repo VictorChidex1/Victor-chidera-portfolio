@@ -49,10 +49,7 @@ const benefits = [
 
 const Benefits = () => {
   return (
-    <section className="py-32 bg-transparent relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-brand-orange/5 rounded-full blur-[100px] pointer-events-none" />
-
+    <section className="py-32 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div
           variants={staggerContainer}
@@ -63,13 +60,13 @@ const Benefits = () => {
         >
           <motion.h2
             variants={fadeInUp}
-            className="text-5xl md:text-7xl font-bold text-white mb-6"
+            className="text-5xl md:text-7xl font-bold font-display text-brand-ink mb-6"
           >
-            WHY <br /> <span className="text-slate-500">CHOOSE ME</span>
+            WHY <br /> <span className="text-brand-muted">CHOOSE ME</span>
           </motion.h2>
           <motion.p
             variants={fadeInUp}
-            className="text-slate-400 text-lg max-w-xl"
+            className="text-brand-muted text-lg max-w-xl"
           >
             I don't just write code; I build digital solutions that solve real
             business problems and drive growth.
@@ -84,15 +81,15 @@ const Benefits = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-slate-900/30 p-8 rounded-2xl border border-slate-800 hover:border-brand-orange/50 transition-all duration-300 group hover:bg-slate-900/50"
+              className="bg-white p-8 rounded-2xl border border-brand-line hover:border-brand-ink transition-all duration-300 group"
             >
-              <div className="mb-6 text-brand-orange group-hover:scale-110 transition-transform duration-300 origin-left">
+              <div className="mb-6 text-brand-ink group-hover:scale-110 transition-transform duration-300 origin-left">
                 {benefit.icon}
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-brand-orange transition-colors">
+              <h3 className="text-2xl font-bold font-display text-brand-ink mb-4">
                 {benefit.title}
               </h3>
-              <p className="text-slate-400 leading-relaxed">
+              <p className="text-brand-muted leading-relaxed">
                 {benefit.description}
               </p>
             </motion.div>

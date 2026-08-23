@@ -35,17 +35,17 @@ const FAQItem = ({ question, answer, isOpen, onClick }: any) => {
   return (
     <motion.div
       variants={fadeInUp}
-      className="border-b border-slate-800 last:border-none"
+      className="border-b border-brand-line last:border-none"
     >
       <button
         onClick={onClick}
         className="w-full py-6 flex justify-between items-center text-left focus:outline-none group"
       >
         <span
-          className={`text-xl md:text-2xl font-bold transition-colors duration-300 ${
+          className={`text-xl md:text-2xl font-bold font-display transition-colors duration-300 ${
             isOpen
-              ? "text-brand-orange"
-              : "text-white group-hover:text-brand-orange"
+              ? "text-brand-ink"
+              : "text-brand-ink group-hover:text-brand-muted"
           }`}
         >
           {question}
@@ -53,8 +53,8 @@ const FAQItem = ({ question, answer, isOpen, onClick }: any) => {
         <span
           className={`ml-4 p-2 rounded-full border transition-all duration-300 ${
             isOpen
-              ? "border-brand-orange text-brand-orange rotate-180"
-              : "border-slate-700 text-slate-400 group-hover:border-brand-orange group-hover:text-brand-orange"
+              ? "border-brand-ink text-brand-ink rotate-180"
+              : "border-brand-line text-brand-muted group-hover:border-brand-ink group-hover:text-brand-ink"
           }`}
         >
           {isOpen ? <Minus size={20} /> : <Plus size={20} />}
@@ -69,7 +69,7 @@ const FAQItem = ({ question, answer, isOpen, onClick }: any) => {
             transition={{ duration: 0.3, ease: "easeInOut" as any }}
             className="overflow-hidden"
           >
-            <p className="text-slate-400 text-lg leading-relaxed pb-6 pr-12">
+            <p className="text-brand-muted text-lg leading-relaxed pb-6 pr-12">
               {answer}
             </p>
           </motion.div>
@@ -88,11 +88,11 @@ const FAQ = () => {
 
   return (
     <section
-      className="py-20 px-6 bg-transparent relative overflow-hidden"
+      className="py-20 px-6 bg-white relative overflow-hidden"
       id="faq"
     >
-      {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+      {/* Top Divider */}
+      <div className="absolute top-0 left-0 w-full h-px bg-brand-line" />
 
       <div className="max-w-4xl mx-auto relative z-10">
         <motion.div
@@ -102,17 +102,17 @@ const FAQ = () => {
           viewport={{ once: true, margin: "-100px" }}
         >
           <motion.div variants={fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-bold font-display text-brand-ink mb-6 tracking-tight">
               Frequently Asked{" "}
-              <span className="text-brand-orange">Questions</span>
+              <span className="text-brand-muted">Questions</span>
             </h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+            <p className="text-brand-muted text-lg max-w-2xl mx-auto">
               Got questions? I've got answers. Here are some of the most common
               inquiries I receive.
             </p>
           </motion.div>
 
-          <div className="bg-slate-900/30 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-slate-800/50">
+          <div className="bg-white rounded-3xl p-8 md:p-12 border border-brand-line">
             {faqs.map((faq, index) => (
               <FAQItem
                 key={index}

@@ -42,7 +42,7 @@ const Services = () => {
   return (
     <section
       id="services"
-      className="py-32 bg-brand-dark border-t border-slate-800"
+      className="py-32 bg-brand-surface border-t border-brand-line"
     >
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -55,9 +55,9 @@ const Services = () => {
           <div className="md:w-1/3">
             <motion.h2
               variants={fadeInUp}
-              className="text-5xl font-bold text-white mb-6 sticky top-32"
+              className="text-5xl font-bold font-display text-brand-ink mb-6 sticky top-32"
             >
-              WHAT I <br /> <span className="text-slate-500">DO</span>
+              WHAT I <br /> <span className="text-brand-muted">DO</span>
             </motion.h2>
           </div>
 
@@ -66,19 +66,19 @@ const Services = () => {
               <motion.div
                 key={service.id}
                 variants={fadeInUp}
-                className="group p-8 bg-slate-900/30 border border-slate-800 hover:border-brand-orange/50 rounded-2xl transition-all duration-300 hover:bg-slate-900/50"
+                className="group p-8 bg-white border border-brand-line hover:border-brand-ink rounded-2xl transition-all duration-300"
               >
                 <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 bg-slate-800 rounded-lg text-brand-orange group-hover:bg-brand-orange group-hover:text-white transition-colors">
+                  <div className="p-3 bg-brand-surface rounded-lg text-brand-ink group-hover:bg-brand-ink group-hover:text-white transition-colors">
                     {service.icon}
                   </div>
-                  <ArrowUpRight className="text-slate-600 group-hover:text-white transition-colors" />
+                  <ArrowUpRight className="text-slate-400 group-hover:text-brand-ink transition-colors" />
                 </div>
 
-                <h3 className="text-2xl font-bold text-white mb-2">
+                <h3 className="text-2xl font-bold font-display text-brand-ink mb-2">
                   {service.title}
                 </h3>
-                <p className="text-slate-400 text-lg">{service.description}</p>
+                <p className="text-brand-muted text-lg">{service.description}</p>
               </motion.div>
             ))}
           </div>

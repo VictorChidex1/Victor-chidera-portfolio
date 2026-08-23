@@ -3,21 +3,18 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      animation: {
-        scan: "scan 4s linear infinite",
-      },
-      keyframes: {
-        scan: {
-          "0%": { top: "0%" },
-          "100%": { top: "100%" },
-        },
+      fontFamily: {
+        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ['"Space Grotesk"', "Inter", "ui-sans-serif", "sans-serif"],
       },
       colors: {
-        // We are adding your specific FoodFlow colors here
         brand: {
-          dark: "#0f172a", // The Dark Blue (Background)
-          orange: "#f97316", // The Vibrant Orange (Highlights)
-          light: "#cbd5e1", // The Light Text color
+          ink: "#111111", // Near-black: headings & primary buttons
+          muted: "#666666", // Secondary text
+          bg: "#FFFFFF", // Main background
+          surface: "#F7F7F5", // Secondary section background
+          line: "#E7E5E4", // Thin borders
+          accent: "#F97316", // Micro brand details only
         },
       },
     },

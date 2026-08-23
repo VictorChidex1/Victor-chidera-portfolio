@@ -145,14 +145,14 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
       className="space-y-8"
     >
       {/* Create/Edit Project Card */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-        <h3 className="text-lg font-bold text-white mb-6 flex justify-between items-center">
+      <div className="bg-white border border-brand-line p-6 rounded-2xl">
+        <h3 className="text-lg font-bold font-display text-brand-ink mb-6 flex justify-between items-center">
           <span>{editingProjectId ? "Edit Portfolio Project" : "Add New Portfolio Project"}</span>
           {editingProjectId && (
             <button
               type="button"
               onClick={handleCancelEdit}
-              className="px-3 py-1 bg-slate-800 text-slate-400 hover:text-white rounded text-xs font-mono border border-slate-700"
+              className="px-3 py-1 bg-brand-surface text-brand-muted hover:text-brand-ink rounded text-xs font-mono border border-brand-line"
             >
               Cancel Edit
             </button>
@@ -161,7 +161,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
         <form onSubmit={handleCreateProject} className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Project Title
               </label>
               <input
@@ -169,12 +169,12 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                 value={newProject.title}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, title: e.target.value }))}
                 required
-                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
                 placeholder="KudiFlow Dashboard"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Category Classification
               </label>
               <input
@@ -182,14 +182,14 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                 value={newProject.category}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, category: e.target.value }))}
                 required
-                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
                 placeholder="Fintech & SaaS Platform"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
               Project Description (High Impact overview)
             </label>
             <textarea
@@ -197,14 +197,14 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
               value={newProject.description}
               onChange={(e) => setNewProject((prev) => ({ ...prev, description: e.target.value }))}
               required
-              className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+              className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
               placeholder="Provide a comprehensive high-impact description..."
             ></textarea>
           </div>
 
           {/* Tech Pills Builder */}
           <div>
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
               Technologies Utilized
             </label>
             <div className="flex gap-2 mb-3">
@@ -212,28 +212,28 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                 type="text"
                 value={newProject.techInput}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, techInput: e.target.value }))}
-                className="bg-brand-dark border border-slate-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-brand-orange flex-1"
+                className="bg-white border border-brand-line rounded-lg px-4 py-2 text-brand-ink text-sm focus:outline-none focus:border-brand-ink flex-1"
                 placeholder="e.g. Firebase"
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTechPill())}
               />
               <button
                 type="button"
                 onClick={addTechPill}
-                className="px-4 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-lg text-sm font-semibold hover:bg-brand-orange hover:text-white transition-all"
+                className="px-4 bg-brand-ink/5 border border-brand-line text-brand-ink rounded-lg text-sm font-semibold hover:bg-brand-ink hover:text-white transition-all"
               >
                 Add Pill
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-2 min-h-8 p-3 bg-slate-950 border border-slate-800 rounded-xl">
+            <div className="flex flex-wrap gap-2 min-h-8 p-3 bg-brand-surface border border-brand-line rounded-xl">
               {newProject.tech.length === 0 ? (
-                <span className="text-slate-500 text-xs italic">No tags added yet. Type a technology and click Add Pill.</span>
+                <span className="text-brand-muted text-xs italic">No tags added yet. Type a technology and click Add Pill.</span>
               ) : (
                 newProject.tech.map((t, idx) => (
                   <span
                     key={idx}
                     onClick={() => removeTechPill(t)}
-                    className="px-3 py-1 bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-300 text-xs rounded-full border border-slate-700 cursor-pointer transition-colors"
+                    className="px-3 py-1 bg-white hover:bg-red-500/10 hover:text-red-500 text-brand-muted text-xs rounded-full border border-brand-line cursor-pointer transition-colors"
                   >
                     {t} ×
                   </span>
@@ -244,38 +244,38 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Deployment / Target Link (Optional)
               </label>
               <input
                 type="text"
                 value={newProject.link}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, link: e.target.value }))}
-                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
                 placeholder="https://example.com"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Cover Image / Asset Path (Optional)
               </label>
               <input
                 type="text"
                 value={newProject.image}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, image: e.target.value }))}
-                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
                 placeholder="/assets/images/proj.webp"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Order Priority (e.g. 1 for first)
               </label>
               <input
                 type="number"
                 value={newProject.order}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, order: e.target.value }))}
-                className="w-full bg-brand-dark border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-orange"
+                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
                 placeholder="1"
                 min="1"
               />
@@ -284,7 +284,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
 
           <button
             type="submit"
-            className="px-5 py-3 font-semibold rounded-lg bg-brand-orange hover:bg-orange-600 text-white transition-all text-sm flex items-center gap-2"
+            className="px-5 py-3 font-semibold rounded-lg bg-brand-ink hover:bg-neutral-800 text-white transition-all text-sm flex items-center gap-2"
           >
             {editingProjectId ? (
               <>
@@ -300,40 +300,40 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
       </div>
 
       {/* Existing Projects List */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-        <h3 className="text-lg font-bold text-white mb-6">
+      <div className="bg-white border border-brand-line p-6 rounded-2xl">
+        <h3 className="text-lg font-bold font-display text-brand-ink mb-6">
           Existing Uploaded Projects ({projectsList.length})
         </h3>
 
         {projectsList.length === 0 ? (
-          <p className="text-slate-500 text-sm italic">No dynamic projects found in database. Currently fallback cards are displayed on the Works page.</p>
+          <p className="text-brand-muted text-sm italic">No dynamic projects found in database. Currently fallback cards are displayed on the Works page.</p>
         ) : (
           <>
-            <div className="divide-y divide-slate-800">
+            <div className="divide-y divide-brand-line">
               {currentAdminProjects.map((proj) => (
                 <div key={proj.id} className="py-4 flex justify-between items-center gap-4">
                   <div>
-                    <h5 className="font-bold text-white text-sm flex items-center gap-2">
+                    <h5 className="font-bold text-brand-ink text-sm flex items-center gap-2">
                       {proj.order !== undefined && proj.order !== "" && (
-                        <span className="px-2 py-0.5 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-xs rounded font-mono">
+                        <span className="px-2 py-0.5 bg-brand-ink/5 border border-brand-line text-brand-ink text-xs rounded font-mono">
                           Priority: {proj.order}
                         </span>
                       )}
                       {proj.title}
                     </h5>
-                    <p className="text-slate-400 text-xs mt-1">{proj.category}</p>
+                    <p className="text-brand-muted text-xs mt-1">{proj.category}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleStartEdit(proj)}
-                      className="w-9 h-9 flex items-center justify-center bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-lg hover:bg-brand-orange hover:text-white transition-all"
+                      className="w-9 h-9 flex items-center justify-center bg-brand-ink/5 border border-brand-line text-brand-ink rounded-lg hover:bg-brand-ink hover:text-white transition-all"
                       title="Edit Project"
                     >
                       <Edit2 size={15} />
                     </button>
                     <button
                       onClick={() => handleDeleteProject(proj.id)}
-                      className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg hover:bg-red-500 hover:text-white transition-all"
+                      className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all"
                       title="Delete Project"
                     >
                       <Trash2 size={15} />
@@ -345,11 +345,11 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
 
             {/* Paginator */}
             {totalAdminPages > 1 && (
-              <div className="flex justify-center items-center gap-2 mt-6 pt-6 border-t border-slate-800">
+              <div className="flex justify-center items-center gap-2 mt-6 pt-6 border-t border-brand-line">
                 <button
                   disabled={adminProjectsPage === 1}
                   onClick={() => setAdminProjectsPage((p) => Math.max(p - 1, 1))}
-                  className="px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400 hover:text-white disabled:opacity-40 transition-all"
+                  className="px-3 py-1.5 bg-white border border-brand-line rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-ink disabled:opacity-40 transition-all"
                 >
                   Prev
                 </button>
@@ -359,8 +359,8 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                     onClick={() => setAdminProjectsPage(i + 1)}
                     className={`w-8 h-8 rounded-lg text-xs font-semibold font-mono border transition-all ${
                       adminProjectsPage === i + 1
-                        ? "bg-brand-orange/10 border-brand-orange/30 text-brand-orange font-bold"
-                        : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                        ? "bg-brand-ink border-brand-ink text-white font-bold"
+                        : "bg-white border-brand-line text-brand-muted hover:text-brand-ink"
                     }`}
                   >
                     {i + 1}
@@ -369,7 +369,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                 <button
                   disabled={adminProjectsPage === totalAdminPages}
                   onClick={() => setAdminProjectsPage((p) => Math.min(p + 1, totalAdminPages))}
-                  className="px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400 hover:text-white disabled:opacity-40 transition-all"
+                  className="px-3 py-1.5 bg-white border border-brand-line rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-ink disabled:opacity-40 transition-all"
                 >
                   Next
                 </button>

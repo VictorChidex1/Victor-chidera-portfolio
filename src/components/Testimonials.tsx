@@ -33,7 +33,7 @@ const Testimonials = () => {
   return (
     <section
       id="testimonials"
-      className="py-32 bg-brand-dark border-t border-slate-800"
+      className="py-32 bg-white border-t border-brand-line"
     >
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -45,9 +45,9 @@ const Testimonials = () => {
         >
           <motion.h2
             variants={fadeInUp}
-            className="text-5xl font-bold text-white mb-6"
+            className="text-5xl font-bold font-display text-brand-ink mb-6"
           >
-            KIND <br /> <span className="text-slate-500">WORDS</span>
+            KIND <br /> <span className="text-brand-muted">WORDS</span>
           </motion.h2>
         </motion.div>
 
@@ -59,14 +59,14 @@ const Testimonials = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="bg-slate-900/30 p-8 rounded-2xl border border-slate-800 relative group hover:border-brand-orange/30 transition-colors"
+              className="bg-white p-8 rounded-2xl border border-brand-line relative group hover:border-brand-ink transition-colors"
             >
               <Quote
-                className="absolute top-8 right-8 text-slate-800 group-hover:text-brand-orange/20 transition-colors"
+                className="absolute top-8 right-8 text-slate-200 group-hover:text-brand-ink/20 transition-colors"
                 size={48}
               />
 
-              <p className="text-slate-300 text-lg mb-8 relative z-10 leading-relaxed">
+              <p className="text-brand-muted text-lg mb-8 relative z-10 leading-relaxed">
                 "{testimonial.content}"
               </p>
 
@@ -74,11 +74,11 @@ const Testimonials = () => {
                 <img
                   src={testimonial.image}
                   alt={testimonial.name}
-                  className="w-12 h-12 rounded-full border border-slate-700"
+                  className="w-12 h-12 rounded-full border border-brand-line"
                 />
                 <div>
-                  <h4 className="text-white font-bold">{testimonial.name}</h4>
-                  <p className="text-slate-500 text-sm">{testimonial.role}</p>
+                  <h4 className="text-brand-ink font-bold">{testimonial.name}</h4>
+                  <p className="text-brand-muted text-sm">{testimonial.role}</p>
                 </div>
               </div>
             </motion.div>

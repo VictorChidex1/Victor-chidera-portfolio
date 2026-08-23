@@ -109,8 +109,8 @@ const Admin: React.FC = () => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-brand-dark flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-brand-orange border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-brand-ink border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -132,7 +132,7 @@ const Admin: React.FC = () => {
 
   // Render Main Logged In Workspace
   return (
-    <div className="min-h-screen bg-brand-dark text-slate-200 py-24 pt-32 px-4 md:px-8 animate-fadeIn">
+    <div className="min-h-screen bg-brand-surface text-brand-ink py-24 pt-32 px-4 md:px-8 animate-fadeIn">
       <div className="max-w-7xl mx-auto">
         <AdminHeader email={user.email} />
 

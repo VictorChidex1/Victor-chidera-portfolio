@@ -18,8 +18,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         onClick={() => setActiveTab("overview")}
         className={`w-full p-4 rounded-xl flex items-center gap-3 text-sm font-semibold transition-all border ${
           activeTab === "overview"
-            ? "bg-brand-orange/10 border-brand-orange/30 text-brand-orange"
-            : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+            ? "bg-brand-ink border-brand-ink text-white"
+            : "bg-white border-brand-line text-brand-muted hover:text-brand-ink hover:border-brand-ink"
         }`}
       >
         <Layout size={18} /> Overview Desk
@@ -28,8 +28,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         onClick={() => setActiveTab("projects")}
         className={`w-full p-4 rounded-xl flex items-center gap-3 text-sm font-semibold transition-all border ${
           activeTab === "projects"
-            ? "bg-brand-orange/10 border-brand-orange/30 text-brand-orange"
-            : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+            ? "bg-brand-ink border-brand-ink text-white"
+            : "bg-white border-brand-line text-brand-muted hover:text-brand-ink hover:border-brand-ink"
         }`}
       >
         <PlusCircle size={18} /> Manage Projects
@@ -38,8 +38,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         onClick={() => setActiveTab("blogs")}
         className={`w-full p-4 rounded-xl flex items-center gap-3 text-sm font-semibold transition-all border ${
           activeTab === "blogs"
-            ? "bg-brand-orange/10 border-brand-orange/30 text-brand-orange"
-            : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+            ? "bg-brand-ink border-brand-ink text-white"
+            : "bg-white border-brand-line text-brand-muted hover:text-brand-ink hover:border-brand-ink"
         }`}
       >
         <FileText size={18} /> Manage Blogs
@@ -48,15 +48,15 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         onClick={() => setActiveTab("leads")}
         className={`w-full p-4 rounded-xl flex justify-between items-center text-sm font-semibold transition-all border ${
           activeTab === "leads"
-            ? "bg-brand-orange/10 border-brand-orange/30 text-brand-orange"
-            : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+            ? "bg-brand-ink border-brand-ink text-white"
+            : "bg-white border-brand-line text-brand-muted hover:text-brand-ink hover:border-brand-ink"
         }`}
       >
         <span className="flex items-center gap-3">
           <Mail size={18} /> Inquiries Inbox
         </span>
         {leadsCount > 0 && (
-          <span className="px-2 py-0.5 rounded bg-brand-orange text-white text-xs font-mono">
+          <span className="px-2 py-0.5 rounded bg-brand-ink text-white text-xs font-mono">
             {leadsCount}
           </span>
         )}

@@ -58,7 +58,7 @@ const itemVariants = {
 
 const Skills = () => {
   return (
-    <section className="py-20 bg-brand-dark">
+    <section className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -66,13 +66,13 @@ const Skills = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold font-display text-brand-ink mb-4">
             Technical Skills
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">
+          <p className="text-brand-muted max-w-2xl mx-auto">
             The technologies and tools I use to bring ideas to life.
           </p>
-          <div className="w-20 h-1 bg-brand-orange mx-auto mt-6"></div>
+          <div className="w-20 h-1 bg-brand-ink mx-auto mt-6"></div>
         </motion.div>
 
         <motion.div
@@ -86,19 +86,19 @@ const Skills = () => {
             <motion.div
               key={index}
               variants={itemVariants}
-              className="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-brand-orange/50 transition-colors duration-300"
+              className="bg-white p-6 rounded-xl border border-brand-line hover:border-brand-ink transition-colors duration-300"
             >
-              <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center mb-6 text-brand-orange">
+              <div className="w-12 h-12 bg-brand-surface rounded-lg flex items-center justify-center mb-6 text-brand-ink">
                 <category.icon size={24} />
               </div>
-              <h3 className="text-xl font-bold text-white mb-4">
+              <h3 className="text-xl font-bold font-display text-brand-ink mb-4">
                 {category.category}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, idx) => (
                   <span
                     key={idx}
-                    className="px-3 py-1 bg-brand-dark text-slate-400 text-xs rounded-full border border-slate-700"
+                    className="px-3 py-1 bg-white text-brand-muted text-xs rounded-full border border-brand-line"
                   >
                     {skill}
                   </span>
