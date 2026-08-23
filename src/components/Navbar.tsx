@@ -38,8 +38,8 @@ const Navbar = () => {
           to="/"
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          <img src="/vc-logo.webp" alt="Victor Chidera" className="h-10 w-auto object-contain" />
-          <span className="hidden sm:block text-2xl font-bold font-display text-brand-ink tracking-tighter">
+          <img src="/assets/images/main-victor-chidera-logo.webp" alt="Victor Chidera" className="h-8 md:h-10 w-auto object-contain" />
+          <span className="text-xl md:text-2xl font-bold font-display text-brand-ink tracking-tighter">
             Victor<span className="text-brand-accent">Chidera</span>
           </span>
         </Link>
