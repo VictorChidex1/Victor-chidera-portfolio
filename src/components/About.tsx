@@ -1,26 +1,31 @@
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { fadeInUp, staggerContainer } from "../utils/animations";
+import InfiniteMarquee from "./InfiniteMarquee";
+import Terminal from "./Terminal";
+import NumberCounter from "./NumberCounter";
 
 const About = () => {
   return (
-    <section
-      id="about"
-      className="py-32 bg-brand-surface relative overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="about" className="bg-brand-surface relative overflow-hidden flex flex-col">
+      {/* The Infinite Marquee placed at the very top of the section */}
+      <div className="w-full mt-20 mb-32 z-0">
+        <InfiniteMarquee />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 pb-32 w-full relative z-10">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+          viewport={{ once: true, amount: 0.2 }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center"
         >
           {/* Text Content */}
-          <div>
+          <div className="lg:col-span-5">
             <motion.h2
               variants={fadeInUp}
-              className="text-5xl md:text-7xl font-bold font-display text-brand-ink mb-8 leading-tight"
+              className="text-5xl md:text-7xl font-bold font-display text-brand-ink mb-8 leading-tight tracking-tighter"
             >
               PASSIONATE <br />{" "}
               <span className="text-brand-muted">CREATOR</span>
@@ -52,11 +57,11 @@ const About = () => {
               </p>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="mt-8">
+            <motion.div variants={fadeInUp} className="mt-10">
               <a
                 href="/victor-chidera-full-stack-cv.pdf"
                 download
-                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-ink text-white font-medium rounded-full hover:bg-neutral-800 transition-all"
+                className="magnetic inline-flex items-center gap-2 px-8 py-4 bg-brand-ink text-white font-bold rounded-full hover:bg-brand-accent transition-colors duration-300 shadow-lg"
               >
                 <Download size={20} />
                 Download CV
@@ -65,74 +70,34 @@ const About = () => {
 
             <motion.div
               variants={fadeInUp}
-              className="grid grid-cols-2 gap-8 mt-12"
+              className="grid grid-cols-2 gap-8 mt-16"
             >
               <div>
-                <h4 className="text-5xl font-bold font-display text-brand-ink mb-2">
-                  3+
-                </h4>
-                <p className="text-brand-muted font-medium uppercase tracking-wider text-sm">
+                <NumberCounter 
+                  end={3} 
+                  suffix="+" 
+                  className="text-5xl md:text-6xl font-bold font-display text-brand-ink block mb-2" 
+                />
+                <p className="text-brand-muted font-bold uppercase tracking-widest text-xs">
                   Years Exp.
                 </p>
               </div>
               <div>
-                <h4 className="text-5xl font-bold font-display text-brand-ink mb-2">
-                  10+
-                </h4>
-                <p className="text-brand-muted font-medium uppercase tracking-wider text-sm">
+                <NumberCounter 
+                  end={10} 
+                  suffix="+" 
+                  className="text-5xl md:text-6xl font-bold font-display text-brand-ink block mb-2" 
+                />
+                <p className="text-brand-muted font-bold uppercase tracking-widest text-xs">
                   Projects
                 </p>
               </div>
             </motion.div>
           </div>
 
-          {/* Decorative Visual */}
-          <motion.div variants={fadeInUp} className="relative mt-16 lg:mt-0">
-            <div className="relative bg-white p-10 rounded-3xl border border-brand-line">
-              <code className="text-sm md:text-base text-slate-700 font-mono">
-                <span className="text-slate-500">const</span>{" "}
-                <span className="text-brand-ink">developer</span> = {"{"} <br />
-                &nbsp;&nbsp;name:{" "}
-                <span className="text-slate-600">'Victor Chidera'</span>,<br />
-                &nbsp;&nbsp;role:{" "}
-                <span className="text-slate-600">'Fullstack Dev'</span>,<br />
-                &nbsp;&nbsp;skills: [
-                <span className="text-slate-600">'React'</span>,{" "}
-                <span className="text-slate-600">'Firebase'</span>,
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-slate-600">'Next.js'</span>,
-                <span className="text-slate-600">'PostgreSQL'</span>,
-                <span className="text-slate-600">'Tailwind'</span>],
-                <br />
-                &nbsp;&nbsp;backend: [
-                <span className="text-slate-600">'Firebase Auth'</span>,{" "}
-                <span className="text-slate-600">'Firestore'</span>,
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-slate-600">'Security Rules'</span>,{" "}
-                <span className="text-slate-600">'Cloud Functions'</span>],
-                <br />
-                &nbsp;&nbsp;tools: [
-                <span className="text-slate-600">'Git'</span>,{" "}
-                <span className="text-slate-600">'GitHub'</span>,{" "}
-                <span className="text-slate-600">'Vercel'</span>,{" "}
-                <span className="text-slate-600">'REST API'</span>],
-                <br />
-                &nbsp;&nbsp;competencies: [
-                <span className="text-slate-600">'AI Integration'</span>,{" "}
-                <span className="text-slate-600">'SaaS Arch'</span>,
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="text-slate-600">'API Security'</span>],
-                <br />
-                &nbsp;&nbsp;hardWorker:{" "}
-                <span className="text-brand-accent">true</span>,<br />
-                &nbsp;&nbsp;quickLearner:{" "}
-                <span className="text-brand-accent">true</span>,
-                <br />
-                {"}"};
-              </code>
-            </div>
+          {/* Decorative Visual (Dynamic Terminal) */}
+          <motion.div variants={fadeInUp} className="relative mt-16 lg:mt-0 lg:col-span-7">
+            <Terminal />
           </motion.div>
         </motion.div>
       </div>
