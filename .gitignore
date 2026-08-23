@@ -29,3 +29,6 @@ dist-ssr
 .env.production
 .env.development
 .env.*.local
+
+# Private Documentation
+Project explanations/
