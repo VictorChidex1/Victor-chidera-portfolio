@@ -1,11 +1,12 @@
-import { useState, useEffect  } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,10 +25,14 @@ const Navbar = () => {
     { name: "Contact", path: "/contact" },
   ];
 
+  // Force white background on pages with dark top sections
+  const forceWhiteBgPages = ["/works", "/testimonials"];
+  const isForceWhite = forceWhiteBgPages.includes(location.pathname);
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled
+        scrolled || isForceWhite
           ? "bg-white/90 backdrop-blur-md py-4 border-b border-brand-line"
           : "bg-transparent py-6"
       }`}

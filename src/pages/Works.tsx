@@ -144,17 +144,17 @@ const ProjectAccordionItem = ({
   const shortTitle = project.title.split(':')[0];
 
   return (
-    <div className="border-b border-white/10 overflow-hidden">
+    <div className="border-b border-neutral-200 overflow-hidden">
       {/* Header Strip */}
       <button 
         onClick={onClick}
         className="w-full flex flex-col md:flex-row md:items-center justify-between py-8 md:py-12 group text-left outline-none"
       >
         <div className="flex items-center gap-6 md:gap-12">
-          <span className={`text-xl md:text-2xl font-medium font-mono transition-colors duration-300 ${isActive ? 'text-brand-accent' : 'text-white/30 group-hover:text-brand-accent'}`}>
+          <span className={`text-xl md:text-2xl font-medium font-mono transition-colors duration-300 ${isActive ? 'text-brand-accent' : 'text-neutral-400 group-hover:text-brand-accent'}`}>
             {String(index).padStart(2, '0')}
           </span>
-          <h3 className={`text-4xl md:text-5xl lg:text-7xl font-bold font-display tracking-tight transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/50 group-hover:text-white/80'}`}>
+          <h3 className={`text-4xl md:text-5xl lg:text-7xl font-bold font-display tracking-tight transition-colors duration-300 ${isActive ? 'text-brand-ink' : 'text-neutral-400 group-hover:text-brand-ink/80'}`}>
             {shortTitle}
           </h3>
         </div>
@@ -164,9 +164,9 @@ const ProjectAccordionItem = ({
             {project.category}
           </span>
           
-          <div className={`w-12 h-12 shrink-0 rounded-full border flex items-center justify-center transition-all duration-300 ${isActive ? 'bg-brand-accent border-brand-accent' : 'border-white/10 bg-white/5 group-hover:bg-white/10'}`}>
+          <div className={`w-12 h-12 shrink-0 rounded-full border flex items-center justify-center transition-all duration-300 ${isActive ? 'bg-brand-accent border-brand-accent text-white' : 'border-neutral-200 bg-neutral-50 group-hover:bg-neutral-100 text-brand-ink'}`}>
              <motion.div animate={{ rotate: isActive ? 135 : 0 }} transition={{ duration: 0.3, ease: "easeOut" }}>
-               <Plus size={24} className="text-white" />
+               <Plus size={24} className="currentColor" />
              </motion.div>
           </div>
         </div>
@@ -197,15 +197,15 @@ const ProjectAccordionItem = ({
               
               <div className="flex flex-col xl:flex-row justify-between gap-8 items-start xl:items-end">
                 <div className="max-w-4xl">
-                  <h4 className="text-2xl md:text-3xl text-white font-display font-bold mb-6 tracking-tight">
+                  <h4 className="text-2xl md:text-3xl text-brand-ink font-display font-bold mb-6 tracking-tight">
                     {project.title}
                   </h4>
-                  <p className="text-white/70 text-lg md:text-xl leading-relaxed mb-10 font-medium">
+                  <p className="text-neutral-600 text-lg md:text-xl leading-relaxed mb-10 font-medium">
                     {project.description}
                   </p>
                   <div className="flex flex-wrap gap-2 md:gap-3">
                     {project.tech.map((t, i) => (
-                      <span key={i} className="px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 text-white/90 text-sm rounded-full font-medium">
+                      <span key={i} className="px-4 py-2 bg-neutral-100 border border-neutral-200 text-neutral-800 text-sm rounded-full font-medium">
                         {t}
                       </span>
                     ))}
@@ -216,7 +216,7 @@ const ProjectAccordionItem = ({
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group/btn inline-flex items-center gap-3 bg-white text-[#0d1117] px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-colors shrink-0 mt-8 xl:mt-0"
+                  className="group/btn inline-flex items-center gap-3 bg-brand-ink text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-neutral-800 transition-colors shrink-0 mt-8 xl:mt-0"
                 >
                   Explore Project 
                   <ExternalLink size={20} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
@@ -231,20 +231,34 @@ const ProjectAccordionItem = ({
   );
 };
 
+const PROJECTS_PER_PAGE = 10;
+
 const Works = () => {
   const { projects: liveProjects } = useProjects();
   const displayProjects = liveProjects.length > 0 ? liveProjects : projects;
   
   // Keep track of which accordion is open. Default to the first one open.
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(displayProjects.length / PROJECTS_PER_PAGE);
+
+  // Slice projects for the current page
+  const startIndex = (currentPage - 1) * PROJECTS_PER_PAGE;
+  const paginatedProjects = displayProjects.slice(startIndex, startIndex + PROJECTS_PER_PAGE);
 
   const handleToggle = (index: number) => {
-    // If clicking the already active one, close it. Otherwise, open the new one.
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    setActiveIndex(0); // Open the first accordion on the new page
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <main className="bg-[#0d1117] min-h-screen pt-32 pb-32 selection:bg-brand-accent selection:text-white">
+    <main className="bg-white min-h-screen pt-32 pb-32 selection:bg-brand-accent selection:text-white">
       <div className="max-w-[90%] mx-auto">
         
         {/* Page Header */}
@@ -257,26 +271,64 @@ const Works = () => {
           <span className="text-brand-accent font-bold tracking-widest uppercase mb-4 block">
             Portfolio Showcase
           </span>
-          <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold font-display text-white tracking-tighter mb-6 leading-none">
-            Selected <span className="text-white/30 italic">Works</span>
+          <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold font-display text-brand-ink tracking-tighter mb-6 leading-none">
+            Selected <span className="text-neutral-300 italic">Works</span>
           </h1>
-          <p className="text-white/50 text-xl md:text-2xl font-medium max-w-3xl mt-8">
+          <p className="text-neutral-500 text-xl md:text-2xl font-medium max-w-3xl mt-8">
             An architectural breakdown of production-grade platforms, immersive interfaces, and scalable applications.
           </p>
         </motion.div>
 
         {/* Minimalist Expandable Accordion List */}
-        <div className="flex flex-col w-full border-t border-white/10">
-          {displayProjects.map((project, index) => (
+        <div className="flex flex-col w-full border-t border-neutral-200">
+          {paginatedProjects.map((project, index) => (
             <ProjectAccordionItem 
               key={project.id} 
               project={project} 
-              index={index + 1} 
+              index={startIndex + index + 1} 
               isActive={activeIndex === index}
               onClick={() => handleToggle(index)}
             />
           ))}
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-3 mt-20">
+            {/* Previous Button */}
+            <button
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-5 py-3 rounded-full text-sm font-bold uppercase tracking-widest border border-neutral-200 text-brand-ink hover:bg-neutral-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Prev
+            </button>
+
+            {/* Page Numbers */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => goToPage(page)}
+                className={`w-12 h-12 rounded-full text-sm font-bold transition-all duration-300 ${
+                  currentPage === page
+                    ? "bg-brand-ink text-white scale-110"
+                    : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            {/* Next Button */}
+            <button
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-5 py-3 rounded-full text-sm font-bold uppercase tracking-widest border border-neutral-200 text-brand-ink hover:bg-neutral-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        )}
 
       </div>
     </main>
@@ -284,3 +336,4 @@ const Works = () => {
 };
 
 export default Works;
+
