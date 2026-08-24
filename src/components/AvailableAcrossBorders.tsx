@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   ComposableMap,
   Geographies,
   Geography,
   Line,
   Marker,
-  Graticule,
 } from "react-simple-maps";
 import { fadeInUp, staggerContainer } from "../utils/animations";
 
@@ -23,11 +22,37 @@ const countries = [
 const nigeriaCoords = countries[0].coordinates;
 
 const AvailableAcrossBorders = () => {
-  const [isMounted, setIsMounted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  // Parallax Mouse Tracking
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+
+  const springConfig = { damping: 30, stiffness: 100, mass: 1.5 };
+  const smoothMouseX = useSpring(mouseX, springConfig);
+  const smoothMouseY = useSpring(mouseY, springConfig);
+
+  // Map mouse position to 3D rotation (-8deg to +8deg)
+  const rotateX = useTransform(smoothMouseY, [0, 1], [8, -8]);
+  const rotateY = useTransform(smoothMouseX, [0, 1], [-8, 8]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    
+    // Calculate normalized mouse position (0 to 1)
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    // Reset to center on leave
+    mouseX.set(0.5);
+    mouseY.set(0.5);
+  };
 
   return (
     <section className="py-32 bg-transparent relative overflow-hidden">
@@ -68,78 +93,66 @@ const AvailableAcrossBorders = () => {
             </motion.div>
           </div>
 
-          {/* White Card matching the Reference Design */}
+          {/* Interactive Parallax Canvas */}
           <motion.div
             variants={fadeInUp}
-            className="relative bg-[#fbfcfd] rounded-[40px] border border-slate-200 overflow-hidden p-6 md:p-12 shadow-2xl"
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ perspective: 2000 }} // Deep perspective for the 3D effect
+            className="relative bg-[#f8fafc] rounded-[40px] border border-slate-200 p-6 md:p-12 shadow-sm flex flex-col md:flex-row items-center justify-between overflow-visible"
           >
-            {/* The Map */}
-            <div className="relative w-full aspect-[16/9] max-h-[600px]">
-              {isMounted && (
+            {/* Informational overlay (Top Left) */}
+            <div className="absolute top-12 left-12 z-20 hidden md:block pointer-events-none">
+               <h3 className="text-3xl font-bold font-display text-brand-ink mb-2">
+                 Global Reach,<br/>Local Precision.
+               </h3>
+               <div className="flex items-center gap-3 mt-4">
+                 <div className="w-2.5 h-2.5 rounded-full bg-brand-accent animate-pulse" />
+                 <span className="text-brand-ink text-sm font-medium tracking-wide">Operating from Lagos, NG (GMT+1)</span>
+               </div>
+            </div>
+
+            {/* The 3D Map Layer */}
+            <motion.div 
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+              }}
+              className="w-full relative z-10 aspect-[16/9] max-h-[600px] flex items-center justify-center cursor-crosshair"
+            >
+              {/* CSS Drop shadow on the entire map container instead of SVG filters guarantees 120fps on Safari */}
+              <div className="w-full h-full" style={{ filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.05))" }}>
                 <ComposableMap
                   projection="geoMercator"
                   projectionConfig={{
-                    scale: 130,
-                    center: [0, 30], // Center to show NA, Europe, Africa nicely
+                    scale: 140,
+                    center: [0, 30], 
                   }}
-                  style={{ width: "100%", height: "100%" }}
+                  style={{ width: "100%", height: "100%", outline: "none" }}
                 >
-                  {/* Definition for Emboss & Drop Shadow Filters */}
-                  <defs>
-                    <filter id="emboss" x="-20%" y="-20%" width="140%" height="140%">
-                      {/* Drop shadow */}
-                      <feDropShadow
-                        dx="2"
-                        dy="4"
-                        stdDeviation="4"
-                        floodColor="#cbd5e1"
-                        floodOpacity="0.8"
-                      />
-                      {/* Inner highlight (top-left) */}
-                      <feOffset dx="-1" dy="-1" in="SourceAlpha" result="offsetAlpha1" />
-                      <feGaussianBlur stdDeviation="1" in="offsetAlpha1" result="blur1" />
-                      <feComposite operator="out" in2="blur1" in="SourceAlpha" result="inverse1" />
-                      <feFlood floodColor="#ffffff" floodOpacity="1" result="color1" />
-                      <feComposite operator="in" in2="inverse1" in="color1" result="highlight" />
-                      
-                      {/* Inner shadow (bottom-right) */}
-                      <feOffset dx="2" dy="2" in="SourceAlpha" result="offsetAlpha2" />
-                      <feGaussianBlur stdDeviation="2" in="offsetAlpha2" result="blur2" />
-                      <feComposite operator="out" in2="blur2" in="SourceAlpha" result="inverse2" />
-                      <feFlood floodColor="#94a3b8" floodOpacity="0.4" result="color2" />
-                      <feComposite operator="in" in2="inverse2" in="color2" result="shadow" />
-                      
-                      {/* Combine everything */}
-                      <feMerge>
-                        <feMergeNode in="SourceGraphic" />
-                        <feMergeNode in="highlight" />
-                        <feMergeNode in="shadow" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-
-                  <Graticule stroke="#e2e8f0" strokeWidth={0.5} strokeDasharray="4 4" />
-
+                  {/* Flawless, flat rendering of the landmasses */}
                   <Geographies geography={geoUrl}>
                     {({ geographies }) =>
                       geographies.map((geo) => (
                         <Geography
                           key={geo.rsmKey}
                           geography={geo}
-                          fill="#f8fafc"
-                          stroke="#f8fafc"
+                          fill="#e2e8f0" // Clean slate grey
+                          stroke="#ffffff"
                           strokeWidth={0.5}
                           style={{
-                            default: { outline: "none", filter: "url(#emboss)" },
-                            hover: { outline: "none", filter: "url(#emboss)" },
-                            pressed: { outline: "none", filter: "url(#emboss)" },
+                            default: { outline: "none" },
+                            hover: { outline: "none", fill: "#cbd5e1", transition: "all 0.3s" },
+                            pressed: { outline: "none" },
                           }}
                         />
                       ))
                     }
                   </Geographies>
 
-                  {/* Connection Lines */}
+                  {/* Animated Connection Lines */}
                   {countries
                     .filter((c) => !c.isHome)
                     .map((country, idx) => (
@@ -147,53 +160,48 @@ const AvailableAcrossBorders = () => {
                         key={`line-${country.name}`}
                         from={nigeriaCoords as [number, number]}
                         to={country.coordinates as [number, number]}
-                        stroke="#111111"
+                        stroke="#94a3b8"
                         strokeWidth={1.5}
                         strokeLinecap="round"
-                        strokeDasharray="6 6"
+                        strokeDasharray="4 4"
                         style={{
-                          opacity: 0,
-                          animation: `draw-line 2s ease-out ${1 + idx * 0.3}s forwards`,
+                          opacity: 0.6,
                         }}
                       />
                     ))}
 
-                  {/* Pins & Labels */}
-                  {countries.map((country, idx) => (
+                  {/* Location Pins & Tooltips */}
+                  {countries.map((country) => (
                     <Marker
                       key={`marker-${country.name}`}
                       coordinates={country.coordinates as [number, number]}
                     >
-                      <g
-                        style={{
-                          opacity: 0,
-                          animation: `fade-in-up 0.5s ease-out ${0.5 + idx * 0.2}s forwards`,
-                        }}
-                      >
+                      <g className="group cursor-pointer">
                         {/* Outer Glow Ring */}
                         <circle
                           r={12}
-                          fill={country.isHome ? "rgba(249,115,22,0.15)" : "rgba(17,17,17,0.10)"}
+                          fill={country.isHome ? "rgba(249,115,22,0.15)" : "rgba(15, 23, 42, 0.10)"}
                           className="origin-center animate-ping"
                         />
-                        {/* Inner Dot */}
+                        {/* Inner Solid Dot */}
                         <circle
                           r={4}
-                          fill={country.isHome ? "#F97316" : "#111111"}
+                          fill={country.isHome ? "#F97316" : "#0f172a"}
                           stroke="#ffffff"
                           strokeWidth={1.5}
+                          className="transition-transform duration-300 group-hover:scale-150"
                         />
-
-                        {/* Beautiful Floating Label matching reference */}
+                        {/* Beautiful Floating Tooltip */}
                         <foreignObject
-                          x={12}
+                          x={10}
                           y={-14}
-                          width={140}
+                          width={160}
                           height={40}
                           style={{ overflow: "visible" }}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         >
-                          <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md border border-slate-200/60 shadow-lg rounded-full px-2.5 py-1 w-max">
-                            <span className="text-xs">{country.flag}</span>
+                          <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl rounded-full px-3 py-1.5 w-max transform -translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                            <span className="text-sm">{country.flag}</span>
                             <span className="text-xs font-semibold text-slate-800">
                               {country.name}
                             </span>
@@ -208,24 +216,11 @@ const AvailableAcrossBorders = () => {
                     </Marker>
                   ))}
                 </ComposableMap>
-              )}
-            </div>
-
-            {/* Injected CSS for SVG animations since SVG paths can't use standard Tailwind variants easily for stroke-dashoffset drawing */}
-            <style>{`
-              @keyframes draw-line {
-                0% { stroke-dashoffset: 100; opacity: 0; }
-                10% { opacity: 1; }
-                100% { stroke-dashoffset: 0; opacity: 0.5; }
-              }
-              @keyframes fade-in-up {
-                0% { opacity: 0; transform: translateY(10px); }
-                100% { opacity: 1; transform: translateY(0); }
-              }
-            `}</style>
+              </div>
+            </motion.div>
           </motion.div>
 
-          {/* Country Cards (Updated to Light Mode) */}
+          {/* Country Cards (For Mobile / Backup) */}
           <motion.div
             variants={staggerContainer}
             initial="hidden"
@@ -250,19 +245,6 @@ const AvailableAcrossBorders = () => {
                     </span>
                   )}
                 </div>
-                <svg
-                  className="w-4 h-4 text-slate-400 group-hover:text-brand-ink transition-colors"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7 17L17 7M17 7H7M17 7V17"
-                  />
-                </svg>
               </motion.div>
             ))}
           </motion.div>
