@@ -13,13 +13,13 @@ import { fadeInUp, staggerContainer } from "../utils/animations";
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 const countries = [
-  { name: "Nigeria", flag: "🇳🇬", isHome: true, coordinates: [8.6753, 9.082] }, // [longitude, latitude]
-  { name: "United States", flag: "🇺🇸", isHome: false, coordinates: [-95.7129, 37.0902] },
-  { name: "United Kingdom", flag: "🇬🇧", isHome: false, coordinates: [-3.436, 55.3781] },
-  { name: "Canada", flag: "🇨🇦", isHome: false, coordinates: [-106.3468, 56.1304] },
+  { name: "Nigeria", flag: "🇳🇬", isBase: true, coordinates: [8.6753, 9.082] }, // [longitude, latitude]
+  { name: "United States", flag: "🇺🇸", isBase: false, coordinates: [-95.7129, 37.0902] },
+  { name: "United Kingdom", flag: "🇬🇧", isBase: false, coordinates: [-3.436, 55.3781] },
+  { name: "Canada", flag: "🇨🇦", isBase: false, coordinates: [-106.3468, 56.1304] },
 ];
 
-const nigeriaCoords = countries[0].coordinates;
+const baseCoords = countries[0].coordinates;
 
 const AvailableAcrossBorders = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -109,7 +109,7 @@ const AvailableAcrossBorders = () => {
                </h3>
                <div className="flex items-center gap-3 mt-4">
                  <div className="w-2.5 h-2.5 rounded-full bg-brand-accent animate-pulse" />
-                 <span className="text-brand-ink text-sm font-medium tracking-wide">Operating from Lagos, NG (GMT+1)</span>
+                 <span className="text-brand-ink text-sm font-medium tracking-wide">Available across GMT-8 to GMT+1</span>
                </div>
             </div>
 
@@ -154,11 +154,11 @@ const AvailableAcrossBorders = () => {
 
                   {/* Animated Connection Lines */}
                   {countries
-                    .filter((c) => !c.isHome)
+                    .filter((c) => !c.isBase)
                     .map((country, idx) => (
                       <Line
                         key={`line-${country.name}`}
-                        from={nigeriaCoords as [number, number]}
+                        from={baseCoords as [number, number]}
                         to={country.coordinates as [number, number]}
                         stroke="#94a3b8"
                         strokeWidth={1.5}
@@ -180,13 +180,13 @@ const AvailableAcrossBorders = () => {
                         {/* Outer Glow Ring */}
                         <circle
                           r={12}
-                          fill={country.isHome ? "rgba(249,115,22,0.15)" : "rgba(15, 23, 42, 0.10)"}
+                          fill={country.isBase ? "rgba(249,115,22,0.15)" : "rgba(15, 23, 42, 0.10)"}
                           className="origin-center animate-ping"
                         />
                         {/* Inner Solid Dot */}
                         <circle
                           r={4}
-                          fill={country.isHome ? "#F97316" : "#0f172a"}
+                          fill={country.isBase ? "#F97316" : "#0f172a"}
                           stroke="#ffffff"
                           strokeWidth={1.5}
                           className="transition-transform duration-300 group-hover:scale-150"
@@ -205,11 +205,7 @@ const AvailableAcrossBorders = () => {
                             <span className="text-xs font-semibold text-slate-800">
                               {country.name}
                             </span>
-                            {country.isHome && (
-                              <span className="text-[9px] bg-brand-ink/5 text-brand-ink px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
-                                Home
-                              </span>
-                            )}
+
                           </div>
                         </foreignObject>
                       </g>
@@ -239,11 +235,7 @@ const AvailableAcrossBorders = () => {
                   <span className="text-sm md:text-base text-slate-800 font-semibold">
                     {country.name}
                   </span>
-                  {country.isHome && (
-                    <span className="text-[10px] bg-brand-ink/5 text-brand-ink px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
-                      Home
-                    </span>
-                  )}
+
                 </div>
               </motion.div>
             ))}

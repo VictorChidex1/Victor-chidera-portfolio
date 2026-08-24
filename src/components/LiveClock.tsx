@@ -30,7 +30,7 @@ const LiveClock = () => {
       <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wider mb-2">Local Time</h3>
       <div className="mt-auto">
         <p className="text-xl md:text-2xl font-bold font-display text-brand-ink tracking-tight">
-          Lagos, NG
+          GMT+1
         </p>
         <p className="text-lg md:text-xl text-brand-accent font-medium">
           {time || 'Loading...'}
