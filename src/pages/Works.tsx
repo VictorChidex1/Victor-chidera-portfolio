@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { ExternalLink, Code } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import WebGLImageHover from "../components/WebGLImageHover";
 import { useProjects } from "../hooks/useFirebaseData";
 
+// Assets
 const foodflowImg = "/assets/images/foodflow.webp";
 const eventflow = "/assets/images/eventflow.webp";
 const healthpoint = "/assets/images/healthpoint.webp";
@@ -22,17 +22,8 @@ export const projects = [
     title: "KudiFlow: The Offline-First App for Smart Vendors",
     category: "Fintech & Offline-First B2B SaaS",
     description:
-      "An offline-first business operating system engineered to digitize retail shops and market vendors. Built with a robust React and Firebase architecture, the platform transitions users from traditional paper ledgers to secure, cloud-backed inventory and debtor management. Features include a fully automated serverless email onboarding pipeline (Resend), custom-routed Firebase authentication flows, automated WhatsApp reminders, and build-time SEO prerendering for a dynamic in-house content management system.",
-    tech: [
-      "React",
-      "Firebase (Firestore DB/Auth)",
-      "Tailwind CSS",
-      "TypeScript",
-      "Framer Motion",
-      "Zustand (State)",
-      "Resend API",
-      "React Helmet (SEO)",
-    ],
+      "An offline-first business operating system engineered to digitize retail shops and market vendors. Built with a robust React and Firebase architecture, the platform transitions users from traditional paper ledgers to secure, cloud-backed inventory and debtor management.",
+    tech: ["React", "Firebase", "Tailwind CSS", "TypeScript", "Framer Motion", "Zustand"],
     link: "https://kudiflow.vercel.app/",
     image: kudiflow,
   },
@@ -41,33 +32,18 @@ export const projects = [
     title: "Oxygen Health Systems: Premium Landing Page",
     category: "Health Tech & Lead Generation",
     description:
-      "A high-converting, custom-coded landing page engineered for a US-based health technology brand. Features a premium UI/UX architecture, seamless video integrations, and direct GoHighLevel (CRM) webhook connections to streamline lead generation and pricing requests.",
-    tech: [
-      "React",
-      "Firebase (Hosting)",
-      "Tailwind CSS",
-      "GoHighLevel (Webhooks)",
-      "Framer Motion",
-    ],
+      "A high-converting, custom-coded landing page engineered for a US-based health technology brand. Features a premium UI/UX architecture, seamless video integrations, and direct GoHighLevel (CRM) webhook connections.",
+    tech: ["React", "Firebase", "Tailwind CSS", "GoHighLevel", "Framer Motion"],
     link: "https://oxygen-health.vercel.app/",
     image: oxygenHealth,
   },
   {
     id: 3,
-    title: "House of Anna: Digital Atelier & Luxury Fashion Portfolio",
-    category: "Bespoke Fashion, High-End Portfolio & Lead Generation",
+    title: "House of Anna: Digital Atelier",
+    category: "Bespoke Fashion & Luxury Portfolio",
     description:
-      "A luxury digital atelier engineered for an elite custom fashion designer and tailor. Designed to transition a traditional physical brand identity into a highly editorial, premium web experience. Built with a performant, non-Next.js serverless architecture, the platform features an automated image optimization pipeline using Firebase Extensions to serve high-fidelity, fluid layout assets instantly. It includes filterable masonry lookbook grids, asynchronous multi-step bespoke inquiry models, full Firebase administrative controls, and an automated lead routing system powered by the Resend API.",
-    tech: [
-      "React (Vite)",
-      "Firebase (Firestore DB/Auth/Hosting)",
-      "Tailwind CSS v4",
-      "TypeScript",
-      "Framer Motion",
-      "Resend API",
-      "Vercel (Deployment)",
-      "puppeteer",
-    ],
+      "A luxury digital atelier engineered for an elite custom fashion designer. Built with a performant serverless architecture, it features an automated image optimization pipeline and asynchronous multi-step bespoke inquiry models.",
+    tech: ["React", "Firebase", "Tailwind CSS", "TypeScript", "Framer Motion", "Resend API"],
     link: "https://house-of-anna.vercel.app/",
     image: houseOfAnna,
   },
@@ -76,17 +52,8 @@ export const projects = [
     title: "Novluma AI: Content Orchestration SaaS",
     category: "Generative AI Platform & B2B SaaS",
     description:
-      "A production-ready AI content workspace built with React and Google Gemini. Features a custom credit-based consumption model, real-time content generation streams, and a secure serverless architecture (Firebase) for managing user authentication and data persistence.",
-    tech: [
-      "React",
-      "Firebase (Firestore DB/Auth)",
-      "Tailwind CSS",
-      "TypeScript",
-      "Framer Motion",
-      "Zustand (State)",
-      "Google Gemini API (AI)",
-      "Vercel (Deployment)",
-    ],
+      "A production-ready AI content workspace built with React and Google Gemini. Features a custom credit-based consumption model, real-time content generation streams, and a secure serverless architecture.",
+    tech: ["React", "Firebase", "Tailwind CSS", "TypeScript", "Framer Motion", "Google Gemini API"],
     link: "https://novluma-saas.vercel.app/",
     image: novluma,
   },
@@ -95,273 +62,169 @@ export const projects = [
     title: "VeraVox AI: Automated Reputation Engine",
     category: "Serverless Micro-SaaS & AI Automation",
     description:
-      "A production-grade reputation management platform engineered with a serverless architecture. Leverages Google Gemini AI to analyze customer sentiment and generate context-aware, persona-driven responses. Features an automated workflow engine that detects reputation risks and drafts strategic recovery responses in real-time, eliminating manual intervention for local business owners.",
-    tech: [
-      "React",
-      "Firebase (Firestore DB/Auth)",
-      "Tailwind CSS",
-      "TypeScript",
-      "Framer Motion",
-      "Zustand (State)",
-      "Google Gemini API (AI)",
-      "Vercel (Deployment)",
-    ],
+      "A production-grade reputation management platform engineered with a serverless architecture. Leverages Google Gemini AI to analyze customer sentiment and generate context-aware, persona-driven responses.",
+    tech: ["React", "Firebase", "Tailwind CSS", "TypeScript", "Framer Motion", "Google Gemini API"],
     link: "https://vevavox-ai.vercel.app/",
     image: veravox,
   },
   {
     id: 6,
     title: "Raploard official Website",
-    category: "Artist Portfolio Website for bookings and contact",
+    category: "Artist Portfolio & Bookings",
     description:
       "A high-performance artist portfolio designed to showcase music, tour dates, and facilitate bookings. Features a sleek, immersive media player and direct contact integration.",
-    tech: [
-      "React",
-      "Firebase (Firestore DB/Auth)",
-      "Tailwind CSS",
-      "TypeScript",
-      "Framer Motion",
-      "Zustand (State)",
-      "Vercel (Deployment)",
-    ],
+    tech: ["React", "Firebase", "Tailwind CSS", "TypeScript", "Framer Motion"],
     link: "https://raploard-web.vercel.app/",
     image: raploard,
   },
   {
     id: 7,
-    title: "Kelvin's Grid: Serverless Solar Utility Platform",
-    category: "Renewable Energy CRM & Customer Portal (SaaS)",
+    title: "Kelvin's Grid: Serverless Solar Platform",
+    category: "Renewable Energy CRM",
     description:
-      "A production-grade serverless application for a Nigerian energy infrastructure firm. Engineered a ‘God Mode’ admin dashboard for real-time asset tracking and client management using Firebase. Features a high-performance, physics-based UI (Framer Motion) optimized for mobile Safari with 0ms blocking navigation and render-slicing strategies.",
-    tech: [
-      "React",
-      "Firebase (Firestore DB/Auth)",
-      "Tailwind CSS",
-      "TypeScript",
-      "Framer Motion",
-      "Zustand (State)",
-      "Vercel (Deployment)",
-    ],
+      "A production-grade serverless application for a Nigerian energy infrastructure firm. Engineered a ‘God Mode’ admin dashboard for real-time asset tracking and client management.",
+    tech: ["React", "Firebase", "Tailwind CSS", "TypeScript", "Framer Motion"],
     link: "https://kelvins-grid.vercel.app/",
     image: kelvinsGrid,
   },
   {
     id: 8,
     title: "The CanMan: Operations & Recruitment Platform",
-    category: "Service Business Management System (SaaS)",
+    category: "Service Business Management SaaS",
     description:
-      "A scalable web platform built for a premier DFW home service provider. Integrated a high-conversion public recruitment portal with a custom internal 'Mission Control' dashboard. Features automated applicant filtering, real-time booking logistics, and a responsive, brand-aligned UI designed to streamline the hiring and scheduling pipeline.",
-    tech: [
-      "React",
-      "Firebase (Firestore/Functions)",
-      "Tailwind CSS",
-      "TypeScript",
-      "React Hook Form",
-      "Framer Motion",
-      "Vercel",
-    ],
+      "A scalable web platform built for a premier DFW home service provider. Integrated a high-conversion public recruitment portal with a custom internal 'Mission Control' dashboard.",
+    tech: ["React", "Firebase", "Tailwind CSS", "TypeScript", "Framer Motion"],
     link: "https://canmancan.com/careers/",
     image: canManHero,
   },
   {
     id: 9,
-    title: "EventFlow: Event Booking & Management Platform",
-    category: "Advanced React Architecture & E-commerce Simulation",
+    title: "EventFlow: Event Booking Platform",
+    category: "Advanced React Architecture",
     description:
-      "A complete event ticketing platform simulation engineered entirely on the frontend. Features a fully functional booking flow where users can browse events, simulate purchases via a mock Paystack integration, and manage their booked tickets in a personal dashboard. Utilizes advanced client-side state management to persist user data and transaction history without a backend connection.",
-    tech: [
-      "React",
-      "Tailwind CSS",
-      "TypeScript",
-      "Vercel (Deployment)",
-      "Context API (Global State Store)",
-      "Zustand (State Management)",
-      "Mock Paystack Implementation",
-      "Framer Motion (for Smooth Animations)",
-    ],
+      "A complete event ticketing platform simulation engineered entirely on the frontend. Features a fully functional booking flow where users can browse events and simulate purchases.",
+    tech: ["React", "Tailwind CSS", "TypeScript", "Zustand", "Mock Paystack"],
     link: "https://eventflow-neon.vercel.app/#/",
     image: eventflow,
   },
   {
     id: 10,
     title: "HealthPoint: Hospital Management System",
-    category: "Advanced Healthcare UI & Workflow Simulation",
+    category: "Advanced Healthcare UI",
     description:
-      "A dual-portal frontend application simulating the complete patient-doctor lifecycle. I engineered distinct interfaces for Patients (finding specialists, checking availability, booking slots) and Doctors (admin dashboard for reviewing and accepting requests). The app utilizes complex client-side state management to mock real-time status updates, demonstrating the logic of a production-grade medical platform.",
-    tech: [
-      "React",
-      "Tailwind CSS",
-      "TypeScript",
-      "Vercel (Deployment)",
-      "Context API (Global State Store)",
-      "React Router (for Role-Based Routing)",
-      "Zustand (State Management)",
-      "Framer Motion (for Smooth Animations)",
-    ],
+      "A dual-portal frontend application simulating the complete patient-doctor lifecycle. I engineered distinct interfaces for Patients and Doctors, utilizing complex client-side state management.",
+    tech: ["React", "Tailwind CSS", "TypeScript", "Zustand", "Framer Motion"],
     link: "https://healthpoint-hospital.vercel.app/#/",
     image: healthpoint,
   },
   {
     id: 11,
-    title: "FoodFlow: Restaurant Management and Delivery Logistics Platform",
-    category: "Advanced Frontend Simulation & Geospatial UI",
+    title: "FoodFlow: Logistics Platform",
+    category: "Advanced Frontend & Geospatial UI",
     description:
-      "A high-fidelity food delivery ecosystem engineered entirely on the frontend. I built a complete e-commerce lifecycle: browsing menus, cart management, and a real-time delivery simulation using Leaflet Maps. The application mocks backend latency and GPS coordinates to visualize a delivery rider's path, while simultaneously persisting order history and status updates in a user-specific dashboard.",
-    tech: [
-      "React",
-      "Tailwind CSS",
-      "TypeScript",
-      "Vercel (Deployment)",
-      "Context API (Global State Store)",
-      "React Router (for Role-Based Routing)",
-      "Zustand (State Management)",
-      "Framer Motion (for Smooth Animations)",
-      "Leaflet Maps (for Geospatial UI)",
-    ],
+      "A high-fidelity food delivery ecosystem engineered entirely on the frontend. I built a complete e-commerce lifecycle and a real-time delivery simulation using Leaflet Maps.",
+    tech: ["React", "Tailwind CSS", "TypeScript", "Zustand", "Leaflet Maps"],
     link: "https://food-delivery-app-zeta-beige.vercel.app/#/",
     image: foodflowImg,
   },
 ];
 
+// Returns alternating, asymmetric heights to create the editorial masonry effect
+const getCardStyle = (index: number) => {
+  const styles = [
+    "h-[500px]", 
+    "h-[750px]", 
+    "h-[600px]", 
+    "h-[400px]", 
+    "h-[800px]", 
+    "h-[650px]", 
+  ];
+  return styles[index % styles.length];
+};
+
+const ProjectCard = ({ project, index }: { project: typeof projects[0]; index: number }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      // break-inside-avoid prevents the card from splitting across CSS columns
+      className={`relative w-full overflow-hidden rounded-[24px] group mb-6 md:mb-8 break-inside-avoid bg-slate-100 ${getCardStyle(index)}`}
+    >
+      {/* Background Image Layer */}
+      <div className="absolute inset-0 w-full h-full">
+        <WebGLImageHover src={project.image} alt={project.title} />
+      </div>
+
+      {/* Hover Overlay - Only appears on hover */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117]/95 via-[#0d1117]/60 to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 ease-out pointer-events-none" />
+
+      {/* Persistent gradient for Mobile readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117]/80 via-transparent to-transparent opacity-100 md:opacity-0 pointer-events-none" />
+
+      {/* Content Layer */}
+      <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 flex flex-col justify-end translate-y-0 md:translate-y-8 opacity-100 md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out z-10">
+        <span className="text-brand-accent text-xs md:text-sm font-bold uppercase tracking-widest mb-3 block">
+          {project.category}
+        </span>
+        
+        <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold font-display text-white mb-4 leading-[1.1] tracking-tight drop-shadow-md">
+          {project.title}
+        </h3>
+        
+        <p className="text-white/80 text-sm md:text-base mb-6 line-clamp-3 md:line-clamp-4 drop-shadow-sm">
+          {project.description}
+        </p>
+
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-fit flex items-center justify-center gap-2 bg-white text-[#0d1117] px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform duration-300"
+        >
+          Explore <ExternalLink size={16} />
+        </a>
+      </div>
+    </motion.div>
+  );
+};
+
 const Works = () => {
   const { projects: liveProjects } = useProjects();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
-
-  const totalPages = Math.ceil(liveProjects.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentProjects = liveProjects.slice(startIndex, startIndex + itemsPerPage);
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  
+  // Use Firebase data if available, otherwise fallback to local projects
+  const displayProjects = liveProjects.length > 0 ? liveProjects : projects;
 
   return (
-    <section className="py-24 pt-32 bg-white min-h-screen">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+    <main className="bg-white min-h-screen pt-32 pb-24 selection:bg-brand-accent selection:text-white">
+      <div className="max-w-[95%] mx-auto px-4 md:px-6">
+        
+        {/* Page Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mb-16 md:mb-24 text-center md:text-left pt-8 md:pt-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-brand-ink mb-4">
-            Selected Works
-          </h2>
-          <div className="w-20 h-1 bg-brand-ink"></div>
+          <h1 className="text-[12vw] lg:text-[10vw] font-bold font-display text-brand-ink tracking-tighter leading-none mb-6">
+            SELECTED <br className="hidden md:block"/>
+            <span className="text-brand-accent italic pr-4">WORKS</span>
+          </h1>
+          <p className="text-brand-muted text-lg md:text-2xl font-medium max-w-2xl mt-4 md:mt-8">
+            A curated showcase of production-grade architectures, immersive interfaces, and scalable applications.
+          </p>
         </motion.div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {currentProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group bg-white rounded-xl overflow-hidden border border-brand-line hover:border-brand-ink transition-all duration-300 hover:-translate-y-2 flex flex-col"
-            >
-              {/* IMAGE AREA */}
-              <div className="h-48 bg-brand-surface relative overflow-hidden group">
-                <WebGLImageHover src={project.image} alt={project.title} />
-
-                {/* Fallback Icon (Hidden unless image fails) */}
-                <div className="absolute inset-0 flex items-center justify-center hidden bg-brand-surface">
-                  <Code
-                    className="text-slate-400 group-hover:text-brand-ink transition-colors"
-                    size={48}
-                  />
-                </div>
-              </div>
-
-              {/* CONTENT AREA */}
-              <div className="p-6 flex-1 flex flex-col">
-                <span className="text-brand-muted text-xs font-bold uppercase tracking-wider mb-2 block">
-                  {project.category}
-                </span>
-                <h3 className="text-xl font-bold font-display text-brand-ink mb-3">
-                  {project.title}
-                </h3>
-                <p className="text-brand-muted text-sm mb-4 flex-grow">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((t: string, i: number) => (
-                    <span
-                      key={i}
-                      className="px-2 py-1 bg-white text-brand-muted text-xs rounded border border-brand-line"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                {/* BUTTON */}
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-brand-ink hover:text-brand-muted font-medium transition-colors"
-                >
-                  View Project <ExternalLink size={16} className="ml-2" />
-                </a>
-              </div>
-            </motion.div>
+        {/* Immersive Asymmetric Masonry Grid using CSS Columns */}
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 md:gap-8 space-y-6 md:space-y-8 pb-12">
+          {displayProjects.map((project, index) => (
+            <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
 
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="mt-16 flex justify-center items-center gap-4">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                currentPage === 1
-                  ? "bg-brand-surface text-slate-400 cursor-not-allowed"
-                  : "bg-brand-ink text-white hover:bg-neutral-800"
-              }`}
-            >
-              Previous
-            </button>
-            <div className="flex gap-2">
-              {Array.from({ length: totalPages }).map((_, idx) => {
-                const pageNum = idx + 1;
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    className={`w-10 h-10 rounded-md flex items-center justify-center font-medium transition-colors ${
-                      currentPage === pageNum
-                        ? "bg-brand-ink text-white"
-                        : "bg-white text-brand-muted border border-brand-line hover:border-brand-ink"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-            </div>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                currentPage === totalPages
-                  ? "bg-brand-surface text-slate-400 cursor-not-allowed"
-                  : "bg-brand-ink text-white hover:bg-neutral-800"
-              }`}
-            >
-              Next
-            </button>
-          </div>
-        )}
       </div>
-    </section>
+    </main>
   );
 };
 
