@@ -7,7 +7,10 @@ import NumberCounter from "./NumberCounter";
 
 const About = () => {
   return (
-    <section id="about" className="bg-brand-surface relative overflow-hidden flex flex-col">
+    <section
+      id="about"
+      className="bg-brand-surface relative overflow-hidden flex flex-col"
+    >
       {/* The Infinite Marquee placed at the very top of the section */}
       <div className="w-full mt-20 mb-32 z-0">
         <InfiniteMarquee />
@@ -73,20 +76,20 @@ const About = () => {
               className="grid grid-cols-2 gap-8 mt-16"
             >
               <div>
-                <NumberCounter 
-                  end={3} 
-                  suffix="+" 
-                  className="text-5xl md:text-6xl font-bold font-display text-brand-ink block mb-2" 
+                <NumberCounter
+                  end={4}
+                  suffix="+"
+                  className="text-5xl md:text-6xl font-bold font-display text-brand-ink block mb-2"
                 />
                 <p className="text-brand-muted font-bold uppercase tracking-widest text-xs">
                   Years Exp.
                 </p>
               </div>
               <div>
-                <NumberCounter 
-                  end={10} 
-                  suffix="+" 
-                  className="text-5xl md:text-6xl font-bold font-display text-brand-ink block mb-2" 
+                <NumberCounter
+                  end={13}
+                  suffix="+"
+                  className="text-5xl md:text-6xl font-bold font-display text-brand-ink block mb-2"
                 />
                 <p className="text-brand-muted font-bold uppercase tracking-widest text-xs">
                   Projects
@@ -96,7 +99,10 @@ const About = () => {
           </div>
 
           {/* Decorative Visual (Dynamic Terminal) */}
-          <motion.div variants={fadeInUp} className="relative mt-16 lg:mt-0 lg:col-span-7">
+          <motion.div
+            variants={fadeInUp}
+            className="relative mt-16 lg:mt-0 lg:col-span-7"
+          >
             <Terminal />
           </motion.div>
         </motion.div>
