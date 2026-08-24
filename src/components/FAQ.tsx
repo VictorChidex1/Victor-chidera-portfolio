@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus } from "lucide-react";
-import { fadeInUp, staggerContainer } from "../utils/animations";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Plus, RotateCcw } from "lucide-react";
 
 const faqs = [
   {
@@ -31,99 +30,101 @@ const faqs = [
   },
 ];
 
-const FAQItem = ({ question, answer, isOpen, onClick }: any) => {
+const FlipCard = ({ question, answer }: { question: string; answer: string }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
   return (
-    <motion.div
-      variants={fadeInUp}
-      className="border-b border-brand-line last:border-none"
+    <div 
+      className="relative w-full h-[320px] md:h-[350px] cursor-pointer group"
+      style={{ perspective: 1200 }}
+      onClick={() => setIsFlipped(!isFlipped)}
     >
-      <button
-        onClick={onClick}
-        className="w-full py-6 flex justify-between items-center text-left focus:outline-none group"
+      <motion.div
+        className="w-full h-full relative"
+        style={{ transformStyle: "preserve-3d" }}
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
-        <span
-          className={`text-xl md:text-2xl font-bold font-display transition-colors duration-300 ${
-            isOpen
-              ? "text-brand-ink"
-              : "text-brand-ink group-hover:text-brand-muted"
-          }`}
+        {/* Front Side (Question) */}
+        <div 
+          className="absolute inset-0 w-full h-full bg-brand-surface border border-brand-line rounded-[2rem] p-8 flex flex-col justify-between hover:border-brand-ink/30 transition-colors shadow-sm"
+          style={{ backfaceVisibility: "hidden" }}
         >
-          {question}
-        </span>
-        <span
-          className={`ml-4 p-2 rounded-full border transition-all duration-300 ${
-            isOpen
-              ? "border-brand-ink text-brand-ink rotate-180"
-              : "border-brand-line text-brand-muted group-hover:border-brand-ink group-hover:text-brand-ink"
-          }`}
+          <div className="flex justify-between items-start">
+            <span className="text-brand-muted font-medium text-xs md:text-sm tracking-widest uppercase">Question</span>
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform shrink-0">
+              <Plus size={20} className="text-brand-ink" />
+            </div>
+          </div>
+          <h3 className="text-2xl md:text-3xl font-display font-bold text-brand-ink leading-tight">
+            {question}
+          </h3>
+        </div>
+
+        {/* Back Side (Answer) */}
+        <div 
+          className="absolute inset-0 w-full h-full bg-brand-ink rounded-[2rem] p-8 flex flex-col justify-between shadow-2xl"
+          style={{ transform: "rotateY(180deg)", backfaceVisibility: "hidden" }}
         >
-          {isOpen ? <Minus size={20} /> : <Plus size={20} />}
-        </span>
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" as any }}
-            className="overflow-hidden"
-          >
-            <p className="text-brand-muted text-lg leading-relaxed pb-6 pr-12">
-              {answer}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+          <div className="flex justify-between items-start">
+            <span className="text-white/50 font-medium text-xs md:text-sm tracking-widest uppercase">Answer</span>
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:rotate-180 transition-transform duration-500 shrink-0">
+              <RotateCcw size={18} className="text-white" />
+            </div>
+          </div>
+          <p className="text-white/90 text-base md:text-lg leading-relaxed overflow-y-auto">
+            {answer}
+          </p>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
 const FAQ = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
-    <section
-      className="py-20 px-6 bg-white relative overflow-hidden"
-      id="faq"
-    >
-      {/* Top Divider */}
-      <div className="absolute top-0 left-0 w-full h-px bg-brand-line" />
-
-      <div className="max-w-4xl mx-auto relative z-10">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          <motion.div variants={fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold font-display text-brand-ink mb-6 tracking-tight">
-              Frequently Asked{" "}
-              <span className="text-brand-muted">Questions</span>
-            </h2>
-            <p className="text-brand-muted text-lg max-w-2xl mx-auto">
-              Got questions? I've got answers. Here are some of the most common
-              inquiries I receive.
-            </p>
-          </motion.div>
-
-          <div className="bg-white rounded-3xl p-8 md:p-12 border border-brand-line">
-            {faqs.map((faq, index) => (
-              <FAQItem
-                key={index}
-                question={faq.question}
-                answer={faq.answer}
-                isOpen={openIndex === index}
-                onClick={() => toggleFAQ(index)}
-              />
-            ))}
+    <section className="py-32 bg-white relative overflow-hidden" id="faq">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-24">
+          <div>
+            <motion.h2
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-6xl md:text-8xl lg:text-9xl font-display font-bold text-brand-ink leading-[0.9] tracking-tighter"
+            >
+              FAQ<span className="text-brand-accent">.</span>
+            </motion.h2>
           </div>
-        </motion.div>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-brand-muted text-lg max-w-sm pb-2"
+          >
+            Click any card to flip it and reveal the answer. If you have any other questions, feel free to reach out.
+          </motion.p>
+        </div>
+
+        {/* 3D Flip Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {faqs.map((faq, index) => {
+            // Make the 5th item span 2 columns on desktop to complete the bento grid perfectly
+            const isLastItem = index === 4;
+            
+            return (
+              <div 
+                key={index} 
+                className={isLastItem ? "lg:col-span-2" : ""}
+              >
+                <FlipCard question={faq.question} answer={faq.answer} />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
