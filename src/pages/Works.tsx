@@ -1,6 +1,6 @@
-import { ExternalLink } from "lucide-react";
-import { motion } from "framer-motion";
-import WebGLImageHover from "../components/WebGLImageHover";
+import { useState } from "react";
+import { ExternalLink, Plus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useProjects } from "../hooks/useFirebaseData";
 
 // Assets
@@ -129,97 +129,152 @@ export const projects = [
   },
 ];
 
-// Returns alternating, asymmetric heights to create the editorial masonry effect
-const getCardStyle = (index: number) => {
-  const styles = [
-    "h-[500px]", 
-    "h-[750px]", 
-    "h-[600px]", 
-    "h-[400px]", 
-    "h-[800px]", 
-    "h-[650px]", 
-  ];
-  return styles[index % styles.length];
-};
+const ProjectAccordionItem = ({ 
+  project, 
+  index, 
+  isActive, 
+  onClick 
+}: { 
+  project: typeof projects[0], 
+  index: number, 
+  isActive: boolean, 
+  onClick: () => void 
+}) => {
+  // Extract just the main name before the colon for a cleaner accordion header
+  const shortTitle = project.title.split(':')[0];
 
-const ProjectCard = ({ project, index }: { project: typeof projects[0]; index: number }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      // break-inside-avoid prevents the card from splitting across CSS columns
-      className={`relative w-full overflow-hidden rounded-[24px] group mb-6 md:mb-8 break-inside-avoid bg-slate-100 ${getCardStyle(index)}`}
-    >
-      {/* Background Image Layer */}
-      <div className="absolute inset-0 w-full h-full">
-        <WebGLImageHover src={project.image} alt={project.title} />
-      </div>
-
-      {/* Hover Overlay - Only appears on hover */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117]/95 via-[#0d1117]/60 to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 ease-out pointer-events-none" />
-
-      {/* Persistent gradient for Mobile readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117]/80 via-transparent to-transparent opacity-100 md:opacity-0 pointer-events-none" />
-
-      {/* Content Layer */}
-      <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 flex flex-col justify-end translate-y-0 md:translate-y-8 opacity-100 md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out z-10">
-        <span className="text-brand-accent text-xs md:text-sm font-bold uppercase tracking-widest mb-3 block">
-          {project.category}
-        </span>
+    <div className="border-b border-white/10 overflow-hidden">
+      {/* Header Strip */}
+      <button 
+        onClick={onClick}
+        className="w-full flex flex-col md:flex-row md:items-center justify-between py-8 md:py-12 group text-left outline-none"
+      >
+        <div className="flex items-center gap-6 md:gap-12">
+          <span className={`text-xl md:text-2xl font-medium font-mono transition-colors duration-300 ${isActive ? 'text-brand-accent' : 'text-white/30 group-hover:text-brand-accent'}`}>
+            {String(index).padStart(2, '0')}
+          </span>
+          <h3 className={`text-4xl md:text-5xl lg:text-7xl font-bold font-display tracking-tight transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/50 group-hover:text-white/80'}`}>
+            {shortTitle}
+          </h3>
+        </div>
         
-        <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold font-display text-white mb-4 leading-[1.1] tracking-tight drop-shadow-md">
-          {project.title}
-        </h3>
-        
-        <p className="text-white/80 text-sm md:text-base mb-6 line-clamp-3 md:line-clamp-4 drop-shadow-sm">
-          {project.description}
-        </p>
+        <div className="flex items-center justify-between w-full md:w-auto mt-6 md:mt-0">
+          <span className="text-brand-accent text-xs md:text-sm tracking-widest uppercase font-bold md:mr-12">
+            {project.category}
+          </span>
+          
+          <div className={`w-12 h-12 shrink-0 rounded-full border flex items-center justify-center transition-all duration-300 ${isActive ? 'bg-brand-accent border-brand-accent' : 'border-white/10 bg-white/5 group-hover:bg-white/10'}`}>
+             <motion.div animate={{ rotate: isActive ? 135 : 0 }} transition={{ duration: 0.3, ease: "easeOut" }}>
+               <Plus size={24} className="text-white" />
+             </motion.div>
+          </div>
+        </div>
+      </button>
 
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-fit flex items-center justify-center gap-2 bg-white text-[#0d1117] px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform duration-300"
-        >
-          Explore <ExternalLink size={16} />
-        </a>
-      </div>
-    </motion.div>
+      {/* Expandable Content Area */}
+      <AnimatePresence initial={false}>
+        {isActive && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} // Apple-style smooth ease
+          >
+            <div className="pb-16 pt-4 flex flex-col">
+              
+              {/* Massive Cinematic Image */}
+              <div className="w-full h-[40vh] md:h-[60vh] rounded-[24px] md:rounded-[32px] overflow-hidden mb-12 relative group cursor-crosshair">
+                <motion.img 
+                  src={project.image} 
+                  alt={project.title} 
+                  className="w-full h-full object-cover object-center origin-center"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                />
+                <div className="absolute inset-0 bg-brand-ink/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
+              </div>
+              
+              <div className="flex flex-col xl:flex-row justify-between gap-8 items-start xl:items-end">
+                <div className="max-w-4xl">
+                  <h4 className="text-2xl md:text-3xl text-white font-display font-bold mb-6 tracking-tight">
+                    {project.title}
+                  </h4>
+                  <p className="text-white/70 text-lg md:text-xl leading-relaxed mb-10 font-medium">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 md:gap-3">
+                    {project.tech.map((t, i) => (
+                      <span key={i} className="px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 text-white/90 text-sm rounded-full font-medium">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/btn inline-flex items-center gap-3 bg-white text-[#0d1117] px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-colors shrink-0 mt-8 xl:mt-0"
+                >
+                  Explore Project 
+                  <ExternalLink size={20} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                </a>
+              </div>
+
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
 const Works = () => {
   const { projects: liveProjects } = useProjects();
-  
-  // Use Firebase data if available, otherwise fallback to local projects
   const displayProjects = liveProjects.length > 0 ? liveProjects : projects;
+  
+  // Keep track of which accordion is open. Default to the first one open.
+  const [activeIndex, setActiveIndex] = useState<number | null>(0);
+
+  const handleToggle = (index: number) => {
+    // If clicking the already active one, close it. Otherwise, open the new one.
+    setActiveIndex(activeIndex === index ? null : index);
+  };
 
   return (
-    <main className="bg-white min-h-screen pt-32 pb-24 selection:bg-brand-accent selection:text-white">
-      <div className="max-w-[95%] mx-auto px-4 md:px-6">
+    <main className="bg-[#0d1117] min-h-screen pt-32 pb-32 selection:bg-brand-accent selection:text-white">
+      <div className="max-w-[90%] mx-auto">
         
         {/* Page Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-16 md:mb-24 text-center md:text-left pt-8 md:pt-16"
+          className="mb-16 md:mb-24"
         >
-          <h1 className="text-[12vw] lg:text-[10vw] font-bold font-display text-brand-ink tracking-tighter leading-none mb-6">
-            SELECTED <br className="hidden md:block"/>
-            <span className="text-brand-accent italic pr-4">WORKS</span>
+          <span className="text-brand-accent font-bold tracking-widest uppercase mb-4 block">
+            Portfolio Showcase
+          </span>
+          <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold font-display text-white tracking-tighter mb-6 leading-none">
+            Selected <span className="text-white/30 italic">Works</span>
           </h1>
-          <p className="text-brand-muted text-lg md:text-2xl font-medium max-w-2xl mt-4 md:mt-8">
-            A curated showcase of production-grade architectures, immersive interfaces, and scalable applications.
+          <p className="text-white/50 text-xl md:text-2xl font-medium max-w-3xl mt-8">
+            An architectural breakdown of production-grade platforms, immersive interfaces, and scalable applications.
           </p>
         </motion.div>
 
-        {/* Immersive Asymmetric Masonry Grid using CSS Columns */}
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 md:gap-8 space-y-6 md:space-y-8 pb-12">
+        {/* Minimalist Expandable Accordion List */}
+        <div className="flex flex-col w-full border-t border-white/10">
           {displayProjects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
+            <ProjectAccordionItem 
+              key={project.id} 
+              project={project} 
+              index={index + 1} 
+              isActive={activeIndex === index}
+              onClick={() => handleToggle(index)}
+            />
           ))}
         </div>
 
