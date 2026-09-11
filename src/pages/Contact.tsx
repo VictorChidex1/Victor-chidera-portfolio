@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import emailjs from "@emailjs/browser";
 import { EMAIL_CONFIG } from "../config/email";
 import { db } from "../firebase";
@@ -11,21 +11,130 @@ import {
   Github,
   Linkedin,
   Twitter,
+  ChevronDown,
 } from "lucide-react";
 import RouteSeo from "../components/seo/RouteSeo";
 import { contactPageSchema } from "../seo/schemas";
+
+/* ───────────────────────────────────────────
+   Constants
+   ─────────────────────────────────────────── */
+
+const SERVICE_OPTIONS = [
+  "New Website",
+  "Web Application",
+  "E-commerce Website",
+  "Website Redesign / Optimization",
+  "Custom Software",
+  "Other",
+] as const;
+
+/** NGN budget tiers — [min, max | null] */
+const BUDGET_TIERS_NGN: [number, number | null][] = [
+  [300_000, 500_000],
+  [500_000, 1_000_000],
+  [1_000_000, 2_000_000],
+  [2_000_000, 5_000_000],
+  [5_000_000, null],
+];
+
+const FALLBACK_RATE = 1500; // NGN per 1 USD — used when API is unreachable
+
+/* ───────────────────────────────────────────
+   Helpers
+   ─────────────────────────────────────────── */
+
+/** Format a number as a compact Naira string: ₦300,000 */
+function fmtNGN(n: number): string {
+  return `₦${n.toLocaleString("en-NG")}`;
+}
+
+/** Format a number as a compact USD string: $200 */
+function fmtUSD(n: number): string {
+  return `$${Math.round(n).toLocaleString("en-US")}`;
+}
+
+/** Build the display label and clean storage value for a budget tier. */
+function budgetLabel(
+  min: number,
+  max: number | null,
+  rate: number,
+): { display: string; value: string } {
+  const ngnLabel =
+    max !== null ? `${fmtNGN(min)} – ${fmtNGN(max)}` : `${fmtNGN(min)}+`;
+  const usdMin = min / rate;
+  const usdMax = max !== null ? max / rate : null;
+  const usdLabel =
+    usdMax !== null
+      ? `~${fmtUSD(usdMin)} – ~${fmtUSD(usdMax)}`
+      : `~${fmtUSD(usdMin)}+`;
+
+  return {
+    display: `${ngnLabel}  /  ${usdLabel}`,
+    value: ngnLabel, // clean NGN-only value stored in payload
+  };
+}
+
+/* ───────────────────────────────────────────
+   Component
+   ─────────────────────────────────────────── */
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    company: "",
+    service: "",
+    budget: "",
     message: "",
   });
   const [status, setStatus] = useState("idle");
   const [lastSubmitTime, setLastSubmitTime] = useState(0);
   const COOLDOWN_MS = 30000; // 30-second cooldown
 
-  const handleChange = (e: any) => {
+  /* ── Exchange rate ── */
+  const [ngnPerUsd, setNgnPerUsd] = useState(FALLBACK_RATE);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          "https://open.er-api.com/v6/latest/USD",
+        );
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!cancelled && json?.rates?.NGN) {
+          setNgnPerUsd(json.rates.NGN);
+        }
+      } catch {
+        // silently fall back to FALLBACK_RATE
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /** Memoised budget options so they update when the rate arrives. */
+  const budgetOptions = useMemo(() => {
+    const tiers = BUDGET_TIERS_NGN.map(([min, max]) =>
+      budgetLabel(min, max, ngnPerUsd),
+    );
+    tiers.push({
+      display: "Not sure yet — let's discuss",
+      value: "Not sure yet",
+    });
+    return tiers;
+  }, [ngnPerUsd]);
+
+  /* ── Handlers ── */
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -33,7 +142,7 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const now = Date.now();
@@ -49,6 +158,9 @@ const Contact = () => {
     const templateParams = {
       from_name: formData.name,
       from_email: formData.email,
+      company: formData.company || "—",
+      service: formData.service,
+      budget: formData.budget,
       message: formData.message,
       to_name: "Victor Chidera",
     };
@@ -58,6 +170,9 @@ const Contact = () => {
       await addDoc(collection(db, "contacts"), {
         name: formData.name,
         email: formData.email,
+        company: formData.company || "",
+        service: formData.service,
+        budget: formData.budget,
         message: formData.message,
         createdAt: serverTimestamp(),
       });
@@ -71,7 +186,14 @@ const Contact = () => {
       );
 
       setStatus("success");
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        service: "",
+        budget: "",
+        message: "",
+      });
       setTimeout(() => setStatus("idle"), 3000);
     } catch (err) {
       console.error("Contact Submission Error:", err);
@@ -79,6 +201,13 @@ const Contact = () => {
       setTimeout(() => setStatus("idle"), 3000);
     }
   };
+
+  /* ── Shared Tailwind classes ── */
+  const inputBase =
+    "w-full bg-transparent border-b-2 border-brand-line px-0 py-4 text-2xl font-medium text-brand-ink placeholder-slate-300 focus:outline-none focus:border-brand-ink transition-all rounded-none";
+  const labelBase =
+    "block text-sm font-bold text-brand-muted uppercase tracking-widest transition-colors group-focus-within:text-brand-ink";
+  const selectBase = `${inputBase} appearance-none cursor-pointer pr-10`;
 
   return (
     <main className="flex flex-col md:flex-row w-full min-h-screen bg-white">
@@ -177,47 +306,138 @@ const Contact = () => {
       <div className="w-full md:w-1/2 bg-white p-8 py-24 md:p-16 lg:p-24 xl:p-32 flex items-center justify-center">
         <div className="w-full max-w-xl">
           <form onSubmit={handleSubmit} className="space-y-12">
+            {/* 01 — Full Name */}
             <div className="space-y-2 group">
-              <label className="block text-sm font-bold text-brand-muted uppercase tracking-widest transition-colors group-focus-within:text-brand-ink">
-                01. What's your name?
+              <label htmlFor="contact-name" className={labelBase}>
+                01. Full Name
               </label>
               <input
+                id="contact-name"
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full bg-transparent border-b-2 border-brand-line px-0 py-4 text-2xl font-medium text-brand-ink placeholder-slate-300 focus:outline-none focus:border-brand-ink transition-all rounded-none"
+                aria-label="Full name"
+                className={inputBase}
                 placeholder="John Doe *"
               />
             </div>
 
+            {/* 02 — Email Address */}
             <div className="space-y-2 group">
-              <label className="block text-sm font-bold text-brand-muted uppercase tracking-widest transition-colors group-focus-within:text-brand-ink">
-                02. What's your email address?
+              <label htmlFor="contact-email" className={labelBase}>
+                02. Email Address
               </label>
               <input
+                id="contact-email"
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full bg-transparent border-b-2 border-brand-line px-0 py-4 text-2xl font-medium text-brand-ink placeholder-slate-300 focus:outline-none focus:border-brand-ink transition-all rounded-none"
+                aria-label="Email address"
+                className={inputBase}
                 placeholder="john@company.com *"
               />
             </div>
 
+            {/* 03 — Company / Business */}
             <div className="space-y-2 group">
-              <label className="block text-sm font-bold text-brand-muted uppercase tracking-widest transition-colors group-focus-within:text-brand-ink">
-                03. Tell me about your project
+              <label htmlFor="contact-company" className={labelBase}>
+                03. Company / Business
+              </label>
+              <input
+                id="contact-company"
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                aria-label="Company or business name"
+                className={inputBase}
+                placeholder="Your company or business name"
+              />
+            </div>
+
+            {/* 04 — What do you need? */}
+            <div className="space-y-2 group">
+              <label htmlFor="contact-service" className={labelBase}>
+                04. What do you need?
+              </label>
+              <div className="relative">
+                <select
+                  id="contact-service"
+                  name="service"
+                  value={formData.service}
+                  onChange={handleChange}
+                  required
+                  aria-label="Type of service needed"
+                  className={selectBase}
+                >
+                  <option value="" disabled>
+                    Select a service *
+                  </option>
+                  {SERVICE_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={20}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 text-brand-muted pointer-events-none"
+                />
+              </div>
+            </div>
+
+            {/* 05 — Budget Range */}
+            <div className="space-y-2 group">
+              <label htmlFor="contact-budget" className={labelBase}>
+                05. Budget Range
+              </label>
+              <div className="relative">
+                <select
+                  id="contact-budget"
+                  name="budget"
+                  value={formData.budget}
+                  onChange={handleChange}
+                  required
+                  aria-label="Budget range"
+                  className={selectBase}
+                >
+                  <option value="" disabled>
+                    Select your budget *
+                  </option>
+                  {budgetOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.display}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={20}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 text-brand-muted pointer-events-none"
+                />
+              </div>
+              <p className="text-xs text-brand-muted/60 mt-2 italic">
+                Approximate USD equivalents shown for international clients.
+              </p>
+            </div>
+
+            {/* 06 — Tell me about your project */}
+            <div className="space-y-2 group">
+              <label htmlFor="contact-message" className={labelBase}>
+                06. Tell me about your project
               </label>
               <textarea
+                id="contact-message"
                 rows={4}
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 required
-                className="w-full bg-transparent border-b-2 border-brand-line px-0 py-4 text-2xl font-medium text-brand-ink placeholder-slate-300 focus:outline-none focus:border-brand-ink transition-all rounded-none resize-none"
+                aria-label="Project details"
+                className={`${inputBase} resize-none`}
                 placeholder="Hello Victor, I need help with... *"
               ></textarea>
             </div>
@@ -262,3 +482,4 @@ const Contact = () => {
 };
 
 export default Contact;
+
