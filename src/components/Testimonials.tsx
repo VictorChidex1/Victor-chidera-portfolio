@@ -1,33 +1,7 @@
 import React, { useState } from "react";
 import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const testimonials = [
-  {
-    id: 1,
-    name: "Esther Onyinye",
-    role: "CEO, TechStart",
-    content:
-      "Working with Victor was an absolute pleasure. He transformed our outdated website into a modern, high-converting platform. The attention to detail and fluid animations are truly unmatched.",
-    image: "/esther-onyinye.webp",
-  },
-  {
-    id: 2,
-    name: "Emmanuel Olafisoye",
-    role: "Afrobeats Superstar (Raploard)",
-    content:
-      "Victor built my artist portfolio website with a sleek, immersive media player to showcase music, tour dates, and facilitate bookings. The aesthetic is incredibly premium. Highly recommended.",
-    image: "/emmanuel-olafisoye.webp",
-  },
-  {
-    id: 3,
-    name: "Dr Ozioma Glory",
-    role: "Marketing Director, CreativeFlow",
-    content:
-      "I was impressed by Victor's ability to translate our abstract design concepts into pixel-perfect code. He is a true professional and delivered a breathtaking final product.",
-    image: "/dr-ozioma.webp",
-  },
-];
+import testimonials from "../data/testimonials.json";
 
 const Testimonials = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -109,6 +83,8 @@ const Testimonials = () => {
                     <img
                       src={testimonial.image}
                       alt={testimonial.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-white/20 object-cover"
                     />
                     <div>

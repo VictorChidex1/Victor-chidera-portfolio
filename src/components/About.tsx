@@ -4,6 +4,7 @@ import { fadeInUp, staggerContainer } from "../utils/animations";
 import InfiniteMarquee from "./InfiniteMarquee";
 import Terminal from "./Terminal";
 import NumberCounter from "./NumberCounter";
+import about from "../data/about.json";
 
 const About = () => {
   return (
@@ -38,26 +39,9 @@ const About = () => {
               variants={fadeInUp}
               className="space-y-6 text-lg text-brand-muted leading-relaxed"
             >
-              <p>
-                Hello! I'm Victor Chidera, a Full-Stack Product Engineer with a
-                deep passion for building pixel-perfect, accessible, and
-                performant web experiences.
-              </p>
-              <p>
-                Expert in taking applications from concept to production (0 to
-                1), leveraging Serverless architecture to build scalable,
-                secure, and high-performance products and applications.
-              </p>
-              <p>
-                My journey started with a curiosity for how things work on the
-                web, which has evolved into a career of crafting interfaces that
-                not only look good but feel amazing to use.
-              </p>
-              <p>
-                When I'm not coding, I'm exploring the latest design trends,
-                optimizing application performance, or contributing to
-                open-source projects.
-              </p>
+              {about.paragraphs.map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
             </motion.div>
 
             <motion.div variants={fadeInUp} className="mt-10">
@@ -75,26 +59,18 @@ const About = () => {
               variants={fadeInUp}
               className="grid grid-cols-2 gap-8 mt-16"
             >
-              <div>
-                <NumberCounter
-                  end={4}
-                  suffix="+"
-                  className="text-5xl md:text-6xl font-bold font-display text-brand-ink block mb-2"
-                />
-                <p className="text-brand-muted font-bold uppercase tracking-widest text-xs">
-                  Years Exp.
-                </p>
-              </div>
-              <div>
-                <NumberCounter
-                  end={13}
-                  suffix="+"
-                  className="text-5xl md:text-6xl font-bold font-display text-brand-ink block mb-2"
-                />
-                <p className="text-brand-muted font-bold uppercase tracking-widest text-xs">
-                  Projects
-                </p>
-              </div>
+              {about.stats.map((stat, i) => (
+                <div key={i}>
+                  <NumberCounter
+                    end={stat.value}
+                    suffix={stat.suffix}
+                    className="text-5xl md:text-6xl font-bold font-display text-brand-ink block mb-2"
+                  />
+                  <p className="text-brand-muted font-bold uppercase tracking-widest text-xs">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
             </motion.div>
           </div>
 

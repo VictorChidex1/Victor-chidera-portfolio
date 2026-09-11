@@ -10,7 +10,6 @@ import CustomCursor from "./components/CustomCursor";
 import PageTransition from "./components/PageTransition";
 import WhatsAppButton from "./components/WhatsAppButton";
 import ScrollToTop from "./components/ScrollToTop";
-import useDocumentTitle from "./hooks/useDocumentTitle";
 
 // Import Pages
 import Home from "./pages/Home";
@@ -20,10 +19,10 @@ import Testimonials from "./pages/Testimonials";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const location = useLocation();
-  useDocumentTitle();
 
   // Reset scroll to top instantly whenever the route changes so the
   // newly loaded page always opens from its top, not a mid-page position.
@@ -55,6 +54,7 @@ function App() {
             <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
             <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
             <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
+            <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>

@@ -1,6 +1,8 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
 
 # Sitemap
-Sitemap: https://victor-chidera-25.vercel.app/sitemap.xml
+Sitemap: https://victorchidera.com/sitemap.xml

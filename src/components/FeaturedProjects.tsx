@@ -92,6 +92,8 @@ const ProjectCard = ({ project, index }: { project: any; index: number }) => {
           <img 
             src={project.image} 
             alt={project.title} 
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover transform scale-105 group-hover:scale-100 transition-transform duration-1000"
           />
           <div className="absolute inset-0 bg-black/10" />

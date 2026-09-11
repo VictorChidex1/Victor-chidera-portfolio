@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What services do you offer?",
+    "answer": "I specialize in full-stack web development, offering custom website design, frontend development with React/Next.js, backend solutions, and SEO optimization to ensure your digital presence is powerful and effective."
+  },
+  {
+    "question": "What is your typical timeline?",
+    "answer": "Timelines vary depending on the project's scope and complexity. A standard portfolio or business site typically takes 2-4 weeks, while more complex web applications may take 6-10 weeks. I provide a detailed timeline during our initial consultation."
+  },
+  {
+    "question": "Do you provide ongoing support?",
+    "answer": "Absolutely. I offer various maintenance packages to keep your website secure, up-to-date, and performing optimally. From content updates to technical troubleshooting, I'm here to support your growth."
+  },
+  {
+    "question": "What is your pricing structure?",
+    "answer": "My pricing is project-based, ensuring transparency and no surprise costs. I assess your specific needs and goals to provide a tailored quote. I also offer hourly rates for smaller tasks or ongoing consultation."
+  },
+  {
+    "question": "How do we get started?",
+    "answer": "It's simple! Click the 'Contact Me' button to send me a message or book a free discovery call. We'll discuss your vision, requirements, and how we can collaborate to bring your digital dreams to life."
+  }
+]

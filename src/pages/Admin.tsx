@@ -7,6 +7,7 @@ import {
 import { AnimatePresence } from "framer-motion";
 import { auth, db } from "../firebase";
 import { sortProjects } from "../hooks/useFirebaseData";
+import PageSeo from "../components/seo/PageSeo";
 
 // Modular Subcomponents
 import { AdminLogin } from "../components/admin/AdminLogin";
@@ -110,6 +111,7 @@ const Admin: React.FC = () => {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
+        <PageSeo path="/admin" title="Admin | Victor Chidera" noindex />
         <div className="w-10 h-10 border-4 border-brand-ink border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -118,21 +120,25 @@ const Admin: React.FC = () => {
   // Render Login Panel if Unauthenticated
   if (!user) {
     return (
-      <AdminLogin
-        email={email}
-        setEmail={setEmail}
-        password={password}
-        setPassword={setPassword}
-        loginError={loginError}
-        loginLoading={loginLoading}
-        handleLogin={handleLogin}
-      />
+      <>
+        <PageSeo path="/admin" title="Admin Login | Victor Chidera" noindex />
+        <AdminLogin
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          loginError={loginError}
+          loginLoading={loginLoading}
+          handleLogin={handleLogin}
+        />
+      </>
     );
   }
 
   // Render Main Logged In Workspace
   return (
     <div className="min-h-screen bg-brand-surface text-brand-ink py-24 pt-32 px-4 md:px-8 animate-fadeIn">
+      <PageSeo path="/admin" title="Admin | Victor Chidera" noindex />
       <div className="max-w-7xl mx-auto">
         <AdminHeader email={user.email} />
 

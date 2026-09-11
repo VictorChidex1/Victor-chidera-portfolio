@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "Web Development",
+    "description": "Building fast, responsive, and scalable websites using modern technologies. Focusing on performance, accessibility, and SEO to deliver exceptional digital experiences.",
+    "gradient": "from-orange-500 to-rose-500",
+    "tags": ["React", "Next.js", "TypeScript", "Tailwind CSS"]
+  },
+  {
+    "id": 2,
+    "title": "UI/UX Design",
+    "description": "Creating intuitive, accessible, and visually stunning user interfaces. Every pixel is crafted to ensure a seamless and delightful user journey.",
+    "gradient": "from-indigo-500 to-purple-600",
+    "tags": ["Figma", "Prototyping", "Design Systems", "Wireframing"]
+  },
+  {
+    "id": 3,
+    "title": "Mobile Apps",
+    "description": "Developing cross-platform mobile applications for iOS and Android. Native-like performance with fluid animations and offline capabilities.",
+    "gradient": "from-cyan-500 to-blue-600",
+    "tags": ["React Native", "Expo", "iOS", "Android"]
+  },
+  {
+    "id": 4,
+    "title": "Full Stack",
+    "description": "End-to-end development including scalable backend architecture, secure API design, and robust database management.",
+    "gradient": "from-emerald-500 to-teal-600",
+    "tags": ["Node.js", "PostgreSQL", "Firebase", "Cloudflare"]
+  }
+]

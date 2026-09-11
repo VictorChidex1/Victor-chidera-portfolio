@@ -12,6 +12,8 @@ import {
   Linkedin,
   Twitter,
 } from "lucide-react";
+import RouteSeo from "../components/seo/RouteSeo";
+import { contactPageSchema } from "../seo/schemas";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -80,6 +82,7 @@ const Contact = () => {
 
   return (
     <main className="flex flex-col md:flex-row w-full min-h-screen bg-white">
+      <RouteSeo path="/contact" jsonLd={contactPageSchema()} />
       {/* LEFT SIDE: The Editorial Dark Canvas */}
       <div className="w-full md:w-1/2 bg-brand-ink text-white p-8 pt-32 md:p-16 lg:p-24 xl:p-32 flex flex-col justify-between relative overflow-hidden">
         {/* Decorative Background Elements */}
@@ -102,8 +105,8 @@ const Contact = () => {
             </h1>
             <p className="text-white/70 text-lg md:text-xl max-w-lg leading-relaxed font-medium">
               Whether you're looking to architect a scalable platform, redesign
-              a flagship product, or simply explore what's possible—I'm ready to
-              help you execute at the highest level.
+              a flagship product, or simply explore what's possible, I'm ready
+              to help you execute at the highest level.
             </p>
           </motion.div>
         </div>
@@ -119,14 +122,14 @@ const Contact = () => {
               Direct Contact
             </span>
             <a
-              href="mailto:donchid.online@gmail.com"
+              href="mailto:victor@victorchidera.com"
               className="group flex items-center gap-3 text-lg font-medium hover:text-brand-accent transition-colors"
             >
               <Mail
                 size={20}
                 className="text-white/50 group-hover:text-brand-accent transition-colors"
               />
-              donchid.online@gmail.com
+              victor@victorchidera.com
             </a>
           </div>
           <div>

@@ -1,0 +1,13 @@
+{
+  "heading": "PASSIONATE CREATOR",
+  "paragraphs": [
+    "Hello! I'm Victor Chidera, a Full-Stack Product Engineer with a deep passion for building pixel-perfect, accessible, and performant web experiences.",
+    "Expert in taking applications from concept to production (0 to 1), leveraging Serverless architecture to build scalable, secure, and high-performance products and applications.",
+    "My journey started with a curiosity for how things work on the web, which has evolved into a career of crafting interfaces that not only look good but feel amazing to use.",
+    "When I'm not coding, I'm exploring the latest design trends, optimizing application performance, or contributing to open-source projects."
+  ],
+  "stats": [
+    { "value": 4, "suffix": "+", "label": "Years Exp." },
+    { "value": 13, "suffix": "+", "label": "Projects" }
+  ]
+}
