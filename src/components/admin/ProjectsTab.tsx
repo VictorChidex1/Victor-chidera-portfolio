@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Edit2, Trash2 } from "lucide-react";
 import { collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../firebase";
+import { ref, deleteObject } from "firebase/storage";
+import { db, storage } from "../../firebase";
+import ImageUploadField from "./ImageUploadField";
 
 interface ProjectsTabProps {
   projectsList: any[];
@@ -22,6 +24,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
     tech: [] as string[],
     link: "",
     image: "",
+    imagePath: "",
     order: "",
   });
 
@@ -56,6 +59,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
           tech: newProject.tech,
           link: newProject.link || "#",
           image: newProject.image || "https://placehold.co/600x400/1e293b/cbd5e1?text=No+Image",
+          imagePath: newProject.imagePath || null,
           order: newProject.order !== "" ? Number(newProject.order) : 99999,
         });
         setEditingProjectId(null);
@@ -68,6 +72,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
           tech: newProject.tech,
           link: newProject.link || "#",
           image: newProject.image || "https://placehold.co/600x400/1e293b/cbd5e1?text=No+Image",
+          imagePath: newProject.imagePath || null,
           order: newProject.order !== "" ? Number(newProject.order) : 99999,
           createdAt: serverTimestamp(),
         });
@@ -82,6 +87,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
         tech: [],
         link: "",
         image: "",
+        imagePath: "",
         order: "",
       });
       await fetchAllData();
@@ -100,6 +106,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
       tech: proj.tech || [],
       link: proj.link || "",
       image: proj.image || "",
+      imagePath: proj.imagePath || "",
       order: proj.order !== undefined && proj.order !== 99999 ? String(proj.order) : "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -115,6 +122,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
       tech: [],
       link: "",
       image: "",
+      imagePath: "",
       order: "",
     });
   };
@@ -122,6 +130,10 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
   const handleDeleteProject = async (projectId: string) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       try {
+        const proj = projectsList.find((p) => p.id === projectId);
+        if (proj?.imagePath) {
+          deleteObject(ref(storage, proj.imagePath)).catch(() => {});
+        }
         await deleteDoc(doc(db, "projects", projectId));
         await fetchAllData();
       } catch (err) {
@@ -242,7 +254,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Deployment / Target Link (Optional)
@@ -253,18 +265,6 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                 onChange={(e) => setNewProject((prev) => ({ ...prev, link: e.target.value }))}
                 className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
                 placeholder="https://example.com"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
-                Cover Image / Asset Path (Optional)
-              </label>
-              <input
-                type="text"
-                value={newProject.image}
-                onChange={(e) => setNewProject((prev) => ({ ...prev, image: e.target.value }))}
-                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
-                placeholder="/assets/images/proj.webp"
               />
             </div>
             <div>
@@ -281,6 +281,16 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
               />
             </div>
           </div>
+
+          <ImageUploadField
+            label="Cover Image (Upload to Storage)"
+            value={newProject.image}
+            valuePath={newProject.imagePath || undefined}
+            storageFolder="projects"
+            onChange={(url, path) =>
+              setNewProject((prev) => ({ ...prev, image: url, imagePath: path || "" }))
+            }
+          />
 
           <button
             type="submit"

@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Edit2, Trash2 } from "lucide-react";
 import { collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../firebase";
+import { ref, deleteObject } from "firebase/storage";
+import { db, storage } from "../../firebase";
+import ImageUploadField from "./ImageUploadField";
 
 interface BlogsTabProps {
   blogsList: any[];
@@ -20,6 +22,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
     readTime: "",
     link: "",
     image: "",
+    imagePath: "",
   });
 
   const handleCreateBlog = async (e: React.FormEvent) => {
@@ -35,6 +38,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
           readTime: newBlog.readTime || "3 min read",
           link: newBlog.link || "#",
           image: newBlog.image || "https://placehold.co/600x400/1e293b/cbd5e1?text=No+Image",
+          imagePath: newBlog.imagePath || null,
         });
         setEditingBlogId(null);
       } else {
@@ -52,6 +56,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
           readTime: newBlog.readTime || "3 min read",
           link: newBlog.link || "#",
           image: newBlog.image || "https://placehold.co/600x400/1e293b/cbd5e1?text=No+Image",
+          imagePath: newBlog.imagePath || null,
           createdAt: serverTimestamp(),
         });
       }
@@ -63,6 +68,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
         readTime: "",
         link: "",
         image: "",
+        imagePath: "",
       });
       await fetchAllData();
     } catch (err) {
@@ -78,6 +84,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
       readTime: blog.readTime || "",
       link: blog.link || "",
       image: blog.image || "",
+      imagePath: blog.imagePath || "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -90,12 +97,17 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
       readTime: "",
       link: "",
       image: "",
+      imagePath: "",
     });
   };
 
   const handleDeleteBlog = async (blogId: string) => {
     if (window.confirm("Are you sure you want to delete this article?")) {
       try {
+        const blog = blogsList.find((b) => b.id === blogId);
+        if (blog?.imagePath) {
+          deleteObject(ref(storage, blog.imagePath)).catch(() => {});
+        }
         await deleteDoc(doc(db, "blogs", blogId));
         await fetchAllData();
       } catch (err) {
@@ -161,7 +173,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
             ></textarea>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
                 Estimated Reading Time
@@ -186,19 +198,17 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
                 placeholder="https://medium.com/@yourusername"
               />
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
-                Featured Cover Image Path (Optional)
-              </label>
-              <input
-                type="text"
-                value={newBlog.image}
-                onChange={(e) => setNewBlog((prev) => ({ ...prev, image: e.target.value }))}
-                className="w-full bg-white border border-brand-line rounded-lg px-4 py-3 text-brand-ink text-sm focus:outline-none focus:border-brand-ink"
-                placeholder="/assets/images/blog.webp"
-              />
-            </div>
           </div>
+
+          <ImageUploadField
+            label="Featured Cover Image (Upload to Storage)"
+            value={newBlog.image}
+            valuePath={newBlog.imagePath || undefined}
+            storageFolder="blog-covers"
+            onChange={(url, path) =>
+              setNewBlog((prev) => ({ ...prev, image: url, imagePath: path || "" }))
+            }
+          />
 
           <button
             type="submit"

@@ -2,6 +2,9 @@
   "firestore": {
     "rules": "firestore.rules"
   },
+  "storage": {
+    "rules": "storage.rules"
+  },
   "functions": {
     "source": "functions"
   },
@@ -12,10 +15,18 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "predeploy": [
+      "npm run build",
+      "node scripts/prerender-hubs.ts"
+    ],
     "rewrites": [
       {
         "source": "/sitemap.xml",
         "run": { "serviceId": "seositemap", "region": "us-central1" }
+      },
+      {
+        "source": "/api/og",
+        "run": { "serviceId": "ogimage", "region": "us-central1" }
       },
       {
         "source": "/api/og/**",

@@ -11,6 +11,7 @@ export { articleSnapshot } from "./seo/snapshot";
 export { ogImage } from "./seo/og";
 export { imageResize } from "./seo/images";
 export { seoSitemap } from "./seo/sitemap";
+export { sendContactEmail, RESEND_API_KEY } from "./contact";
 
 const REGION = "us-central1";
 const PROD_HOST = "victorchidera.com";

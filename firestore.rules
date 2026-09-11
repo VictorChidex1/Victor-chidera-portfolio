@@ -26,7 +26,8 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // 3. CONTACTS COLLECTION: Public submission (validated), Admin-only view & delete
+    // 3. CONTACTS COLLECTION: Written only by the backend Cloud Function (Admin SDK).
+    //    Public read, write, update, delete are denied. Admin can view & delete.
     match /contacts/{contactId} {
       // Admin clearance required to view inquiry messages or delete them
       allow read, delete: if isAdmin();
@@ -34,28 +35,10 @@ service cloud.firestore {
       // Contact submissions can never be edited once submitted to preserve integrity
       allow update: if false;
 
-      // Public visitor form submission validation (Bot & Payload Injection filtering)
-      allow create: if 
-        // 1. Mandatory structural presence and exact schema match
-        request.resource.data.keys().hasAll(['name', 'email', 'message', 'createdAt']) &&
-        request.resource.data.keys().hasOnly(['name', 'email', 'message', 'createdAt']) &&
-        
-        // 2. Name validation: Non-empty string
-        request.resource.data.name is string && 
-        request.resource.data.name.trim().size() > 0 &&
-        request.resource.data.name.size() <= 100 &&
-        
-        // 3. Email validation: Simple valid regex matching
-        request.resource.data.email is string && 
-        request.resource.data.email.matches('.+@.+\\..+') &&
-        
-        // 4. Message validation: Length constraint preventing huge binary payload spam or scripting
-        request.resource.data.message is string && 
-        request.resource.data.message.trim().size() >= 5 && 
-        request.resource.data.message.size() <= 3000 &&
-        
-        // 5. Server timestamp validation: Prevents spoofed/client-modified submission timestamps
-        request.resource.data.createdAt == request.time;
+      // Public visitors cannot write directly — submissions go through the
+      // sendContactEmail callable function (Admin SDK), which validates, rate-limits,
+      // and persists the lead server-side.
+      allow create: if false;
     }
   }
 }

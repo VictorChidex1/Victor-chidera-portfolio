@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import emailjs from "@emailjs/browser";
-import { EMAIL_CONFIG } from "../config/email";
-import { db } from "../firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "../firebase";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -87,10 +85,16 @@ const Contact = () => {
     service: "",
     budget: "",
     message: "",
+    website: "", // honeypot — hidden from humans, bots may fill it
   });
   const [status, setStatus] = useState("idle");
   const [lastSubmitTime, setLastSubmitTime] = useState(0);
   const COOLDOWN_MS = 30000; // 30-second cooldown
+
+  const sendContactEmail = useMemo(
+    () => httpsCallable(functions, "sendContactEmail"),
+    [],
+  );
 
   /* ── Exchange rate ── */
   const [ngnPerUsd, setNgnPerUsd] = useState(FALLBACK_RATE);
@@ -152,38 +156,34 @@ const Contact = () => {
       return;
     }
 
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(
+      formData.email.trim(),
+    );
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.message.trim() ||
+      !emailValid
+    ) {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 3000);
+      return;
+    }
+
     setStatus("sending");
     setLastSubmitTime(now);
 
-    const templateParams = {
-      from_name: formData.name,
-      from_email: formData.email,
-      company: formData.company || "—",
-      service: formData.service,
-      budget: formData.budget,
-      message: formData.message,
-      to_name: "Victor Chidera",
-    };
-
     try {
-      // 1. Submit to Firestore contacts collection
-      await addDoc(collection(db, "contacts"), {
+      // Processed server-side: validated, persisted to Firestore, emailed via Resend.
+      await sendContactEmail({
         name: formData.name,
         email: formData.email,
-        company: formData.company || "",
+        company: formData.company,
         service: formData.service,
         budget: formData.budget,
         message: formData.message,
-        createdAt: serverTimestamp(),
+        website: formData.website, // honeypot
       });
-
-      // 2. Submit to EmailJS for email notification
-      await emailjs.send(
-        EMAIL_CONFIG.SERVICE_ID,
-        EMAIL_CONFIG.TEMPLATE_ID,
-        templateParams,
-        EMAIL_CONFIG.PUBLIC_KEY,
-      );
 
       setStatus("success");
       setFormData({
@@ -193,6 +193,7 @@ const Contact = () => {
         service: "",
         budget: "",
         message: "",
+        website: "",
       });
       setTimeout(() => setStatus("idle"), 3000);
     } catch (err) {
@@ -306,6 +307,19 @@ const Contact = () => {
       <div className="w-full md:w-1/2 bg-white p-8 py-24 md:p-16 lg:p-24 xl:p-32 flex items-center justify-center">
         <div className="w-full max-w-xl">
           <form onSubmit={handleSubmit} className="space-y-12">
+            {/* Honeypot — visually hidden; bots that fill it are silently rejected */}
+            <div className="hidden" aria-hidden="true">
+              <label htmlFor="contact-website">Website</label>
+              <input
+                id="contact-website"
+                type="text"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
             {/* 01 — Full Name */}
             <div className="space-y-2 group">
               <label htmlFor="contact-name" className={labelBase}>
