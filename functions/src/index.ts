@@ -36,7 +36,8 @@ function normalizePath(url: string): string {
 
 async function fetchShell(host: string): Promise<string | null> {
   const proto = "https";
-  const url = `${proto}://${host}/index.html`;
+  // With cleanUrls enabled, `/index.html` 301s to `/`; fetch `/` directly.
+  const url = `${proto}://${host}/`;
   try {
     const res = await fetch(url, { redirect: "follow" });
     if (res.ok) return await res.text();
@@ -81,7 +82,7 @@ export const seoGateway = onRequest(
       } catch (err) {
         logger.error("human shell error", err);
       }
-      res.redirect(302, "/index.html");
+      res.redirect(302, "/");
       return;
     }
 
@@ -115,7 +116,7 @@ export const seoGateway = onRequest(
       return;
     } catch (err) {
       logger.error("seoGateway error", err);
-      res.redirect(302, "/index.html");
+      res.redirect(302, "/");
       return;
     }
   }

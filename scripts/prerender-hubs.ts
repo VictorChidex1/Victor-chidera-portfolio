@@ -4,12 +4,15 @@
 // SEO-complete static HTML for every stable route, so Firebase Hosting can serve
 // them from the CDN with no Cloud Function invocation.
 //
-//   dist/index.html                       → patched in place (home)
-//   dist/{works,services,...}/index.html  → generated per route
+//   dist/index.html                  → patched in place (home)
+//   dist/{works,services,...}.html   → generated per route
+//
+// Single .html files (not folder/index.html) keep URLs clean: `/works` is served
+// with a 200 and no trailing-slash redirect, matching the canonical `/works`.
 //
 // Run:  node scripts/prerender-hubs.ts   (Node 22+ runs TypeScript natively)
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -178,9 +181,10 @@ function main(): void {
     if (path === "/") {
       writeFileSync(DIST_HTML, html);
     } else {
-      const dir = join(DIST, path.replace(/^\//, ""));
-      mkdirSync(dir, { recursive: true });
-      writeFileSync(join(dir, "index.html"), html);
+      // Single file per route (dist/works.html) so `/works` is served with a
+      // 200 and no trailing-slash 301, matching the canonical URL.
+      const file = join(DIST, `${path.replace(/^\//, "")}.html`);
+      writeFileSync(file, html);
     }
 
     count += 1;
