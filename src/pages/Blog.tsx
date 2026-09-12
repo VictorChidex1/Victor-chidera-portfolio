@@ -66,9 +66,9 @@ const Blog = () => {
         {/* Featured Article (Only on Page 1) */}
         {featuredPost && (
           <motion.a
-            href={featuredPost.link}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={featuredPost.slug ? `/blog/${featuredPost.slug}` : featuredPost.link}
+            target={featuredPost.slug ? undefined : "_blank"}
+            rel={featuredPost.slug ? undefined : "noopener noreferrer"}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -76,7 +76,7 @@ const Blog = () => {
           >
             <div className="relative w-full h-[50vh] md:h-[70vh] rounded-[32px] overflow-hidden mb-8 md:mb-12">
               <motion.img 
-                src={featuredPost.image} 
+                src={featuredPost.coverImage || featuredPost.image} 
                 alt={featuredPost.title}
                 loading="eager"
                 decoding="async"
@@ -126,15 +126,15 @@ const Blog = () => {
             {gridPosts.map((post) => (
               <motion.a 
                 key={post.id}
-                href={post.link} 
-                target="_blank"
-                rel="noopener noreferrer"
+                href={post.slug ? `/blog/${post.slug}` : post.link} 
+                target={post.slug ? undefined : "_blank"}
+                rel={post.slug ? undefined : "noopener noreferrer"}
                 variants={fadeInUp}
                 className="group block break-inside-avoid cursor-crosshair"
               >
                  <div className="w-full aspect-[4/3] rounded-[24px] overflow-hidden mb-6 md:mb-8 relative bg-neutral-100">
                     <motion.img 
-                      src={post.image} 
+                      src={post.coverImage || post.image} 
                       alt={post.title}
                       loading="lazy"
                       decoding="async"

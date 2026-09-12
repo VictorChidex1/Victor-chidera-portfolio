@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import testimonials from "../data/testimonials.json";
+import { useTestimonials } from "../hooks/useFirebaseData";
 
 const Testimonials = () => {
+  const { testimonials } = useTestimonials();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const next = () => setActiveIndex((prev) => (prev + 1) % testimonials.length);

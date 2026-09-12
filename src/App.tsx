@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
@@ -14,15 +14,24 @@ import ScrollToTop from "./components/ScrollToTop";
 // Import Pages
 import Home from "./pages/Home";
 import Works from "./pages/Works";
+import CaseStudy from "./pages/CaseStudy";
 import Services from "./pages/Services";
 import Testimonials from "./pages/Testimonials";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 function App() {
   const location = useLocation();
+
+  // Remove the build-time FOUC guard class once React has mounted, so the
+  // hydrated app is revealed before paint. (No-op when the class is absent,
+  // e.g. local dev or no-JS.)
+  useLayoutEffect(() => {
+    document.documentElement.classList.remove("prerender");
+  }, []);
 
   // Reset scroll to top instantly whenever the route changes so the
   // newly loaded page always opens from its top, not a mid-page position.
@@ -49,9 +58,11 @@ function App() {
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/works" element={<PageTransition><Works /></PageTransition>} />
+            <Route path="/works/:slug" element={<PageTransition><CaseStudy /></PageTransition>} />
             <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
             <Route path="/testimonials" element={<PageTransition><Testimonials /></PageTransition>} />
             <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
+            <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
             <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
             <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
             <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />

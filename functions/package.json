@@ -7,7 +7,6 @@
     "node": "20"
   },
   "scripts": {
-    "prebuild": "node ../scripts/sync-content.mjs",
     "build": "tsc",
     "serve": "npm run build && firebase emulators:start --only functions,hosting",
     "deploy": "npm run build && firebase deploy --only functions",

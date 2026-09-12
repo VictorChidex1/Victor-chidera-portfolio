@@ -16,7 +16,11 @@ import { AdminSidebar } from "../components/admin/AdminSidebar";
 import { OverviewTab } from "../components/admin/OverviewTab";
 import { ProjectsTab } from "../components/admin/ProjectsTab";
 import { BlogsTab } from "../components/admin/BlogsTab";
+import { ServicesTab } from "../components/admin/ServicesTab";
+import { TestimonialsTab } from "../components/admin/TestimonialsTab";
 import { InquiriesTab } from "../components/admin/InquiriesTab";
+
+type AdminTab = "overview" | "projects" | "blogs" | "services" | "testimonials" | "leads";
 
 const Admin: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -29,9 +33,11 @@ const Admin: React.FC = () => {
   const [loginLoading, setLoginLoading] = useState(false);
 
   // Dashboard state
-  const [activeTab, setActiveTab] = useState<"overview" | "projects" | "blogs" | "leads">("overview");
+  const [activeTab, setActiveTab] = useState<AdminTab>("overview");
   const [projectsList, setProjectsList] = useState<any[]>([]);
   const [blogsList, setBlogsList] = useState<any[]>([]);
+  const [servicesList, setServicesList] = useState<any[]>([]);
+  const [testimonialsList, setTestimonialsList] = useState<any[]>([]);
   const [leadsList, setLeadsList] = useState<any[]>([]);
 
   // Track authentication state
@@ -71,6 +77,16 @@ const Admin: React.FC = () => {
         return timeB - timeA;
       });
       setBlogsList(blogs);
+
+      // 2b. Services
+      const svcSnap = await getDocs(collection(db, "services"));
+      const services = svcSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setServicesList(sortProjects(services));
+
+      // 2c. Testimonials
+      const testiSnap = await getDocs(collection(db, "testimonials"));
+      const testimonials = testiSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setTestimonialsList(sortProjects(testimonials));
 
       // 3. Leads (Contacts)
       const leadSnap = await getDocs(collection(db, "contacts"));
@@ -155,6 +171,8 @@ const Admin: React.FC = () => {
                 <OverviewTab
                   projectsList={projectsList}
                   blogsList={blogsList}
+                  servicesList={servicesList}
+                  testimonialsList={testimonialsList}
                   leadsList={leadsList}
                   setActiveTab={setActiveTab}
                 />
@@ -170,6 +188,20 @@ const Admin: React.FC = () => {
               {activeTab === "blogs" && (
                 <BlogsTab
                   blogsList={blogsList}
+                  fetchAllData={fetchAllData}
+                />
+              )}
+
+              {activeTab === "services" && (
+                <ServicesTab
+                  servicesList={servicesList}
+                  fetchAllData={fetchAllData}
+                />
+              )}
+
+              {activeTab === "testimonials" && (
+                <TestimonialsTab
+                  testimonialsList={testimonialsList}
                   fetchAllData={fetchAllData}
                 />
               )}

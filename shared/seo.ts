@@ -4,7 +4,7 @@
 // Consumed by three environments (do not add runtime imports here):
 //   1. Client   → src/seo/site.ts + src/seo/schemas.ts re-export this
 //   2. Functions → functions/src/shared/seo.ts (synced copy) re-exported
-//   3. Prerender → scripts/prerender-hubs.ts imports this directly (Node TS)
+//   3. Prerender → scripts/prerender.ts imports this directly (Node TS)
 //
 // Keep this file dependency-free and use only erasable TypeScript syntax.
 // ─────────────────────────────────────────────────────────────────────────
@@ -44,7 +44,13 @@ export interface ArticlePost {
   title: string;
   description: string;
   slug: string;
+  /** Full path (e.g. "/works/my-project"); defaults to "/blog/{slug}". */
+  path?: string;
+  /** Schema.org type; defaults to "BlogPosting". Use "Article" for case studies. */
+  type?: string;
   coverImage?: string;
+  /** Extra images (e.g. case-study screenshots) included in the schema image array. */
+  images?: string[];
   publishedTime?: string;
   modifiedTime?: string;
   section?: string;
@@ -161,15 +167,23 @@ export function webPageSchema(name: string, path: string, description: string) {
 }
 
 export function articleSchema(post: ArticlePost) {
-  const url = `${SITE_URL}/blog/${post.slug}`;
+  const url = post.path
+    ? absoluteUrl(post.path)
+    : `${SITE_URL}/blog/${post.slug}`;
+  const primaryImage = post.coverImage
+    ? absoluteImage(post.coverImage)
+    : DEFAULT_OG_IMAGE;
+  const images = [
+    primaryImage,
+    ...(post.images || []).filter(Boolean).map(absoluteImage),
+  ];
+
   return {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": post.type || "BlogPosting",
     headline: post.title,
     description: post.description,
-    image: post.coverImage
-      ? absoluteImage(post.coverImage)
-      : `${SITE_URL}/api/og?slug=${encodeURIComponent(post.slug)}`,
+    image: images.length === 1 ? images[0] : images,
     url,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     author: { "@type": "Person", name: AUTHOR_NAME },

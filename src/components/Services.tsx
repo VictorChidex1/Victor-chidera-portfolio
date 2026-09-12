@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import services from "../data/services.json";
+import { useServices } from "../hooks/useFirebaseData";
+
+const GRADIENTS = [
+  "from-orange-500 to-rose-500",
+  "from-indigo-500 to-purple-600",
+  "from-cyan-500 to-blue-600",
+  "from-emerald-500 to-teal-600",
+];
 
 const Services = () => {
+  const { services } = useServices();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
 
   return (
@@ -42,7 +50,7 @@ const Services = () => {
                     isExpanded ? "opacity-30" : "opacity-0"
                   }`}
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} blur-[80px] md:blur-[120px] scale-150 transform translate-x-1/4 translate-y-1/4 rounded-full`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${GRADIENTS[index % GRADIENTS.length]} blur-[80px] md:blur-[120px] scale-150 transform translate-x-1/4 translate-y-1/4 rounded-full`} />
                 </div>
 
                 <div className="absolute inset-0 flex flex-col justify-between p-6 md:p-12 z-10 pointer-events-none">

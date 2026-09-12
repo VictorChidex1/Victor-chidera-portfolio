@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { ExternalLink, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProjects } from "../hooks/useFirebaseData";
@@ -6,7 +7,20 @@ import RouteSeo from "../components/seo/RouteSeo";
 import projectsFallback from "../data/projects-fallback.json";
 import { collectionPageSchema } from "../seo/schemas";
 
-export const projects = projectsFallback;
+interface Project {
+  id?: string | number;
+  title: string;
+  category?: string;
+  description?: string;
+  tech?: string[];
+  link?: string;
+  image?: string;
+  slug?: string;
+  order?: number | string;
+  status?: string;
+}
+
+export const projects = projectsFallback as Project[];
 
 const ProjectAccordionItem = ({ 
   project, 
@@ -14,13 +28,13 @@ const ProjectAccordionItem = ({
   isActive, 
   onClick 
 }: { 
-  project: typeof projects[0], 
+  project: Project, 
   index: number, 
   isActive: boolean, 
   onClick: () => void 
 }) => {
   // Extract just the main name before the colon for a cleaner accordion header
-  const shortTitle = project.title.split(':')[0];
+  const shortTitle = (project.title || "").split(':')[0];
 
   return (
     <div className="border-b border-neutral-200 overflow-hidden">
@@ -64,15 +78,19 @@ const ProjectAccordionItem = ({
               
               {/* Massive Cinematic Image */}
               <div className="w-full h-[40vh] md:h-[60vh] rounded-[24px] md:rounded-[32px] overflow-hidden mb-12 relative group cursor-crosshair">
-                <motion.img 
-                  src={project.image} 
-                  alt={project.title} 
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover object-center origin-center"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                />
+                {project.image ? (
+                  <motion.img 
+                    src={project.image} 
+                    alt={project.title} 
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover object-center origin-center"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-brand-surface" />
+                )}
                 <div className="absolute inset-0 bg-brand-ink/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
               </div>
               
@@ -84,24 +102,38 @@ const ProjectAccordionItem = ({
                   <p className="text-neutral-600 text-lg md:text-xl leading-relaxed mb-10 font-medium">
                     {project.description}
                   </p>
-                  <div className="flex flex-wrap gap-2 md:gap-3">
-                    {project.tech.map((t, i) => (
-                      <span key={i} className="px-4 py-2 bg-neutral-100 border border-neutral-200 text-neutral-800 text-sm rounded-full font-medium">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                  {project.tech && project.tech.length > 0 && (
+                    <div className="flex flex-wrap gap-2 md:gap-3">
+                      {project.tech.map((t, i) => (
+                        <span key={i} className="px-4 py-2 bg-neutral-100 border border-neutral-200 text-neutral-800 text-sm rounded-full font-medium">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/btn inline-flex items-center gap-3 bg-brand-ink text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-neutral-800 transition-colors shrink-0 mt-8 xl:mt-0"
-                >
-                  Explore Project 
-                  <ExternalLink size={20} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                </a>
+                {project.slug ? (
+                  <Link
+                    to={`/works/${project.slug}`}
+                    className="group/btn inline-flex items-center gap-3 bg-brand-ink text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-neutral-800 transition-colors shrink-0 mt-8 xl:mt-0"
+                  >
+                    View Case Study
+                    <Plus size={20} className="group-hover/btn:rotate-90 transition-transform" />
+                  </Link>
+                ) : (
+                  project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/btn inline-flex items-center gap-3 bg-brand-ink text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-neutral-800 transition-colors shrink-0 mt-8 xl:mt-0"
+                    >
+                      Explore Project
+                      <ExternalLink size={20} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                    </a>
+                  )
+                )}
               </div>
 
             </div>
@@ -147,7 +179,7 @@ const Works = () => {
             "Selected Works",
             "/works",
             "Explore Victor Chidera's latest full-stack projects, SaaS applications, and frontend implementations.",
-            projects.map((p) => ({ name: p.title, url: p.link }))
+            projects.filter((p) => p.link).map((p) => ({ name: p.title, url: p.link as string }))
           ),
         ]}
       />

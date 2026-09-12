@@ -14,3 +14,74 @@ body {
     cursor: none !important;
   }
 }
+
+/* CMS rich content (Tiptap HTML) rendered on case-study / blog pages */
+.prose-cms {
+  color: #111111;
+  line-height: 1.8;
+  font-size: 1.0625rem;
+}
+.prose-cms h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 2.5rem 0 1rem;
+}
+.prose-cms h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 1.75rem 0 0.75rem;
+}
+.prose-cms p {
+  margin: 1rem 0;
+}
+.prose-cms ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.prose-cms ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.prose-cms li {
+  margin: 0.375rem 0;
+}
+.prose-cms blockquote {
+  border-left: 3px solid #f97316;
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  color: #666666;
+}
+.prose-cms code {
+  background: #f7f7f5;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.9em;
+}
+.prose-cms pre {
+  background: #0d1117;
+  color: #e7e5e4;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+.prose-cms pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+.prose-cms a {
+  color: #f97316;
+  text-decoration: underline;
+}
+.prose-cms img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+}
+

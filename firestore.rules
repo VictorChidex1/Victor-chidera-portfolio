@@ -26,6 +26,18 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 2b. SERVICES COLLECTION: Public viewable, Admin-only write privileges
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 2c. TESTIMONIALS COLLECTION: Public viewable, Admin-only write privileges
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // 3. CONTACTS COLLECTION: Written only by the backend Cloud Function (Admin SDK).
     //    Public read, write, update, delete are denied. Admin can view & delete.
     match /contacts/{contactId} {

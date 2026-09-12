@@ -1,17 +1,21 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { PlusCircle, FileText, Mail, CheckCircle } from "lucide-react";
+import { PlusCircle, FileText, Mail, CheckCircle, Wrench, Quote } from "lucide-react";
 
 interface OverviewTabProps {
   projectsList: any[];
   blogsList: any[];
+  servicesList: any[];
+  testimonialsList: any[];
   leadsList: any[];
-  setActiveTab: (tab: "overview" | "projects" | "blogs" | "leads") => void;
+  setActiveTab: (tab: "overview" | "projects" | "blogs" | "services" | "testimonials" | "leads") => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
   projectsList,
   blogsList,
+  servicesList,
+  testimonialsList,
   leadsList,
   setActiveTab,
 }) => {
@@ -23,7 +27,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       exit={{ opacity: 0, y: -15 }}
       className="space-y-8"
     >
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Stats Box 1 */}
         <div
           onClick={() => setActiveTab("projects")}
@@ -59,6 +63,40 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </div>
 
         {/* Stats Box 3 */}
+        <div
+          onClick={() => setActiveTab("services")}
+          className="bg-white border border-brand-line p-6 rounded-2xl relative overflow-hidden group cursor-pointer hover:border-brand-ink transform hover:scale-[1.01] transition-all"
+        >
+          <div className="absolute right-4 top-4 text-brand-ink/10 group-hover:text-brand-ink/20 transition-colors">
+            <Wrench size={54} />
+          </div>
+          <span className="text-brand-muted text-xs font-mono uppercase">[DATABASE.SERVICES]</span>
+          <h4 className="text-3xl font-bold text-brand-ink mt-4 font-mono">
+            {servicesList.length}
+          </h4>
+          <p className="text-brand-muted text-xs mt-2">
+            Services fetched from Firestore
+          </p>
+        </div>
+
+        {/* Stats Box 4 */}
+        <div
+          onClick={() => setActiveTab("testimonials")}
+          className="bg-white border border-brand-line p-6 rounded-2xl relative overflow-hidden group cursor-pointer hover:border-brand-ink transform hover:scale-[1.01] transition-all"
+        >
+          <div className="absolute right-4 top-4 text-brand-ink/10 group-hover:text-brand-ink/20 transition-colors">
+            <Quote size={54} />
+          </div>
+          <span className="text-brand-muted text-xs font-mono uppercase">[DATABASE.TESTIMONIALS]</span>
+          <h4 className="text-3xl font-bold text-brand-ink mt-4 font-mono">
+            {testimonialsList.length}
+          </h4>
+          <p className="text-brand-muted text-xs mt-2">
+            Testimonials fetched from Firestore
+          </p>
+        </div>
+
+        {/* Stats Box 5 */}
         <div
           onClick={() => setActiveTab("leads")}
           className="bg-white border border-brand-line p-6 rounded-2xl relative overflow-hidden group cursor-pointer hover:border-brand-ink transform hover:scale-[1.01] transition-all"
