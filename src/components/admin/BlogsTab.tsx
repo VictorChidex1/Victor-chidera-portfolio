@@ -8,6 +8,7 @@ import {
   deleteDoc,
   doc,
   serverTimestamp,
+  Timestamp,
   getDocs,
   query,
   where,
@@ -17,6 +18,8 @@ import { db, storage } from "../../firebase";
 import ImageUploadField from "./ImageUploadField";
 import RichTextEditor from "./RichTextEditor";
 import { slugify } from "../../lib/slug";
+import { excerptFromHtml } from "../../lib/excerpt";
+import { toDatetimeLocal, fromDatetimeLocal, formatDisplayDate } from "../../lib/datetime";
 
 interface BlogsTabProps {
   blogsList: any[];
@@ -37,6 +40,7 @@ const emptyBlog = {
   tags: [] as string[],
   link: "",
   status: "published",
+  publishedAtInput: "",
   seoTitle: "",
   seoDescription: "",
 };
@@ -58,6 +62,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
   const [adminBlogsPage, setAdminBlogsPage] = useState(1);
   const [subTab, setSubTab] = useState<SubTab>("details");
   const [slugTouched, setSlugTouched] = useState(false);
+  const [excerptTouched, setExcerptTouched] = useState(false);
   const [saving, setSaving] = useState(false);
   const [blog, setBlog] = useState(emptyBlog);
   const blogsPerPage = 10;
@@ -76,6 +81,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
     setBlog(emptyBlog);
     setEditingBlogId(null);
     setSlugTouched(false);
+    setExcerptTouched(false);
     setSubTab("details");
   };
 
@@ -101,11 +107,8 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
 
     setSaving(true);
     try {
-      const formattedDate = new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      });
+      const scheduledDate = fromDatetimeLocal(blog.publishedAtInput);
+      const publishAt = scheduledDate ? Timestamp.fromDate(scheduledDate) : null;
 
       const payload = {
         title: blog.title,
@@ -124,13 +127,23 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
       };
 
       if (editingBlogId) {
-        await updateDoc(doc(db, "blogs", editingBlogId), payload);
+        await updateDoc(doc(db, "blogs", editingBlogId), {
+          ...payload,
+          ...(publishAt
+            ? { publishedAt: publishAt, date: formatDisplayDate(scheduledDate!) }
+            : {}),
+        });
       } else {
+        const formattedDate = new Date().toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
         await addDoc(collection(db, "blogs"), {
           ...payload,
-          date: formattedDate,
+          date: publishAt ? formatDisplayDate(scheduledDate!) : formattedDate,
           createdAt: serverTimestamp(),
-          publishedAt: serverTimestamp(),
+          publishedAt: publishAt ?? serverTimestamp(),
         });
       }
 
@@ -146,6 +159,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
   const handleStartEdit = (b: any) => {
     setEditingBlogId(b.id);
     setSlugTouched(true);
+    setExcerptTouched(Boolean(b.excerpt));
     setSubTab("details");
     setBlog({
       title: b.title || "",
@@ -159,6 +173,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
       tags: b.tags || [],
       link: b.link || "",
       status: b.status || "published",
+      publishedAtInput: toDatetimeLocal(b.publishedAt),
       seoTitle: b.seoTitle || "",
       seoDescription: b.seoDescription || "",
     });
@@ -245,7 +260,17 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
 
               <div>
                 <label className={labelClass}>Excerpt (Summary)</label>
-                <textarea rows={3} value={blog.excerpt} onChange={(e) => set("excerpt", e.target.value)} required className={inputClass} placeholder="A one-two sentence summary shown on the /blog listing." />
+                <textarea
+                  rows={3}
+                  value={blog.excerpt}
+                  onChange={(e) => {
+                    set("excerpt", e.target.value);
+                    setExcerptTouched(true);
+                  }}
+                  required
+                  className={inputClass}
+                  placeholder="Auto-filled from the article content (or type your own)."
+                />
               </div>
 
               {/* Tags */}
@@ -285,7 +310,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
                 onChange={(url, path) => setBlog((prev) => ({ ...prev, coverImage: url, coverImagePath: path || "" }))}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
                 <div>
                   <label className={labelClass}>Read Time</label>
                   <input type="text" value={blog.readTime} onChange={(e) => set("readTime", e.target.value)} className={inputClass} placeholder="Auto from content" />
@@ -301,6 +326,11 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
                     <option value="draft">Draft</option>
                   </select>
                 </div>
+                <div>
+                  <label className={labelClass}>Publish Date &amp; Time</label>
+                  <input type="datetime-local" value={blog.publishedAtInput} onChange={(e) => set("publishedAtInput", e.target.value)} className={inputClass} />
+                  <p className="text-brand-muted text-[10px] mt-1">Empty = now · Past = backdate · Future = schedule</p>
+                </div>
               </div>
             </>
           )}
@@ -310,7 +340,10 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
               <label className={labelClass}>Article Content</label>
               <RichTextEditor
                 content={blog.content}
-                onChange={(html) => set("content", html)}
+                onChange={(html) => {
+                  set("content", html);
+                  if (!excerptTouched) set("excerpt", excerptFromHtml(html));
+                }}
                 placeholder="Write your article…"
                 minHeight="420px"
               />
@@ -349,6 +382,9 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
                     <h5 className="font-bold text-brand-ink text-sm flex items-center gap-2">
                       {b.title}
                       {b.status === "draft" && <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded font-mono">draft</span>}
+                      {b.status !== "draft" && b.publishedAt?.seconds * 1000 > Date.now() && (
+                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded font-mono">scheduled</span>
+                      )}
                     </h5>
                     <p className="text-brand-muted text-xs mt-1">
                       {b.slug ? <span className="font-mono">/blog/{b.slug}</span> : <span>External link · {b.readTime}</span>}

@@ -14,8 +14,15 @@ import testimonialsFallback from "../data/testimonials.json";
 import projectsFallback from "../data/projects-fallback.json";
 import blogPostsFallback from "../data/blog-posts-fallback.json";
 
+const isLive = (doc: any): boolean => {
+  const ts = doc.publishedAt;
+  if (!ts) return true;
+  const seconds = typeof ts === "number" ? ts : ts.seconds;
+  return typeof seconds === "number" ? seconds * 1000 <= Date.now() : true;
+};
+
 const isPublished = (doc: any) =>
-  doc.status === undefined || doc.status !== "draft";
+  (doc.status === undefined || doc.status !== "draft") && isLive(doc);
 
 // Generic order-first sort: numeric `order` ascending, then newest first.
 export const sortByOrder = (items: any[]) => {
@@ -102,7 +109,13 @@ export const useBlogs = () => {
       try {
         const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"));
         const snap = await getDocs(q);
-        const blogs = mapDocs(snap).filter(isPublished);
+        const blogs = mapDocs(snap)
+          .filter(isPublished)
+          .sort((a: any, b: any) => {
+            const ta = a.publishedAt?.seconds || a.createdAt?.seconds || 0;
+            const tb = b.publishedAt?.seconds || b.createdAt?.seconds || 0;
+            return tb - ta;
+          });
         setBlogsList(blogs.length > 0 ? blogs : blogPostsFallback);
       } catch (err) {
         console.warn("Error fetching blogs:", err);

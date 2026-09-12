@@ -8,6 +8,7 @@ import {
   deleteDoc,
   doc,
   serverTimestamp,
+  Timestamp,
   getDocs,
   query,
   where,
@@ -18,6 +19,8 @@ import ImageUploadField from "./ImageUploadField";
 import RichTextEditor from "./RichTextEditor";
 import ScreenshotsUploader, { Screenshot } from "./ScreenshotsUploader";
 import { slugify } from "../../lib/slug";
+import { excerptFromHtml } from "../../lib/excerpt";
+import { toDatetimeLocal, fromDatetimeLocal } from "../../lib/datetime";
 
 interface ProjectsTabProps {
   projectsList: any[];
@@ -46,6 +49,7 @@ const emptyProject = {
   imagePath: "",
   techInput: "",
   tech: [] as string[],
+  publishedAtInput: "",
   seoTitle: "",
   seoDescription: "",
   overview: "",
@@ -82,6 +86,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
   const [adminProjectsPage, setAdminProjectsPage] = useState(1);
   const [subTab, setSubTab] = useState<SubTab>("details");
   const [slugTouched, setSlugTouched] = useState(false);
+  const [descriptionTouched, setDescriptionTouched] = useState(false);
   const [saving, setSaving] = useState(false);
   const [project, setProject] = useState(emptyProject);
   const projectsPerPage = 10;
@@ -110,6 +115,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
     setProject(emptyProject);
     setEditingProjectId(null);
     setSlugTouched(false);
+    setDescriptionTouched(false);
     setSubTab("details");
   };
 
@@ -136,6 +142,9 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
 
     setSaving(true);
     try {
+      const scheduledDate = fromDatetimeLocal(project.publishedAtInput);
+      const publishAt = scheduledDate ? Timestamp.fromDate(scheduledDate) : null;
+
       const payload = {
         title: project.title,
         slug,
@@ -144,7 +153,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
         status: project.status,
         order: project.order !== "" ? Number(project.order) : 99999,
         role: project.role,
-        year: project.year,
+        year: project.year || (scheduledDate ? String(scheduledDate.getFullYear()) : ""),
         client: project.client,
         link: project.link || "",
         image: project.image || "",
@@ -166,9 +175,16 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
       };
 
       if (editingProjectId) {
-        await updateDoc(doc(db, "projects", editingProjectId), payload);
+        await updateDoc(doc(db, "projects", editingProjectId), {
+          ...payload,
+          ...(publishAt ? { publishedAt: publishAt } : {}),
+        });
       } else {
-        await addDoc(collection(db, "projects"), { ...payload, createdAt: serverTimestamp(), publishedAt: serverTimestamp() });
+        await addDoc(collection(db, "projects"), {
+          ...payload,
+          createdAt: serverTimestamp(),
+          publishedAt: publishAt ?? serverTimestamp(),
+        });
       }
 
       resetForm();
@@ -183,6 +199,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
   const handleStartEdit = (proj: any) => {
     setEditingProjectId(proj.id);
     setSlugTouched(true);
+    setDescriptionTouched(Boolean(proj.description));
     setSubTab("details");
     setProject({
       title: proj.title || "",
@@ -199,6 +216,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
       imagePath: proj.imagePath || "",
       techInput: "",
       tech: proj.tech || [],
+      publishedAtInput: toDatetimeLocal(proj.publishedAt),
       seoTitle: proj.seoTitle || "",
       seoDescription: proj.seoDescription || "",
       overview: proj.overview || "",
@@ -335,7 +353,16 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
 
               <div>
                 <label className={labelClass}>Short Description (listing card)</label>
-                <textarea rows={3} value={project.description} onChange={(e) => set("description", e.target.value)} className={inputClass} placeholder="One-paragraph summary shown on /works" />
+                <textarea
+                  rows={3}
+                  value={project.description}
+                  onChange={(e) => {
+                    set("description", e.target.value);
+                    setDescriptionTouched(true);
+                  }}
+                  className={inputClass}
+                  placeholder="Auto-filled from the Overview section (or type your own)."
+                />
               </div>
 
               {/* Tech pills */}
@@ -375,7 +402,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                 onChange={(url, path) => setProject((prev) => ({ ...prev, image: url, imagePath: path || "" }))}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
                 <div>
                   <label className={labelClass}>Order Priority</label>
                   <input type="number" value={project.order} onChange={(e) => set("order", e.target.value)} className={inputClass} placeholder="1" min="1" />
@@ -386,6 +413,11 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                     <option value="published">Published</option>
                     <option value="draft">Draft</option>
                   </select>
+                </div>
+                <div>
+                  <label className={labelClass}>Publish Date &amp; Time</label>
+                  <input type="datetime-local" value={project.publishedAtInput} onChange={(e) => set("publishedAtInput", e.target.value)} className={inputClass} />
+                  <p className="text-brand-muted text-[10px] mt-1">Empty = now · Past = backdate · Future = schedule</p>
                 </div>
               </div>
             </>
@@ -399,7 +431,12 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                     <label className={labelClass}>{f.label}</label>
                     <RichTextEditor
                       content={project[f.key] as string}
-                      onChange={(html) => set(f.key, html)}
+                      onChange={(html) => {
+                        set(f.key, html);
+                        if (f.key === "overview" && !descriptionTouched) {
+                          set("description", excerptFromHtml(html));
+                        }
+                      }}
                       placeholder={`Write the ${f.label} section…`}
                     />
                   </div>
@@ -480,6 +517,9 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                       )}
                       {proj.title}
                       {proj.status === "draft" && <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded font-mono">draft</span>}
+                      {proj.status !== "draft" && proj.publishedAt?.seconds * 1000 > Date.now() && (
+                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded font-mono">scheduled</span>
+                      )}
                     </h5>
                     <p className="text-brand-muted text-xs mt-1">
                       {proj.slug ? <span className="font-mono">/works/{proj.slug}</span> : <span>{proj.category}</span>}

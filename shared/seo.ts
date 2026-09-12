@@ -14,7 +14,7 @@ export const SITE_NAME = "Victor Chidera";
 export const SITE_TITLE = "Victor Chidera | Full Stack Developer";
 export const SITE_DESCRIPTION =
   "Portfolio of Victor Chidera, a Full Stack Developer specializing in React, Node.js, TypeScript, Firebase, and modern UI/UX design.";
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.webp`;
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/assets/images/victor-chidera-logo.webp`;
 
 export const AUTHOR_NAME = "Victor Chidera";
 export const AUTHOR_JOB_TITLE = "Full Stack Developer";

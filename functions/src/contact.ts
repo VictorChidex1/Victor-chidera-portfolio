@@ -135,7 +135,16 @@ function buildEmailHtml(data: ContactData): string {
 }
 
 export const sendContactEmail = onCall(
-  { region: REGION, timeoutSeconds: 60, secrets: [RESEND_API_KEY] },
+  {
+    region: REGION,
+    timeoutSeconds: 30,
+    maxInstances: 3,
+    concurrency: 80,
+    memory: "256MiB",
+    cpu: 1,
+    minInstances: 0,
+    secrets: [RESEND_API_KEY],
+  },
   async (req) => {
     const apiKey = RESEND_API_KEY.value();
     const payload = (req.data ?? {}) as ContactPayload;

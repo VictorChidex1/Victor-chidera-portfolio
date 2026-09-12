@@ -47,6 +47,13 @@ function normalizeTimestamp(v: any): { seconds: number } | undefined {
   return undefined;
 }
 
+// A scheduled item (future publishedAt) is not yet live, so it must not be
+// prerendered or sitemapped. Missing timestamp = live.
+function isLive(ts: { seconds: number } | undefined): boolean {
+  if (!ts) return true;
+  return ts.seconds * 1000 <= Date.now();
+}
+
 async function main(): Promise<void> {
   const key = findKey();
   if (!key) {
@@ -72,7 +79,8 @@ async function main(): Promise<void> {
   const snap = await db.collection("blogs").get();
   const blogs = snap.docs
     .map((d: any) => ({ id: d.id, ...(d.data() ?? {}) }))
-    .filter((b: any) => b.status === undefined || b.status !== "draft");
+    .filter((b: any) => b.status === undefined || b.status !== "draft")
+    .filter((b: any) => isLive(normalizeTimestamp(b.publishedAt)));
 
   const cleanBlogs = blogs
     .map((b: any) => ({
@@ -96,7 +104,8 @@ async function main(): Promise<void> {
   const projSnap = await db.collection("projects").get();
   const projects = projSnap.docs
     .map((d: any) => ({ id: d.id, ...(d.data() ?? {}) }))
-    .filter((p: any) => p.status === undefined || p.status !== "draft");
+    .filter((p: any) => p.status === undefined || p.status !== "draft")
+    .filter((p: any) => isLive(normalizeTimestamp(p.publishedAt)));
 
   const cleanProjects = projects.map((p: any) => ({
     slug: p.slug || "",
