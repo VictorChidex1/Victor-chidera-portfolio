@@ -1,4 +1,5 @@
 import { useEditor, EditorContent } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/react/menus";
 import type { ReactNode } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -7,6 +8,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import {
   Bold,
   Italic,
+  Strikethrough,
   List,
   ListOrdered,
   Quote,
@@ -103,24 +105,39 @@ const RichTextEditor = ({ content, onChange, placeholder, minHeight = "220px" }:
   return (
     <div className="border border-brand-line rounded-lg bg-white overflow-hidden">
       <style>{EDITOR_STYLES}</style>
-      <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-b border-brand-line bg-brand-surface">
-        <ToolbarButton label="Bold" onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")}><Bold size={15} /></ToolbarButton>
-        <ToolbarButton label="Italic" onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")}><Italic size={15} /></ToolbarButton>
-        <ToolbarButton label="Heading 2" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} active={editor.isActive("heading", { level: 2 })}><Heading2 size={15} /></ToolbarButton>
-        <ToolbarButton label="Heading 3" onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} active={editor.isActive("heading", { level: 3 })}><Heading3 size={15} /></ToolbarButton>
-        <div className="w-px h-5 bg-brand-line mx-1" />
-        <ToolbarButton label="Bullet list" onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive("bulletList")}><List size={15} /></ToolbarButton>
-        <ToolbarButton label="Ordered list" onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editor.isActive("orderedList")}><ListOrdered size={15} /></ToolbarButton>
-        <ToolbarButton label="Blockquote" onClick={() => editor.chain().focus().toggleBlockquote().run()} active={editor.isActive("blockquote")}><Quote size={15} /></ToolbarButton>
-        <ToolbarButton label="Code block" onClick={() => editor.chain().focus().toggleCodeBlock().run()} active={editor.isActive("codeBlock")}><Code size={15} /></ToolbarButton>
-        <div className="w-px h-5 bg-brand-line mx-1" />
-        <ToolbarButton label="Link" onClick={setLink} active={editor.isActive("link")}><Link2 size={15} /></ToolbarButton>
-        <ToolbarButton label="Image" onClick={addImage}><ImageIcon size={15} /></ToolbarButton>
-        <div className="w-px h-5 bg-brand-line mx-1" />
-        <ToolbarButton label="Undo" onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()}><Undo2 size={15} /></ToolbarButton>
-        <ToolbarButton label="Redo" onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()}><Redo2 size={15} /></ToolbarButton>
+      <div className="max-h-[65vh] overflow-y-auto">
+        <div className="sticky top-0 z-20 flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-b border-brand-line bg-brand-surface">
+          <ToolbarButton label="Bold" onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")}><Bold size={15} /></ToolbarButton>
+          <ToolbarButton label="Italic" onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")}><Italic size={15} /></ToolbarButton>
+          <ToolbarButton label="Heading 2" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} active={editor.isActive("heading", { level: 2 })}><Heading2 size={15} /></ToolbarButton>
+          <ToolbarButton label="Heading 3" onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} active={editor.isActive("heading", { level: 3 })}><Heading3 size={15} /></ToolbarButton>
+          <div className="w-px h-5 bg-brand-line mx-1" />
+          <ToolbarButton label="Bullet list" onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive("bulletList")}><List size={15} /></ToolbarButton>
+          <ToolbarButton label="Ordered list" onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editor.isActive("orderedList")}><ListOrdered size={15} /></ToolbarButton>
+          <ToolbarButton label="Blockquote" onClick={() => editor.chain().focus().toggleBlockquote().run()} active={editor.isActive("blockquote")}><Quote size={15} /></ToolbarButton>
+          <ToolbarButton label="Code block" onClick={() => editor.chain().focus().toggleCodeBlock().run()} active={editor.isActive("codeBlock")}><Code size={15} /></ToolbarButton>
+          <div className="w-px h-5 bg-brand-line mx-1" />
+          <ToolbarButton label="Link" onClick={setLink} active={editor.isActive("link")}><Link2 size={15} /></ToolbarButton>
+          <ToolbarButton label="Image" onClick={addImage}><ImageIcon size={15} /></ToolbarButton>
+          <div className="w-px h-5 bg-brand-line mx-1" />
+          <ToolbarButton label="Undo" onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()}><Undo2 size={15} /></ToolbarButton>
+          <ToolbarButton label="Redo" onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()}><Redo2 size={15} /></ToolbarButton>
+        </div>
+        <EditorContent editor={editor} />
       </div>
-      <EditorContent editor={editor} />
+
+      {editor && (
+        <BubbleMenu
+          editor={editor}
+          className="flex items-center gap-0.5 p-1.5 bg-white border border-brand-line rounded-xl shadow-lg z-50"
+        >
+          <ToolbarButton label="Bold" onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")}><Bold size={15} /></ToolbarButton>
+          <ToolbarButton label="Italic" onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")}><Italic size={15} /></ToolbarButton>
+          <ToolbarButton label="Strikethrough" onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive("strike")}><Strikethrough size={15} /></ToolbarButton>
+          <div className="w-px h-5 bg-brand-line mx-1" />
+          <ToolbarButton label="Link" onClick={setLink} active={editor.isActive("link")}><Link2 size={15} /></ToolbarButton>
+        </BubbleMenu>
+      )}
     </div>
   );
 };

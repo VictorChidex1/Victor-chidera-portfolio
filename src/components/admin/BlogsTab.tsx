@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Plus, Edit2, Trash2 } from "lucide-react";
 import {
@@ -23,6 +23,7 @@ import { toDatetimeLocal, fromDatetimeLocal, formatDisplayDate } from "../../lib
 
 interface BlogsTabProps {
   blogsList: any[];
+  settings?: any;
   fetchAllData: () => Promise<void>;
 }
 
@@ -31,6 +32,7 @@ type SubTab = "details" | "content" | "seo";
 const emptyBlog = {
   title: "",
   slug: "",
+  author: "",
   excerpt: "",
   content: "",
   coverImage: "",
@@ -57,7 +59,7 @@ function computeReadTime(html: string): string {
   return `${Math.max(1, Math.ceil(words / 200))} min read`;
 }
 
-export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) => {
+export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, settings, fetchAllData }) => {
   const [editingBlogId, setEditingBlogId] = useState<string | null>(null);
   const [adminBlogsPage, setAdminBlogsPage] = useState(1);
   const [subTab, setSubTab] = useState<SubTab>("details");
@@ -69,6 +71,13 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
 
   const set = (key: keyof typeof emptyBlog, value: any) =>
     setBlog((prev) => ({ ...prev, [key]: value }));
+
+  // Auto-fill the author from site settings on brand-new posts.
+  useEffect(() => {
+    if (!editingBlogId && settings?.name && !blog.author) {
+      setBlog((prev) => ({ ...prev, author: settings.name }));
+    }
+  }, [settings?.name, editingBlogId]);
 
   const addTag = () => {
     if (blog.tagsInput.trim()) {
@@ -113,6 +122,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
       const payload = {
         title: blog.title,
         slug,
+        author: blog.author || settings?.name || "",
         excerpt: blog.excerpt,
         content: blog.content,
         coverImage: blog.coverImage || "",
@@ -164,6 +174,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
     setBlog({
       title: b.title || "",
       slug: b.slug || "",
+      author: b.author || "",
       excerpt: b.excerpt || "",
       content: b.content || "",
       coverImage: b.coverImage || b.image || "",
@@ -256,6 +267,20 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
                     placeholder="blueprint-before-code"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className={labelClass}>Author</label>
+                <input
+                  type="text"
+                  value={blog.author}
+                  onChange={(e) => set("author", e.target.value)}
+                  className={inputClass}
+                  placeholder="Victor Chidera"
+                />
+                <p className="text-brand-muted text-[10px] mt-1">
+                  Auto-filled from Site Settings. Edit per-post if needed.
+                </p>
               </div>
 
               <div>
@@ -388,6 +413,7 @@ export const BlogsTab: React.FC<BlogsTabProps> = ({ blogsList, fetchAllData }) =
                     </h5>
                     <p className="text-brand-muted text-xs mt-1">
                       {b.slug ? <span className="font-mono">/blog/{b.slug}</span> : <span>External link · {b.readTime}</span>}
+                      {b.author && <span className="text-brand-accent font-medium"> · by {b.author}</span>}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

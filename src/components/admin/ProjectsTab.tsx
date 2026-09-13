@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus, Edit2, Trash2 } from "lucide-react";
+import { Plus, Edit2, Trash2, ChevronUp, ChevronDown, GripVertical } from "lucide-react";
 import {
   collection,
   addDoc,
@@ -12,8 +12,26 @@ import {
   getDocs,
   query,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import type { DragEndEvent } from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  arrayMove,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { db, storage } from "../../firebase";
 import ImageUploadField from "./ImageUploadField";
 import RichTextEditor from "./RichTextEditor";
@@ -40,7 +58,6 @@ const emptyProject = {
   category: "",
   description: "",
   status: "published",
-  order: "",
   role: "",
   year: "",
   client: "",
@@ -81,6 +98,102 @@ const SUBTABS: { key: SubTab; label: string }[] = [
   { key: "seo", label: "SEO" },
 ];
 
+interface SortableProjectRowProps {
+  project: any;
+  fullIndex: number;
+  total: number;
+  onMove: (from: number, to: number) => void;
+  onEdit: (proj: any) => void;
+  onDelete: (id: string) => void;
+}
+
+const SortableProjectRow: React.FC<SortableProjectRowProps> = ({
+  project,
+  fullIndex,
+  total,
+  onMove,
+  onEdit,
+  onDelete,
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: project.id,
+  });
+  const style = { transform: CSS.Transform.toString(transform), transition };
+  const isFirst = fullIndex === 0;
+  const isLast = fullIndex === total - 1;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`py-4 flex justify-between items-center gap-4 ${isDragging ? "opacity-60" : ""}`}
+    >
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          {...attributes}
+          {...listeners}
+          className="w-8 h-8 flex items-center justify-center rounded-lg cursor-grab active:cursor-grabbing text-brand-muted hover:text-brand-ink hover:bg-brand-surface transition-all"
+          title="Drag to reorder"
+        >
+          <GripVertical size={16} />
+        </button>
+        <span className="px-2 py-0.5 bg-brand-ink/5 border border-brand-line text-brand-ink text-xs rounded font-mono">
+          #{fullIndex + 1}
+        </span>
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <h5 className="font-bold text-brand-ink text-sm flex items-center gap-2">
+          {project.title}
+          {project.status === "draft" && (
+            <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded font-mono">draft</span>
+          )}
+          {project.status !== "draft" && project.publishedAt?.seconds * 1000 > Date.now() && (
+            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded font-mono">scheduled</span>
+          )}
+        </h5>
+        <p className="text-brand-muted text-xs mt-1">
+          {project.slug ? <span className="font-mono">/works/{project.slug}</span> : <span>{project.category}</span>}
+        </p>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => onMove(fullIndex, fullIndex - 1)}
+          disabled={isFirst}
+          className="w-8 h-8 flex items-center justify-center bg-white border border-brand-line text-brand-muted rounded-lg hover:border-brand-ink hover:text-brand-ink transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+          title="Move up"
+        >
+          <ChevronUp size={15} />
+        </button>
+        <button
+          onClick={() => onMove(fullIndex, fullIndex + 1)}
+          disabled={isLast}
+          className="w-8 h-8 flex items-center justify-center bg-white border border-brand-line text-brand-muted rounded-lg hover:border-brand-ink hover:text-brand-ink transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+          title="Move down"
+        >
+          <ChevronDown size={15} />
+        </button>
+        <button
+          onClick={() => onEdit(project)}
+          className="w-9 h-9 flex items-center justify-center bg-brand-ink/5 border border-brand-line text-brand-ink rounded-lg hover:bg-brand-ink hover:text-white transition-all"
+          title="Edit"
+        >
+          <Edit2 size={15} />
+        </button>
+        <button
+          onClick={() => onDelete(project.id)}
+          className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all"
+          title="Delete"
+        >
+          <Trash2 size={15} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAllData }) => {
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
   const [adminProjectsPage, setAdminProjectsPage] = useState(1);
@@ -89,10 +202,22 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
   const [descriptionTouched, setDescriptionTouched] = useState(false);
   const [saving, setSaving] = useState(false);
   const [project, setProject] = useState(emptyProject);
+  const [orderedProjects, setOrderedProjects] = useState<any[]>([]);
   const projectsPerPage = 10;
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor),
+    useSensor(KeyboardSensor)
+  );
 
   const set = (key: keyof typeof emptyProject, value: any) =>
     setProject((prev) => ({ ...prev, [key]: value }));
+
+  // Keep the local ordered list in sync with the parent's sorted list.
+  useEffect(() => {
+    setOrderedProjects(projectsList);
+  }, [projectsList]);
 
   const addTechPill = () => {
     if (project.techInput.trim()) {
@@ -126,6 +251,45 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
     return snap.docs.some((d) => d.id !== excludeId);
   };
 
+  // Write sequential order 1..N for `next`, updating only docs whose order changed.
+  const persistOrder = async (next: any[]) => {
+    const prevMap = new Map(orderedProjects.map((p) => [p.id, p.order]));
+    const batch = writeBatch(db);
+    let changed = 0;
+    next.forEach((p, i) => {
+      const order = i + 1;
+      if (prevMap.get(p.id) !== order) {
+        batch.update(doc(db, "projects", p.id), { order });
+        changed += 1;
+      }
+    });
+    if (changed > 0) await batch.commit();
+    return changed;
+  };
+
+  // Shared by the ↑/↓ arrows and drag-and-drop.
+  const applyMove = async (from: number, to: number) => {
+    if (from < 0 || to < 0 || to >= orderedProjects.length || from === to) return;
+    const next = arrayMove([...orderedProjects], from, to).map((p, i) => ({ ...p, order: i + 1 }));
+    setOrderedProjects(next);
+    try {
+      await persistOrder(next);
+    } catch (err) {
+      console.error("Failed to persist project order:", err);
+    }
+    await fetchAllData();
+  };
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+    const pageOffset = (adminProjectsPage - 1) * projectsPerPage;
+    const pageIds = currentAdminProjects.map((p) => p.id);
+    const fromInPage = pageIds.indexOf(active.id as string);
+    const toInPage = pageIds.indexOf(over.id as string);
+    if (fromInPage < 0 || toInPage < 0) return;
+    applyMove(pageOffset + fromInPage, pageOffset + toInPage);
+  };
+
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!project.title || !project.category) return;
@@ -151,7 +315,6 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
         category: project.category,
         description: project.description,
         status: project.status,
-        order: project.order !== "" ? Number(project.order) : 99999,
         role: project.role,
         year: project.year || (scheduledDate ? String(scheduledDate.getFullYear()) : ""),
         client: project.client,
@@ -180,11 +343,21 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
           ...(publishAt ? { publishedAt: publishAt } : {}),
         });
       } else {
-        await addDoc(collection(db, "projects"), {
+        // New projects land at the TOP of the list.
+        const newRef = await addDoc(collection(db, "projects"), {
           ...payload,
           createdAt: serverTimestamp(),
           publishedAt: publishAt ?? serverTimestamp(),
         });
+        const newProj = { id: newRef.id, ...payload };
+        const next = [newProj, ...orderedProjects].map((p, i) => ({ ...p, order: i + 1 }));
+        setOrderedProjects(next);
+        try {
+          await persistOrder(next);
+        } catch (err) {
+          console.error("Failed to persist new project order:", err);
+        }
+        setAdminProjectsPage(1);
       }
 
       resetForm();
@@ -207,7 +380,6 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
       category: proj.category || "",
       description: proj.description || "",
       status: proj.status || "published",
-      order: proj.order !== undefined && proj.order !== 99999 ? String(proj.order) : "",
       role: proj.role || "",
       year: proj.year || "",
       client: proj.client || "",
@@ -249,8 +421,8 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
     }
   };
 
-  const totalAdminPages = Math.ceil(projectsList.length / projectsPerPage);
-  const currentAdminProjects = projectsList.slice(
+  const totalAdminPages = Math.ceil(orderedProjects.length / projectsPerPage);
+  const currentAdminProjects = orderedProjects.slice(
     (adminProjectsPage - 1) * projectsPerPage,
     adminProjectsPage * projectsPerPage
   );
@@ -402,11 +574,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                 onChange={(url, path) => setProject((prev) => ({ ...prev, image: url, imagePath: path || "" }))}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-                <div>
-                  <label className={labelClass}>Order Priority</label>
-                  <input type="number" value={project.order} onChange={(e) => set("order", e.target.value)} className={inputClass} placeholder="1" min="1" />
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className={labelClass}>Status</label>
                   <select value={project.status} onChange={(e) => set("status", e.target.value)} className={inputClass}>
@@ -502,40 +670,31 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
 
       {/* Existing Projects List */}
       <div className="bg-white border border-brand-line p-6 rounded-2xl">
-        <h3 className="text-lg font-bold font-display text-brand-ink mb-6">Existing Projects ({projectsList.length})</h3>
-        {projectsList.length === 0 ? (
+        <h3 className="text-lg font-bold font-display text-brand-ink mb-2">Existing Projects ({orderedProjects.length})</h3>
+        <p className="text-brand-muted text-xs mb-6">
+          Drag with the <GripVertical size={13} className="inline -mt-0.5" /> handle or use the ↑/↓ arrows to reorder. New projects appear at the top.
+        </p>
+        {orderedProjects.length === 0 ? (
           <p className="text-brand-muted text-sm italic">No dynamic projects found. Fallback cards are shown on the Works page.</p>
         ) : (
           <>
-            <div className="divide-y divide-brand-line">
-              {currentAdminProjects.map((proj) => (
-                <div key={proj.id} className="py-4 flex justify-between items-center gap-4">
-                  <div>
-                    <h5 className="font-bold text-brand-ink text-sm flex items-center gap-2">
-                      {proj.order !== undefined && proj.order !== "" && (
-                        <span className="px-2 py-0.5 bg-brand-ink/5 border border-brand-line text-brand-ink text-xs rounded font-mono">#{proj.order}</span>
-                      )}
-                      {proj.title}
-                      {proj.status === "draft" && <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded font-mono">draft</span>}
-                      {proj.status !== "draft" && proj.publishedAt?.seconds * 1000 > Date.now() && (
-                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded font-mono">scheduled</span>
-                      )}
-                    </h5>
-                    <p className="text-brand-muted text-xs mt-1">
-                      {proj.slug ? <span className="font-mono">/works/{proj.slug}</span> : <span>{proj.category}</span>}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => handleStartEdit(proj)} className="w-9 h-9 flex items-center justify-center bg-brand-ink/5 border border-brand-line text-brand-ink rounded-lg hover:bg-brand-ink hover:text-white transition-all" title="Edit">
-                      <Edit2 size={15} />
-                    </button>
-                    <button onClick={() => handleDeleteProject(proj.id)} className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all" title="Delete">
-                      <Trash2 size={15} />
-                    </button>
-                  </div>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={currentAdminProjects.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+                <div className="divide-y divide-brand-line">
+                  {currentAdminProjects.map((proj, i) => (
+                    <SortableProjectRow
+                      key={proj.id}
+                      project={proj}
+                      fullIndex={(adminProjectsPage - 1) * projectsPerPage + i}
+                      total={orderedProjects.length}
+                      onMove={applyMove}
+                      onEdit={handleStartEdit}
+                      onDelete={handleDeleteProject}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </SortableContext>
+            </DndContext>
 
             {totalAdminPages > 1 && (
               <div className="flex justify-center items-center gap-2 mt-6 pt-6 border-t border-brand-line">
@@ -543,9 +702,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ projectsList, fetchAll
                   Prev
                 </button>
                 {Array.from({ length: totalAdminPages }).map((_, i) => (
-                  <button key={i} onClick={() => setAdminProjectsPage(i + 1)} className={`w-8 h-8 rounded-lg text-xs font-semibold font-mono border transition-all ${adminProjectsPage === i + 1 ? "bg-brand-ink border-brand-ink text-white font-bold" : "bg-white border-brand-line text-brand-muted hover:text-brand-ink"}`}>
-                    {i + 1}
-                  </button>
+                  <button key={i} onClick={() => setAdminProjectsPage(i + 1)} className={`w-8 h-8 rounded-lg text-xs font-semibold font-mono border transition-all ${adminProjectsPage === i + 1 ? "bg-brand-ink border-brand-ink text-white font-bold" : "bg-white border-brand-line text-brand-muted hover:text-brand-ink"}`}>{i + 1}</button>
                 ))}
                 <button disabled={adminProjectsPage === totalAdminPages} onClick={() => setAdminProjectsPage((p) => Math.min(p + 1, totalAdminPages))} className="px-3 py-1.5 bg-white border border-brand-line rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-ink disabled:opacity-40 transition-all">
                   Next

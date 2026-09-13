@@ -1,13 +1,15 @@
-import { Layout, PlusCircle, FileText, Mail, Wrench, Quote } from "lucide-react";
+import { Layout, PlusCircle, FileText, Mail, Wrench, Quote, Settings } from "lucide-react";
+
+export type AdminTab = "overview" | "projects" | "blogs" | "services" | "testimonials" | "leads" | "settings";
 
 interface AdminSidebarProps {
-  activeTab: "overview" | "projects" | "blogs" | "services" | "testimonials" | "leads";
-  setActiveTab: (tab: "overview" | "projects" | "blogs" | "services" | "testimonials" | "leads") => void;
+  activeTab: AdminTab;
+  setActiveTab: (tab: AdminTab) => void;
   leadsCount: number;
 }
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActiveTab, leadsCount }) => {
-  const btn = (tab: AdminSidebarProps["activeTab"], icon: React.ReactNode, label: string, badge?: number) => (
+  const btn = (tab: AdminTab, icon: React.ReactNode, label: string, badge?: number) => (
     <button
       onClick={() => setActiveTab(tab)}
       className={`w-full p-4 rounded-xl flex justify-between items-center text-sm font-semibold transition-all border ${
@@ -33,6 +35,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
       {btn("services", <Wrench size={18} />, "Manage Services")}
       {btn("testimonials", <Quote size={18} />, "Manage Testimonials")}
       {btn("leads", <Mail size={18} />, "Inquiries Inbox", leadsCount)}
+      {btn("settings", <Settings size={18} />, "Site Settings")}
     </div>
   );
 };

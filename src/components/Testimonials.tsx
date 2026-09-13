@@ -25,7 +25,7 @@ const Testimonials = () => {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative h-[450px] md:h-[400px] w-full flex items-center justify-center" style={{ perspective: 1200 }}>
+        <div className="relative h-[350px] md:h-[320px] w-full flex items-center justify-center" style={{ perspective: 1200 }}>
           <AnimatePresence initial={false}>
             {testimonials.map((testimonial, index) => {
               const position = 
@@ -69,14 +69,14 @@ const Testimonials = () => {
                   animate={position}
                   transition={{ type: "spring", stiffness: 200, damping: 25 }}
                   onClick={() => setActiveIndex(index)}
-                  className={`absolute w-full max-w-[90%] md:max-w-2xl bg-white/5 border border-white/10 p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] backdrop-blur-xl cursor-pointer ${position === 'active' ? 'shadow-[0_20px_50px_rgba(0,0,0,0.5)] cursor-default' : ''}`}
+                  className={`absolute w-full max-w-[85%] md:max-w-xl bg-white/5 border border-white/10 p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] backdrop-blur-xl cursor-pointer ${position === 'active' ? 'shadow-[0_20px_50px_rgba(0,0,0,0.5)] cursor-default' : ''}`}
                 >
                   <Quote
-                    className={`absolute top-8 right-8 ${position === 'active' ? 'text-brand-accent/20' : 'text-white/5'} transition-colors duration-500`}
-                    size={64}
+                    className={`absolute top-6 right-6 ${position === 'active' ? 'text-brand-accent/20' : 'text-white/5'} transition-colors duration-500`}
+                    size={40}
                   />
 
-                  <p className={`text-xl md:text-3xl font-medium leading-relaxed mb-10 relative z-10 transition-colors duration-500 ${position === 'active' ? 'text-white' : 'text-white/40'}`}>
+                  <p className={`text-base md:text-lg font-medium leading-relaxed mb-6 relative z-10 transition-colors duration-500 line-clamp-6 md:line-clamp-5 ${position === 'active' ? 'text-white' : 'text-white/40'}`}>
                     "{testimonial.content}"
                   </p>
 
@@ -86,10 +86,10 @@ const Testimonials = () => {
                       alt={testimonial.name}
                       loading="lazy"
                       decoding="async"
-                      className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-white/20 object-cover"
+                      className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white/20 object-cover"
                     />
                     <div>
-                      <h4 className={`font-bold text-lg md:text-xl transition-colors duration-500 ${position === 'active' ? 'text-white' : 'text-white/60'}`}>
+                      <h4 className={`font-bold text-base md:text-lg transition-colors duration-500 ${position === 'active' ? 'text-white' : 'text-white/60'}`}>
                         {testimonial.name}
                       </h4>
                       <p className="text-white/40 text-sm md:text-base">{testimonial.role}</p>

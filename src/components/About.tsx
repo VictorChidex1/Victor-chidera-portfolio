@@ -5,6 +5,7 @@ import InfiniteMarquee from "./InfiniteMarquee";
 import Terminal from "./Terminal";
 import NumberCounter from "./NumberCounter";
 import about from "../data/about.json";
+import { COMPANY_NAME, COMPANY_TITLE, COMPANY_TAGLINE, COMPANY_LOGO } from "../seo/site";
 
 const About = () => {
   return (
@@ -42,6 +43,31 @@ const About = () => {
               {about.paragraphs.map((paragraph, i) => (
                 <p key={i}>{paragraph}</p>
               ))}
+            </motion.div>
+
+            <motion.div
+              variants={fadeInUp}
+              className="mt-8 flex items-center gap-4 bg-white border border-brand-line rounded-2xl p-5"
+            >
+              {COMPANY_LOGO ? (
+                <img
+                  src={COMPANY_LOGO}
+                  alt={COMPANY_NAME}
+                  className="w-14 h-14 rounded-full object-cover border border-brand-line bg-white shrink-0"
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <div className="w-14 h-14 rounded-full bg-brand-ink text-white flex items-center justify-center font-display font-bold text-lg shrink-0">
+                  {COMPANY_NAME.charAt(0)}
+                </div>
+              )}
+              <div>
+                <p className="text-brand-ink font-bold text-sm uppercase tracking-wider">
+                  {COMPANY_TITLE} · {COMPANY_NAME}
+                </p>
+                <p className="text-brand-muted text-sm mt-0.5">{COMPANY_TAGLINE}</p>
+              </div>
             </motion.div>
 
             <motion.div variants={fadeInUp} className="mt-10">

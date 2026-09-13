@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 import {
   collection,
   getDocs,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import { AnimatePresence } from "framer-motion";
 import { auth, db } from "../firebase";
@@ -19,8 +27,12 @@ import { BlogsTab } from "../components/admin/BlogsTab";
 import { ServicesTab } from "../components/admin/ServicesTab";
 import { TestimonialsTab } from "../components/admin/TestimonialsTab";
 import { InquiriesTab } from "../components/admin/InquiriesTab";
+import { SettingsTab } from "../components/admin/SettingsTab";
 
-type AdminTab = "overview" | "projects" | "blogs" | "services" | "testimonials" | "leads";
+type AdminTab = "overview" | "projects" | "blogs" | "services" | "testimonials" | "leads" | "settings";
+
+// Sign the admin out after this long without any activity on the tab.
+const IDLE_TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
 
 const Admin: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -39,9 +51,16 @@ const Admin: React.FC = () => {
   const [servicesList, setServicesList] = useState<any[]>([]);
   const [testimonialsList, setTestimonialsList] = useState<any[]>([]);
   const [leadsList, setLeadsList] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>(null);
 
   // Track authentication state
   useEffect(() => {
+    // Session-only persistence: logged in while the tab is open, logged out
+    // as soon as the tab/browser is closed.
+    setPersistence(auth, browserSessionPersistence).catch((err) => {
+      console.error("Error setting session persistence:", err);
+    });
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser && currentUser.email !== "donchid.online@gmail.com") {
         try {
@@ -97,6 +116,10 @@ const Admin: React.FC = () => {
         return timeB - timeA;
       });
       setLeadsList(leads);
+
+      // 4. Site Settings (author identity)
+      const settingsSnap = await getDoc(doc(db, "settings", "site"));
+      setSettings(settingsSnap.exists() ? settingsSnap.data() : {});
     } catch (err) {
       console.error("Error loading admin data: ", err);
     }
@@ -108,12 +131,42 @@ const Admin: React.FC = () => {
     }
   }, [user]);
 
+  // Idle timeout: sign out after 1 hour with no activity on the tab.
+  const lastActivity = useRef(Date.now());
+  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const resetTimer = () => {
+      lastActivity.current = Date.now();
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+      idleTimer.current = setTimeout(() => {
+        signOut(auth)
+          .then(() => setLoginError("Session expired due to inactivity. Please sign in again."))
+          .catch((err) => console.error("Error signing out after idle timeout:", err));
+      }, IDLE_TIMEOUT_MS);
+    };
+
+    const events: (keyof WindowEventMap)[] = ["pointerdown", "keydown", "touchstart", "scroll"];
+    events.forEach((evt) => window.addEventListener(evt, resetTimer, { passive: true }));
+
+    resetTimer();
+
+    return () => {
+      events.forEach((evt) => window.removeEventListener(evt, resetTimer));
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    };
+  }, [user]);
+
   // Handle Login Submission
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
     setLoginError("");
     try {
+      // Keep the session in-memory-of-tab: logged out when the tab closes.
+      await setPersistence(auth, browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
     } catch (err: any) {
       setLoginError(err.message || "Failed to log in. Please check credentials.");
@@ -188,6 +241,7 @@ const Admin: React.FC = () => {
               {activeTab === "blogs" && (
                 <BlogsTab
                   blogsList={blogsList}
+                  settings={settings}
                   fetchAllData={fetchAllData}
                 />
               )}
@@ -209,6 +263,14 @@ const Admin: React.FC = () => {
               {activeTab === "leads" && (
                 <InquiriesTab
                   leadsList={leadsList}
+                  fetchAllData={fetchAllData}
+                />
+              )}
+
+              {activeTab === "settings" && (
+                <SettingsTab
+                  settings={settings}
+                  blogsList={blogsList}
                   fetchAllData={fetchAllData}
                 />
               )}

@@ -6,6 +6,8 @@ import {
   orderBy,
   where,
   limit,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -205,4 +207,43 @@ export const useTestimonials = () => {
   }, []);
 
   return { testimonials, loading };
+};
+
+// Default site identity used until a settings doc exists.
+export const DEFAULT_SITE_SETTINGS = {
+  name: "Victor Chidera",
+  editorialTitle: "Full Stack Developer",
+  avatar: "",
+  avatarPath: "",
+};
+
+// Custom Hook to Fetch the Site Settings (author identity / avatar / title).
+// Single doc at `settings/site`; falls back to defaults when absent.
+export const useSiteSettings = () => {
+  const [settings, setSettings] = useState<any>(DEFAULT_SITE_SETTINGS);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const snap = await getDoc(doc(db, "settings", "site"));
+        if (snap.exists()) {
+          setSettings({
+            ...DEFAULT_SITE_SETTINGS,
+            ...snap.data(),
+          });
+        } else {
+          setSettings(DEFAULT_SITE_SETTINGS);
+        }
+      } catch (err) {
+        console.warn("Error fetching site settings:", err);
+        setSettings(DEFAULT_SITE_SETTINGS);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  return { settings, loading };
 };

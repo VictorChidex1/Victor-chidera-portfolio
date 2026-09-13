@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useBlogs } from "../hooks/useFirebaseData";
+import { useBlogs, useSiteSettings } from "../hooks/useFirebaseData";
 import { fadeInUp, staggerContainer } from "../utils/animations";
 import RouteSeo from "../components/seo/RouteSeo";
+import AuthorByline from "../components/AuthorByline";
 import blogPostsFallback from "../data/blog-posts-fallback.json";
 import { collectionPageSchema } from "../seo/schemas";
 
@@ -13,6 +14,7 @@ const POSTS_PER_PAGE = 10;
 
 const Blog = () => {
   const { blogs: liveBlogs } = useBlogs();
+  const { settings } = useSiteSettings();
   const displayBlogs = liveBlogs.length > 0 ? liveBlogs : blogPosts;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -105,6 +107,14 @@ const Blog = () => {
                 <p className="text-lg md:text-2xl text-neutral-500 font-medium leading-relaxed max-w-3xl">
                   {featuredPost.excerpt}
                 </p>
+                <div className="mt-6">
+                  <AuthorByline
+                    author={featuredPost.author}
+                    avatar={settings?.avatar}
+                    editorialTitle={settings?.editorialTitle}
+                    avatarSize={40}
+                  />
+                </div>
               </div>
               
               <div className="shrink-0 flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-neutral-200 group-hover:border-brand-accent group-hover:bg-brand-accent transition-all duration-300 text-brand-ink group-hover:text-white group-hover:-translate-y-2 group-hover:translate-x-2">
@@ -162,6 +172,15 @@ const Blog = () => {
                    <p className="text-neutral-500 text-base md:text-lg font-medium leading-relaxed mb-6">
                      {post.excerpt}
                    </p>
+                   
+                   <div className="mb-6">
+                     <AuthorByline
+                       author={post.author}
+                       avatar={settings?.avatar}
+                       editorialTitle={settings?.editorialTitle}
+                       avatarSize={30}
+                     />
+                   </div>
                    
                    <div className="flex items-center text-brand-ink font-bold text-sm uppercase tracking-widest group-hover:text-brand-accent transition-colors">
                      Read Article <ArrowUpRight size={18} className="ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />

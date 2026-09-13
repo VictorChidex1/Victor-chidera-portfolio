@@ -8,6 +8,7 @@ export {
   articleSchema,
   faqSchema,
   contactPageSchema,
+  organizationSchema,
   absoluteUrl,
   absoluteImage,
 } from "../../shared/seo";

@@ -10,9 +10,11 @@ import {
   Linkedin,
   Twitter,
   ChevronDown,
+  Building2,
 } from "lucide-react";
 import RouteSeo from "../components/seo/RouteSeo";
 import { contactPageSchema } from "../seo/schemas";
+import { COMPANY_NAME, COMPANY_TITLE, COMPANY_TAGLINE } from "../seo/site";
 
 /* ───────────────────────────────────────────
    Constants
@@ -269,6 +271,22 @@ const Contact = () => {
             <div className="flex items-center gap-3 text-lg font-medium">
               <MapPin size={20} className="text-white/50" />
               Remote
+            </div>
+          </div>
+
+          <div className="sm:col-span-2 mt-4">
+            <span className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3 block">
+              Company
+            </span>
+            <div className="flex items-center gap-3 text-lg font-medium">
+              <Building2 size={20} className="text-white/50 shrink-0" />
+              <span>
+                {COMPANY_NAME}
+                <span className="text-white/40 text-base">
+                  {" "}
+                  — {COMPANY_TITLE}, {COMPANY_TAGLINE}
+                </span>
+              </span>
             </div>
           </div>
 

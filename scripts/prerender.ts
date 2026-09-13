@@ -25,6 +25,11 @@ import {
   LOCALE,
   CONTACT_EMAIL,
   SOCIALS,
+  AUTHOR_NAME,
+  AUTHOR_JOB_TITLE,
+  COMPANY_NAME,
+  COMPANY_TITLE,
+  COMPANY_LOGO,
   personSchema,
   websiteSchema,
   collectionPageSchema,
@@ -32,6 +37,7 @@ import {
   breadcrumbSchema,
   faqSchema,
   contactPageSchema,
+  organizationSchema,
 } from "../shared/seo.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -41,6 +47,7 @@ const DIST_HTML = join(DIST, "index.html");
 
 const CACHE_BLOGS = join(__dirname, ".cache", "blogs.json");
 const CACHE_PROJECTS = join(__dirname, ".cache", "projects.json");
+const CACHE_SETTINGS = join(__dirname, ".cache", "settings.json");
 
 // ── Types ────────────────────────────────────────────────────────────────
 interface RouteMeta {
@@ -86,6 +93,7 @@ interface BlogPost {
   id?: string | number;
   slug?: string;
   title: string;
+  author?: string;
   excerpt?: string;
   content?: string;
   coverImage?: string;
@@ -159,6 +167,25 @@ function loadProjects(): Project[] {
     }
   }
   return readJson<Project[]>("src/data/projects-fallback.json");
+}
+
+interface SiteSettings {
+  name?: string;
+  editorialTitle?: string;
+  avatar?: string;
+  avatarPath?: string;
+}
+
+function loadSettings(): SiteSettings {
+  if (existsSync(CACHE_SETTINGS)) {
+    try {
+      const cached = JSON.parse(readFileSync(CACHE_SETTINGS, "utf-8")) as SiteSettings;
+      if (cached && typeof cached === "object") return cached;
+    } catch {
+      // fall through to defaults
+    }
+  }
+  return {};
 }
 
 // ── HTML helpers ─────────────────────────────────────────────────────────
@@ -257,11 +284,17 @@ function renderHome(
         <ul>${faqList}</ul>
       </section>
     </main>
-    <footer>${escapeHtml(SITE_NAME)} — ${escapeHtml(CONTACT_EMAIL)}</footer>`;
+    <footer>${escapeHtml(SITE_NAME)} · ${escapeHtml(COMPANY_TITLE)} of ${escapeHtml(COMPANY_NAME)} — ${escapeHtml(CONTACT_EMAIL)}</footer>`;
 }
 
 function renderWorks(projects: Project[]): string {
-  const list = projects
+  const sorted = [...projects].sort((a, b) => {
+    const orderA = a.order !== undefined && a.order !== "" ? Number(a.order) : 99999;
+    const orderB = b.order !== undefined && b.order !== "" ? Number(b.order) : 99999;
+    if (orderA !== orderB) return orderA - orderB;
+    return String(a.title || "").localeCompare(String(b.title || ""));
+  });
+  const list = sorted
     .map(
       (p) => `
       <li>
@@ -320,16 +353,21 @@ function renderTestimonials(testimonials: Testimonial[]): string {
     </main>`;
 }
 
-function renderBlogList(blogs: BlogPost[]): string {
+function renderBlogList(blogs: BlogPost[], settings: SiteSettings): string {
   const list = blogs
     .map((b) => {
       const href = b.slug ? `/blog/${b.slug}` : b.link || "#";
       const external = b.slug ? "" : ' rel="noopener"';
+      const authorName = b.author || settings.name || AUTHOR_NAME;
       return `
       <li>
         <h2><a href="${escapeHtml(href)}"${external}>${escapeHtml(b.title)}</a></h2>
         <p>${escapeHtml(b.excerpt || "")}</p>
-        ${b.date ? `<p><time>${escapeHtml(b.date)}</time> · ${escapeHtml(b.readTime || "")}</p>` : ""}
+        <p class="post-meta">by ${escapeHtml(authorName)}${
+          b.date
+            ? ` · <time>${escapeHtml(b.date)}</time>${b.readTime ? ` · ${escapeHtml(b.readTime)}` : ""}`
+            : ""
+        }</p>
       </li>`;
     })
     .join("");
@@ -341,13 +379,28 @@ function renderBlogList(blogs: BlogPost[]): string {
     </main>`;
 }
 
-function renderArticle(post: BlogPost): string {
+function renderArticle(post: BlogPost, settings: SiteSettings): string {
+  const authorName = post.author || settings.name || AUTHOR_NAME;
+  const byline = `
+      <address class="post-author">
+        ${
+          settings.avatar
+            ? `<img src="${escapeHtml(settings.avatar)}" alt="" width="40" height="40" loading="lazy" />`
+            : `<span class="post-author-avatar">${escapeHtml((authorName || "V").charAt(0).toUpperCase())}</span>`
+        }
+        <span><strong>${escapeHtml(authorName)}</strong>${
+          settings.editorialTitle
+            ? `<br /><span>${escapeHtml(settings.editorialTitle)}</span>`
+            : ""
+        }</span>
+      </address>`;
   if (post.content) {
     return `
       <header>${navHtml(`/blog/${post.slug}`)}</header>
       <main>
         <article>
           <h1>${escapeHtml(post.title)}</h1>
+          ${byline}
           ${post.excerpt ? `<p>${escapeHtml(post.excerpt)}</p>` : ""}
           ${stripUnsafe(post.content)}
         </article>
@@ -359,6 +412,7 @@ function renderArticle(post: BlogPost): string {
     <main>
       <article>
         <h1>${escapeHtml(post.title)}</h1>
+        ${byline}
         <p>${escapeHtml(post.excerpt || "")}</p>
         <p><a href="${escapeHtml(post.link || "#")}" rel="noopener">Read the full article</a></p>
       </article>
@@ -474,6 +528,7 @@ function buildSeo(
     services: Service[];
     faqs: Faq[];
     blogs: BlogPost[];
+    settings: SiteSettings;
   }
 ): SeoResult {
   const route: RouteMeta = ctx.routes[path] || {
@@ -495,8 +550,16 @@ function buildSeo(
   switch (true) {
     case path === "/":
       jsonLd = [
-        personSchema(),
+        personSchema({
+          name: ctx.settings.name,
+          jobTitle: ctx.settings.editorialTitle,
+          image: ctx.settings.avatar,
+        }),
         websiteSchema(),
+        organizationSchema({
+          name: COMPANY_NAME,
+          logo: COMPANY_LOGO,
+        }),
         faqSchema(ctx.faqs as Faq[]),
       ];
       break;
@@ -541,13 +604,14 @@ function buildSeo(
       const slug = path.slice("/blog/".length);
       const post = ctx.blogs.find((b) => b.slug === slug);
       if (post && (post.status === undefined || post.status !== "draft")) {
-        meta.title = post.seoTitle || `${post.title} | Victor Chidera`;
+        meta.title = post.seoTitle || `${post.title} | ${post.author || ctx.settings.name || AUTHOR_NAME}`;
         meta.description = post.seoDescription || post.excerpt || route.description;
         meta.image = post.coverImage || post.image;
         meta.type = "article";
         meta.publishedTime = toIso(post.publishedAt || post.createdAt);
         meta.modifiedTime = toIso(post.updatedAt || post.publishedAt || post.createdAt);
         meta.section = "Blog";
+        meta.authorName = post.author || ctx.settings.name || AUTHOR_NAME;
         jsonLd = [
           articleSchema({
             title: post.title,
@@ -557,6 +621,8 @@ function buildSeo(
             publishedTime: toIso(post.publishedAt || post.createdAt),
             modifiedTime: toIso(post.updatedAt || post.publishedAt || post.createdAt),
             section: "Blog",
+            author: meta.authorName,
+            authorImage: ctx.settings.avatar,
           }),
           breadcrumbSchema([
             { name: "Home", url: "/" },
@@ -642,6 +708,9 @@ function buildHeadBlock(meta: SeoMeta, jsonLd: object[]): string {
       : "",
     type === "article" && meta.modifiedTime
       ? `<meta property="article:modified_time" content="${escapeHtml(meta.modifiedTime)}" />`
+      : "",
+    type === "article" && meta.authorName
+      ? `<meta property="article:author" content="${escapeHtml(meta.authorName)}" />`
       : "",
     type === "article" && meta.section
       ? `<meta property="article:section" content="${escapeHtml(meta.section)}" />`
@@ -791,8 +860,9 @@ function main(): void {
   const faqs = readJson<Faq[]>("src/data/faqs.json");
   const projects = loadProjects();
   const blogs = loadBlogs();
+  const settings = loadSettings();
 
-  const ctx = { routes, projects, services, faqs, blogs };
+  const ctx = { routes, projects, services, faqs, blogs, settings };
   const original = readFileSync(DIST_HTML, "utf-8");
   let count = 0;
 
@@ -816,13 +886,13 @@ function main(): void {
   writeRoute("/works", renderWorks(projects));
   writeRoute("/services", renderServices(services));
   writeRoute("/testimonials", renderTestimonials(testimonials));
-  writeRoute("/blog", renderBlogList(blogs));
+  writeRoute("/blog", renderBlogList(blogs, settings));
   writeRoute("/contact", renderContact());
 
   // Blog articles (only those with a slug — live Firestore snapshots).
   for (const post of blogs) {
     if (!post.slug) continue;
-    writeRoute(`/blog/${post.slug}`, renderArticle(post));
+    writeRoute(`/blog/${post.slug}`, renderArticle(post, settings));
   }
 
   // Case studies (only projects with a slug — live Firestore snapshots).

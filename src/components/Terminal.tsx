@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { COMPANY_NAME } from "../seo/site";
 
 const codeLines = [
   {
@@ -11,7 +12,8 @@ const codeLines = [
   { text: "const developer = {", delay: 1500, color: "text-brand-accent" },
   { text: "  name: 'Victor Chidera',", delay: 2000, color: "text-white" },
   { text: "  role: 'Fullstack Engineer',", delay: 2500, color: "text-white" },
-  { text: "  skills: [", delay: 2900, color: "text-white" },
+  { text: `  company: '${COMPANY_NAME}',`, delay: 2800, color: "text-brand-accent" },
+  { text: "  skills: [", delay: 3200, color: "text-white" },
   {
     text: "    'React', 'Firebase', 'Supabase',",
     delay: 3200,

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, ArrowUpRight } from "lucide-react";
+import { COMPANY_NAME, COMPANY_TITLE } from "../seo/site";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -113,6 +114,10 @@ const Footer = () => {
 
           {/* Bottom Section: Massive Typography */}
           <div className="w-full flex flex-col items-center justify-end mt-4 sm:mt-8 md:mt-auto pt-2 md:pt-0">
+            {/* Company tag */}
+            <p className="text-white/50 text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-2 md:mb-3">
+              {COMPANY_TITLE} · {COMPANY_NAME}
+            </p>
             {/* The Massive Name */}
             <h1 className="text-[11.5vw] md:text-[14vw] font-display font-bold text-white leading-[0.85] md:leading-[0.8] tracking-tighter whitespace-nowrap text-center opacity-90 select-none my-1 md:my-0">
               VICTOR CHIDERA
@@ -120,7 +125,7 @@ const Footer = () => {
 
             {/* Copyright row */}
             <div className="w-full flex flex-col md:flex-row justify-between items-center pt-4 mt-4 sm:pt-6 sm:mt-6 md:pt-8 md:mt-8 border-t border-white/10 text-white/40 text-xs md:text-sm gap-3 md:gap-0">
-              <p>© {currentYear} Victor Chidera. All rights reserved.</p>
+              <p>© {currentYear} {COMPANY_NAME}. All rights reserved.</p>
               <p>Designed & Engineered with 🤍</p>
             </div>
           </div>

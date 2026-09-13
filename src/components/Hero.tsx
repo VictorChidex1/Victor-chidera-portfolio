@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { staggerContainer, scaleIn } from "../utils/animations";
 import TiltPortrait from "./TiltPortrait";
 import LiveClock from "./LiveClock";
+import { COMPANY_NAME, COMPANY_TITLE, COMPANY_LOGO } from "../seo/site";
 
 const profileImage = "/assets/images/profile.webp";
 
@@ -105,7 +106,28 @@ const Hero = () => {
 
           {/* Live Clock Card */}
           <BentoCard className="lg:col-span-4 p-8 min-h-[200px] sm:min-h-[250px]" delay={0.5}>
-            <LiveClock />
+            <div className="flex flex-col h-full">
+              <div className="flex items-center gap-3 mb-6">
+                {COMPANY_LOGO ? (
+                  <img
+                    src={COMPANY_LOGO}
+                    alt={COMPANY_NAME}
+                    className="w-9 h-9 rounded-full object-cover border border-brand-line bg-white"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : null}
+                <div className="leading-tight">
+                  <p className="text-xs font-bold text-brand-ink uppercase tracking-wider">
+                    {COMPANY_TITLE}
+                  </p>
+                  <p className="text-brand-muted text-xs font-medium">{COMPANY_NAME}</p>
+                </div>
+              </div>
+              <div className="mt-auto">
+                <LiveClock />
+              </div>
+            </div>
           </BentoCard>
           
         </div>

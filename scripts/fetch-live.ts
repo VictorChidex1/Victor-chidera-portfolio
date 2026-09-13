@@ -19,6 +19,7 @@ const ROOT = join(__dirname, "..");
 const CACHE_DIR = join(__dirname, ".cache");
 const CACHE_BLOGS = join(CACHE_DIR, "blogs.json");
 const CACHE_PROJECTS = join(CACHE_DIR, "projects.json");
+const CACHE_SETTINGS = join(CACHE_DIR, "settings.json");
 
 const KEY_CANDIDATES = [
   process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -139,8 +140,27 @@ async function main(): Promise<void> {
   mkdirSync(CACHE_DIR, { recursive: true });
   writeFileSync(CACHE_BLOGS, JSON.stringify(cleanBlogs, null, 2));
   writeFileSync(CACHE_PROJECTS, JSON.stringify(cleanProjects, null, 2));
+
+  // Site settings (author identity) — used by the prerender for bylines + SEO.
+  let cleanSettings: Record<string, unknown> = {};
+  try {
+    const settingsSnap = await db.collection("settings").doc("site").get();
+    if (settingsSnap.exists) {
+      const s = settingsSnap.data() ?? {};
+      cleanSettings = {
+        name: s.name || "",
+        editorialTitle: s.editorialTitle || "",
+        avatar: s.avatar || "",
+        avatarPath: s.avatarPath || "",
+      };
+    }
+  } catch {
+    cleanSettings = {};
+  }
+  writeFileSync(CACHE_SETTINGS, JSON.stringify(cleanSettings, null, 2));
+
   console.log(
-    `[fetch-live] cached ${cleanBlogs.length} published blog(s) + ${cleanProjects.length} published project(s)`
+    `[fetch-live] cached ${cleanBlogs.length} published blog(s) + ${cleanProjects.length} published project(s) + settings`
   );
 
   await app.delete();

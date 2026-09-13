@@ -2,7 +2,8 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PageSeo from "../components/seo/PageSeo";
 import RichContent from "../components/RichContent";
-import { useBlogBySlug } from "../hooks/useFirebaseData";
+import AuthorByline from "../components/AuthorByline";
+import { useBlogBySlug, useSiteSettings } from "../hooks/useFirebaseData";
 import { articleSchema, breadcrumbSchema } from "../seo/schemas";
 
 const toIso = (ts: any) =>
@@ -11,6 +12,7 @@ const toIso = (ts: any) =>
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const { post, loading } = useBlogBySlug(slug);
+  const { settings } = useSiteSettings();
 
   if (loading) {
     return (
@@ -35,16 +37,18 @@ const BlogPost = () => {
 
   const publishedAt = toIso(post.publishedAt) || toIso(post.createdAt);
   const cover = post.coverImage || post.image;
+  const authorName = post.author || settings?.name || "Victor Chidera";
 
   return (
     <main className="bg-white min-h-screen pt-32 pb-32 selection:bg-brand-accent selection:text-white">
       <PageSeo
-        title={post.seoTitle || `${post.title} | Victor Chidera`}
+        title={post.seoTitle || `${post.title} | ${authorName}`}
         description={post.seoDescription || post.excerpt}
         path={`/blog/${slug}`}
         image={cover}
         type="article"
         publishedTime={publishedAt}
+        authorName={authorName}
         jsonLd={[
           articleSchema({
             title: post.title,
@@ -54,6 +58,8 @@ const BlogPost = () => {
             publishedTime: publishedAt,
             modifiedTime: publishedAt,
             section: "Blog",
+            author: authorName,
+            authorImage: settings?.avatar,
           }),
           breadcrumbSchema([
             { name: "Home", url: "/" },
@@ -86,6 +92,15 @@ const BlogPost = () => {
               ))}
             </div>
           )}
+
+          <div className="mt-8">
+            <AuthorByline
+              author={authorName}
+              avatar={settings?.avatar}
+              editorialTitle={settings?.editorialTitle}
+              avatarSize={44}
+            />
+          </div>
         </header>
 
         {cover && (

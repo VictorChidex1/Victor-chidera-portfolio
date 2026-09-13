@@ -8,7 +8,7 @@ interface OverviewTabProps {
   servicesList: any[];
   testimonialsList: any[];
   leadsList: any[];
-  setActiveTab: (tab: "overview" | "projects" | "blogs" | "services" | "testimonials" | "leads") => void;
+  setActiveTab: (tab: "overview" | "projects" | "blogs" | "services" | "testimonials" | "leads" | "settings") => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({

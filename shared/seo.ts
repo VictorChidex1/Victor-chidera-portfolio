@@ -20,6 +20,16 @@ export const AUTHOR_NAME = "Victor Chidera";
 export const AUTHOR_JOB_TITLE = "Full Stack Developer";
 export const LOCALE = "en_NG";
 
+// ── Company (CV Digitals) ────────────────────────────────────────────────
+// The owner's registered web design agency. Intentionally location-neutral:
+// no legalName / address / country signals so international clients focus on
+// the work rather than geography.
+export const COMPANY_NAME = "CV Digitals";
+export const COMPANY_TITLE = "Founder";
+export const COMPANY_TAGLINE = "Web Design Agency";
+export const COMPANY_URL = "";
+export const COMPANY_LOGO = "/assets/images/CV Digital.png";
+
 export const SOCIALS = {
   github: "https://github.com/VictorChidex1",
   linkedin: "https://www.linkedin.com/in/victor-chidera-255526b9",
@@ -54,6 +64,10 @@ export interface ArticlePost {
   publishedTime?: string;
   modifiedTime?: string;
   section?: string;
+  /** Author name override (defaults to AUTHOR_NAME). */
+  author?: string;
+  /** Author avatar/photo used in the schema author + publisher Person objects. */
+  authorImage?: string;
 }
 
 export interface FaqItem {
@@ -74,16 +88,21 @@ export function absoluteImage(image?: string): string {
 
 // ── JSON-LD builders ─────────────────────────────────────────────────────
 
-export function personSchema() {
+export function personSchema(opts?: {
+  name?: string;
+  jobTitle?: string;
+  image?: string;
+}) {
   return {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: AUTHOR_NAME,
+    name: opts?.name || AUTHOR_NAME,
     url: SITE_URL,
-    jobTitle: AUTHOR_JOB_TITLE,
+    jobTitle: opts?.jobTitle || AUTHOR_JOB_TITLE,
     description: SITE_DESCRIPTION,
-    image: DEFAULT_OG_IMAGE,
+    image: opts?.image || DEFAULT_OG_IMAGE,
     sameAs: [SOCIALS.github, SOCIALS.linkedin, SOCIALS.twitter],
+    worksFor: { "@type": "Organization", name: COMPANY_NAME },
     knowsAbout: [
       "React",
       "Node.js",
@@ -96,6 +115,27 @@ export function personSchema() {
       "Serverless Architecture",
       "Full Stack Development",
     ],
+  };
+}
+
+export function organizationSchema(opts?: {
+  name?: string;
+  url?: string;
+  logo?: string;
+  description?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: opts?.name || COMPANY_NAME,
+    url: opts?.url || SITE_URL,
+    ...(opts?.logo || COMPANY_LOGO
+      ? { logo: absoluteImage((opts?.logo || COMPANY_LOGO).replace(/ /g, "%20")) }
+      : {}),
+    ...(opts?.description
+      ? { description: opts.description }
+      : { description: COMPANY_TAGLINE }),
+    sameAs: [SOCIALS.github, SOCIALS.linkedin, SOCIALS.twitter],
   };
 }
 
@@ -178,6 +218,9 @@ export function articleSchema(post: ArticlePost) {
     ...(post.images || []).filter(Boolean).map(absoluteImage),
   ];
 
+  const authorName = post.author || AUTHOR_NAME;
+  const authorImage = post.authorImage || undefined;
+
   return {
     "@context": "https://schema.org",
     "@type": post.type || "BlogPosting",
@@ -186,8 +229,16 @@ export function articleSchema(post: ArticlePost) {
     image: images.length === 1 ? images[0] : images,
     url,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    author: { "@type": "Person", name: AUTHOR_NAME },
-    publisher: { "@type": "Person", name: AUTHOR_NAME },
+    author: {
+      "@type": "Person",
+      name: authorName,
+      ...(authorImage ? { image: authorImage } : {}),
+    },
+    publisher: {
+      "@type": "Person",
+      name: authorName,
+      ...(authorImage ? { image: authorImage } : {}),
+    },
     ...(post.publishedTime ? { datePublished: post.publishedTime } : {}),
     ...(post.modifiedTime ? { dateModified: post.modifiedTime } : {}),
     ...(post.section ? { articleSection: post.section } : {}),
