@@ -16,9 +16,15 @@ const REGION = "us-central1";
 const FROM_ADDRESS = "Victor Chidera <hello@send.victorchidera.com>";
 const TO_ADDRESS = ["victor@victorchidera.com"];
 
-// Rate limiting: at most RATE_MAX submissions per email within RATE_WINDOW_MS.
-const RATE_MAX = 5;
-const RATE_WINDOW_MS = 60 * 60 * 1000;
+// Rate limiting — multi-key: per-email, per-IP, and a global cap so a caller
+// can't bypass the email limit by rotating addresses.
+const HOUR = 60 * 60 * 1000;
+const EMAIL_MAX = 5;
+const EMAIL_WINDOW = HOUR;
+const IP_MAX = 20;
+const IP_WINDOW = HOUR;
+const GLOBAL_MAX = 100;
+const GLOBAL_WINDOW = HOUR;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -51,37 +57,32 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-/** Lightweight Firestore-backed rate limiter keyed by a hash of the sender email. */
-async function enforceRateLimit(email: string): Promise<void> {
-  const id = createHash("sha256").update(email.toLowerCase()).digest("hex");
-  const ref = db.collection("rateLimits").doc(id);
+/** Lightweight Firestore-backed rate limiter keyed by an arbitrary string. */
+async function withinLimit(key: string, max: number, windowMs: number): Promise<boolean> {
+  const ref = db.collection("rateLimits").doc(key);
   const now = Date.now();
-  let limited = false;
 
-  await db.runTransaction(async (tx) => {
+  return db.runTransaction(async (tx) => {
     const snap = await tx.get(ref);
     if (!snap.exists) {
       tx.set(ref, { count: 1, windowStart: now });
-      return;
+      return true;
     }
     const data = snap.data() as { count: number; windowStart: number };
-    if (now - data.windowStart > RATE_WINDOW_MS) {
+    if (now - data.windowStart > windowMs) {
       tx.set(ref, { count: 1, windowStart: now });
-      return;
+      return true;
     }
-    if (data.count >= RATE_MAX) {
-      limited = true;
-      return;
+    if (data.count >= max) {
+      return false;
     }
     tx.update(ref, { count: FieldValue.increment(1) });
+    return true;
   });
+}
 
-  if (limited) {
-    throw new HttpsError(
-      "resource-exhausted",
-      "Too many submissions. Please try again later."
-    );
-  }
+function sha256(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
 }
 
 /** Build a clean, responsive HTML notification email. */
@@ -144,6 +145,7 @@ export const sendContactEmail = onCall(
     cpu: 1,
     minInstances: 0,
     secrets: [RESEND_API_KEY],
+    consumeAppCheckToken: true,
   },
   async (req) => {
     const apiKey = RESEND_API_KEY.value();
@@ -175,7 +177,22 @@ export const sendContactEmail = onCall(
       throw new HttpsError("invalid-argument", "Invalid submission", { fields: invalid });
     }
 
-    await enforceRateLimit(data.email);
+    const ip =
+      req.rawRequest.ip ||
+      (req.rawRequest.headers?.["x-forwarded-for"] as string | undefined)
+        ?.split(",")[0]
+        ?.trim() ||
+      "unknown";
+
+    if (!(await withinLimit(`email:${sha256(data.email.toLowerCase())}`, EMAIL_MAX, EMAIL_WINDOW))) {
+      throw new HttpsError("resource-exhausted", "Too many submissions. Please try again later.");
+    }
+    if (!(await withinLimit(`ip:${sha256(ip)}`, IP_MAX, IP_WINDOW))) {
+      throw new HttpsError("resource-exhausted", "Too many requests. Please try again later.");
+    }
+    if (!(await withinLimit("global", GLOBAL_MAX, GLOBAL_WINDOW))) {
+      throw new HttpsError("resource-exhausted", "We're receiving too many requests. Please try again shortly.");
+    }
 
     // Persist the lead (Admin SDK bypasses rules; public create is disabled).
     const leadRef = await db.collection("contacts").add({
