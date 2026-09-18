@@ -4,7 +4,7 @@
   "description": "SEO engine Cloud Functions for the Victor Chidera portfolio",
   "main": "lib/index.js",
   "engines": {
-    "node": "20"
+    "node": "22"
   },
   "scripts": {
     "build": "tsc",
