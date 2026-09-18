@@ -26,12 +26,12 @@ jobs:
           cache: npm
 
       - name: Write Firebase config
-        run: echo "${{ secrets.ENV_FILE }}" > .env
+        run: echo "${{ secrets.ENV_FILE }}" | base64 -d > .env
 
       - name: Restore service-account key
         run: |
           mkdir -p secrets
-          echo "${{ secrets.FIREBASE_ADMIN_SDK }}" > secrets/firebase-adminsdk.json
+          echo "${{ secrets.FIREBASE_ADMIN_SDK }}" | base64 -d > secrets/firebase-adminsdk.json
 
       - name: Install dependencies
         run: npm ci
