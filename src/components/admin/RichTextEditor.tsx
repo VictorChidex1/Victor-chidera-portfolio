@@ -105,7 +105,7 @@ const RichTextEditor = ({ content, onChange, placeholder, minHeight = "220px" }:
   return (
     <div className="border border-brand-line rounded-lg bg-white overflow-hidden">
       <style>{EDITOR_STYLES}</style>
-      <div className="max-h-[65vh] overflow-y-auto">
+      <div className="max-h-[65vh] overflow-y-auto overscroll-contain" data-lenis-prevent>
         <div className="sticky top-0 z-20 flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-b border-brand-line bg-brand-surface">
           <ToolbarButton label="Bold" onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")}><Bold size={15} /></ToolbarButton>
           <ToolbarButton label="Italic" onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")}><Italic size={15} /></ToolbarButton>

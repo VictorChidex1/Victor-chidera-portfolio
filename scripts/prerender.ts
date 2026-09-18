@@ -729,7 +729,7 @@ function buildHeadBlock(meta: SeoMeta, jsonLd: object[]): string {
     <meta property="og:url" content="${canonical}" />
     <meta property="og:title" content="${escapeHtml(meta.title)}" />
     <meta property="og:description" content="${escapeHtml(meta.description)}" />
-    <meta property="og:image" content="${ogImage}" />
+    <meta property="og:image" content="${escapeHtml(ogImage)}" />
     <meta property="og:site_name" content="${escapeHtml(SITE_NAME)}" />
     <meta property="og:locale" content="${LOCALE}" />
 
@@ -737,7 +737,7 @@ function buildHeadBlock(meta: SeoMeta, jsonLd: object[]): string {
     <meta name="twitter:url" content="${canonical}" />
     <meta name="twitter:title" content="${escapeHtml(meta.title)}" />
     <meta name="twitter:description" content="${escapeHtml(meta.description)}" />
-    <meta name="twitter:image" content="${ogImage}" />
+    <meta name="twitter:image" content="${escapeHtml(ogImage)}" />
 
     ${articleTags}
     ${jsonLdTags}`;

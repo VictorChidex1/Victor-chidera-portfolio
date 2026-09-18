@@ -1,6 +1,10 @@
 // Cloud Functions entry point.
 //
-// Only the contact handler is deployed. All SEO rendering now happens at
-// build time (see scripts/prerender.ts) and is served as static files from
-// Firebase Hosting — zero per-request Cloud Function invocations.
+// sendContactEmail   — contact form handler.
+// onBlogChange       — fires on blog writes and dispatches a GitHub Actions
+//                      "seo-refresh" so the build-time SEO prerender (see
+//                      scripts/prerender.ts) is regenerated and redeployed.
+//                      SEO HTML stays static on Firebase Hosting — no
+//                      per-request Cloud Function invocations.
 export { sendContactEmail } from "./contact";
+export { onBlogChange } from "./deployTrigger";

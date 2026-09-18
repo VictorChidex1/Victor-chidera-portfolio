@@ -74,6 +74,27 @@ src/
 
 ## 🚀 Deployment
 
+### Firebase Hosting (production)
+
+The live site is deployed to Firebase Hosting. `firebase deploy` runs a `predeploy` chain that snapshots live Firestore data (`scripts/fetch-live.ts`), builds the SPA (`npm run build`), and generates SEO-complete static HTML + `sitemap.xml` for every route and blog post (`scripts/prerender.ts`):
+
+```bash
+firebase deploy
+```
+
+**SEO refreshes are automatic.** Publishing, editing, or deleting a blog post triggers a Cloud Function (`functions/src/deployTrigger.ts`) that dispatches a GitHub Actions "SEO Refresh" workflow (`.github/workflows/seo-refresh.yml`), which re-runs the prerender and redeploys hosting. The workflow also runs on a 30-minute schedule as a safety net. Manual `firebase deploy` is therefore only needed for code changes.
+
+Required secrets:
+
+- GitHub Actions secrets:
+  - `FIREBASE_TOKEN` — generate with `firebase login:ci`.
+  - `FIREBASE_ADMIN_SDK` — contents of `secrets/firebase-adminsdk.json` (gitignored).
+  - `ENV_FILE` — contents of your local `.env` (gitignored).
+- Firebase function secret:
+  - `GH_PAT` — a GitHub personal access token with `repo` (or `public_repo`) scope; set with `firebase functions:secrets:set GH_PAT`.
+
+After adding these, deploy the functions once with `firebase deploy --only functions`.
+
 ### Option 1: Vercel (Recommended)
 
 The easiest way to deploy this project is with [Vercel](https://vercel.com/import/git).
