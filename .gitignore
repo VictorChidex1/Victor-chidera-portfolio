@@ -42,3 +42,8 @@ scripts/.cache/
 
 # Private Documentation
 Project explanations/
+
+# Local tooling / environment artifacts (not part of the website)
+opencode.json
+install.sh
+y/
