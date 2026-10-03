@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
-import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useProjects } from "../hooks/useFirebaseData";
+import PrefetchLink from "./PrefetchLink";
 
 const TitleSection = () => {
   return (
@@ -157,7 +157,7 @@ const FeaturedProjects = () => {
 
       {/* Outro Section */}
       <div className="pt-32 pb-16 flex justify-center">
-        <Link
+        <PrefetchLink
           to="/works"
           className="group flex flex-col items-center gap-8 text-brand-ink hover:text-brand-accent transition-colors"
         >
@@ -170,7 +170,7 @@ const FeaturedProjects = () => {
               className="group-hover:translate-x-2 transition-transform text-brand-ink group-hover:text-brand-accent"
             />
           </div>
-        </Link>
+        </PrefetchLink>
       </div>
     </section>
   );

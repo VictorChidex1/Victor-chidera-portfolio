@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Menu, X, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import PrefetchLink from "./PrefetchLink";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +40,7 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
-        <Link
+        <PrefetchLink
           to="/"
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
@@ -47,18 +48,18 @@ const Navbar = () => {
           <span className="text-xl md:text-2xl font-bold font-display text-brand-ink tracking-tighter">
             Victor<span className="text-brand-accent">Chidera</span>
           </span>
-        </Link>
+        </PrefetchLink>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link
+            <PrefetchLink
               key={link.name}
               to={link.path}
               className="text-sm font-medium text-brand-muted hover:text-brand-ink transition-colors uppercase tracking-widest"
             >
               {link.name}
-            </Link>
+            </PrefetchLink>
           ))}
           <a
             href="/victor-chidera-full-stack-cv.pdf"
@@ -90,14 +91,14 @@ const Navbar = () => {
           >
             <div className="flex flex-col p-6 gap-4">
               {navLinks.map((link) => (
-                <Link
+                <PrefetchLink
                   key={link.name}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
                   className="text-lg font-medium text-brand-muted hover:text-brand-ink transition-colors uppercase tracking-widest"
                 >
                   {link.name}
-                </Link>
+                </PrefetchLink>
               ))}
               <a
                 href="/victor-chidera-full-stack-cv.pdf"

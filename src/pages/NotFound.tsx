@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import PageSeo from "../components/seo/PageSeo";
+import PrefetchLink from "../components/PrefetchLink";
 
 const NotFound = () => {
   return (
@@ -15,12 +15,12 @@ const NotFound = () => {
         <p className="text-brand-muted text-lg max-w-md mx-auto mb-10">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        <Link
+        <PrefetchLink
           to="/"
           className="inline-flex items-center gap-2 bg-brand-ink text-white px-8 py-4 rounded-full font-bold hover:bg-neutral-800 transition-colors"
         >
           Back to Home
-        </Link>
+        </PrefetchLink>
       </div>
     </main>
   );

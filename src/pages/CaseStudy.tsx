@@ -1,7 +1,8 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import PageSeo from "../components/seo/PageSeo";
 import RichContent from "../components/RichContent";
+import PrefetchLink from "../components/PrefetchLink";
 import { useProjectBySlug, useProjects } from "../hooks/useFirebaseData";
 import { articleSchema, breadcrumbSchema } from "../seo/schemas";
 
@@ -39,9 +40,9 @@ const CaseStudy = () => {
           <h1 className="text-5xl md:text-7xl font-bold font-display text-brand-ink tracking-tighter mb-6">
             Project not found.
           </h1>
-          <Link to="/works" className="inline-flex items-center gap-2 bg-brand-ink text-white px-8 py-4 rounded-full font-bold hover:bg-neutral-800 transition-colors">
+          <PrefetchLink to="/works" className="inline-flex items-center gap-2 bg-brand-ink text-white px-8 py-4 rounded-full font-bold hover:bg-neutral-800 transition-colors">
             <ArrowLeft size={18} /> Back to Works
-          </Link>
+          </PrefetchLink>
         </div>
       </main>
     );
@@ -83,9 +84,9 @@ const CaseStudy = () => {
       />
 
       <div className="max-w-5xl mx-auto px-6">
-        <Link to="/works" className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-ink text-sm font-semibold mb-10 transition-colors">
+        <PrefetchLink to="/works" className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-ink text-sm font-semibold mb-10 transition-colors">
           <ArrowLeft size={16} /> All Works
-        </Link>
+        </PrefetchLink>
 
         {/* Hero */}
         <header className="mb-16">
@@ -179,11 +180,11 @@ const CaseStudy = () => {
             <h2 className="text-2xl md:text-3xl font-bold font-display text-brand-ink tracking-tight mb-8">More Work</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {related.map((p: any) => (
-                <Link key={p.id} to={`/works/${p.slug}`} className="group block">
+                <PrefetchLink key={p.id} to={`/works/${p.slug}`} className="group block">
                   {p.image && <div className="aspect-video rounded-2xl overflow-hidden border border-brand-line mb-4"><img src={p.image} alt={p.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>}
                   <h3 className="font-bold font-display text-brand-ink group-hover:text-brand-accent transition-colors">{p.title}</h3>
                   <p className="text-brand-muted text-sm mt-1">{p.category}</p>
-                </Link>
+                </PrefetchLink>
               ))}
             </div>
           </section>

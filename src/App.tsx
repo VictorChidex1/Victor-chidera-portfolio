@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
@@ -11,17 +11,35 @@ import PageTransition from "./components/PageTransition";
 import WhatsAppButton from "./components/WhatsAppButton";
 import ScrollToTop from "./components/ScrollToTop";
 
-// Import Pages
-import Home from "./pages/Home";
-import Works from "./pages/Works";
-import CaseStudy from "./pages/CaseStudy";
-import Services from "./pages/Services";
-import Testimonials from "./pages/Testimonials";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import Contact from "./pages/Contact";
-import Admin from "./pages/Admin";
-import NotFound from "./pages/NotFound";
+import {
+  loadHome,
+  loadWorks,
+  loadCaseStudy,
+  loadServices,
+  loadTestimonials,
+  loadBlog,
+  loadBlogPost,
+  loadContact,
+  loadAdmin,
+  loadNotFound,
+} from "./lib/lazyRoutes";
+
+const Home = lazy(loadHome);
+const Works = lazy(loadWorks);
+const CaseStudy = lazy(loadCaseStudy);
+const Services = lazy(loadServices);
+const Testimonials = lazy(loadTestimonials);
+const Blog = lazy(loadBlog);
+const BlogPost = lazy(loadBlogPost);
+const Contact = lazy(loadContact);
+const Admin = lazy(loadAdmin);
+const NotFound = lazy(loadNotFound);
+
+const PageLoader = () => (
+  <div className="min-h-screen bg-white flex items-center justify-center">
+    <div className="w-10 h-10 border-4 border-brand-ink border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 function App() {
   const location = useLocation();
@@ -55,18 +73,20 @@ function App() {
       {/* Main content grows to fill space */}
       <main className="flex-grow">
         <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-            <Route path="/works" element={<PageTransition><Works /></PageTransition>} />
-            <Route path="/works/:slug" element={<PageTransition><CaseStudy /></PageTransition>} />
-            <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
-            <Route path="/testimonials" element={<PageTransition><Testimonials /></PageTransition>} />
-            <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
-            <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
-            <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
-            <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
-            <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
-          </Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+              <Route path="/works" element={<PageTransition><Works /></PageTransition>} />
+              <Route path="/works/:slug" element={<PageTransition><CaseStudy /></PageTransition>} />
+              <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
+              <Route path="/testimonials" element={<PageTransition><Testimonials /></PageTransition>} />
+              <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
+              <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
+              <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+              <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
+              <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+            </Routes>
+          </Suspense>
         </AnimatePresence>
       </main>
 

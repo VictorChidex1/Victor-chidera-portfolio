@@ -1,0 +1,10 @@
+export const loadHome = () => import("../pages/Home");
+export const loadWorks = () => import("../pages/Works");
+export const loadCaseStudy = () => import("../pages/CaseStudy");
+export const loadServices = () => import("../pages/Services");
+export const loadTestimonials = () => import("../pages/Testimonials");
+export const loadBlog = () => import("../pages/Blog");
+export const loadBlogPost = () => import("../pages/BlogPost");
+export const loadContact = () => import("../pages/Contact");
+export const loadAdmin = () => import("../pages/Admin");
+export const loadNotFound = () => import("../pages/NotFound");

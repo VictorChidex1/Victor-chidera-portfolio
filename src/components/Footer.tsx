@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
 import { Mail, ArrowUpRight } from "lucide-react";
 import { COMPANY_NAME, COMPANY_TITLE } from "../seo/site";
+import PrefetchLink from "./PrefetchLink";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -47,34 +47,34 @@ const Footer = () => {
                 <span className="text-white/40 text-xs md:text-sm font-bold uppercase tracking-widest mb-1">
                   Navigation
                 </span>
-                <Link
+                <PrefetchLink
                   to="/"
                   className="text-base md:text-lg text-white/80 hover:text-brand-accent transition-colors flex items-center gap-1 group"
                 >
                   Home{" "}
                   <ArrowUpRight className="w-4 h-4 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
-                </Link>
-                <Link
+                </PrefetchLink>
+                <PrefetchLink
                   to="/works"
                   className="text-base md:text-lg text-white/80 hover:text-brand-accent transition-colors flex items-center gap-1 group"
                 >
                   Work{" "}
                   <ArrowUpRight className="w-4 h-4 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
-                </Link>
-                <Link
+                </PrefetchLink>
+                <PrefetchLink
                   to="/services"
                   className="text-base md:text-lg text-white/80 hover:text-brand-accent transition-colors flex items-center gap-1 group"
                 >
                   Services{" "}
                   <ArrowUpRight className="w-4 h-4 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
-                </Link>
-                <Link
+                </PrefetchLink>
+                <PrefetchLink
                   to="/testimonials"
                   className="text-base md:text-lg text-white/80 hover:text-brand-accent transition-colors flex items-center gap-1 group"
                 >
                   Testimonials{" "}
                   <ArrowUpRight className="w-4 h-4 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
-                </Link>
+                </PrefetchLink>
               </div>
 
               <div className="flex flex-col gap-3 sm:gap-4 md:gap-5">

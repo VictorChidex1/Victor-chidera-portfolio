@@ -1,8 +1,9 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PageSeo from "../components/seo/PageSeo";
 import RichContent from "../components/RichContent";
 import AuthorByline from "../components/AuthorByline";
+import PrefetchLink from "../components/PrefetchLink";
 import { useBlogBySlug, useSiteSettings } from "../hooks/useFirebaseData";
 import { articleSchema, breadcrumbSchema } from "../seo/schemas";
 
@@ -27,9 +28,9 @@ const BlogPost = () => {
       <main className="min-h-screen bg-white flex items-center justify-center px-6 pt-32">
         <div className="text-center">
           <h1 className="text-5xl md:text-7xl font-bold font-display text-brand-ink tracking-tighter mb-6">Post not found.</h1>
-          <Link to="/blog" className="inline-flex items-center gap-2 bg-brand-ink text-white px-8 py-4 rounded-full font-bold hover:bg-neutral-800 transition-colors">
+          <PrefetchLink to="/blog" className="inline-flex items-center gap-2 bg-brand-ink text-white px-8 py-4 rounded-full font-bold hover:bg-neutral-800 transition-colors">
             <ArrowLeft size={18} /> Back to Blog
-          </Link>
+          </PrefetchLink>
         </div>
       </main>
     );
@@ -70,9 +71,9 @@ const BlogPost = () => {
       />
 
       <article className="max-w-3xl mx-auto px-6">
-        <Link to="/blog" className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-ink text-sm font-semibold mb-10 transition-colors">
+        <PrefetchLink to="/blog" className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-ink text-sm font-semibold mb-10 transition-colors">
           <ArrowLeft size={16} /> All Posts
-        </Link>
+        </PrefetchLink>
 
         <header className="mb-10">
           <div className="flex items-center gap-3 text-sm text-brand-accent font-mono uppercase tracking-widest font-bold mb-6">

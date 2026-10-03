@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { staggerContainer, scaleIn } from "../utils/animations";
 import TiltPortrait from "./TiltPortrait";
 import LiveClock from "./LiveClock";
 import { COMPANY_NAME, COMPANY_TITLE, COMPANY_LOGO } from "../seo/site";
+import PrefetchLink from "./PrefetchLink";
 
 const profileImage = "/assets/images/profile.webp";
 
@@ -73,19 +73,19 @@ const Hero = () => {
           {/* Action Card */}
           <BentoCard className="sm:col-span-2 lg:col-span-4 p-8 sm:p-10 flex flex-col justify-center min-h-[250px]" delay={0.3}>
             <div className="flex flex-wrap gap-4 mt-auto mb-auto">
-              <Link
+              <PrefetchLink
                 to="/works"
                 className="magnetic group flex items-center gap-2 bg-brand-ink text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-neutral-800 transition-all duration-300"
               >
                 View Work
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
+              </PrefetchLink>
+              <PrefetchLink
                 to="/contact"
                 className="magnetic flex items-center gap-2 border border-brand-ink text-brand-ink px-6 py-3 sm:px-8 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-ink hover:text-white transition-colors"
               >
                 Contact Me
-              </Link>
+              </PrefetchLink>
             </div>
           </BentoCard>
 

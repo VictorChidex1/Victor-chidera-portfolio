@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import PrefetchLink from "./PrefetchLink";
 import { motion } from "framer-motion";
 
 const SolidText = ({ text }: { text: string }) => (
@@ -76,7 +76,7 @@ const CallToAction = () => {
 
       {/* Floating Center CTA */}
       <div className="relative z-10 flex flex-col items-center px-6 text-center">
-        <Link
+        <PrefetchLink
           to="/contact"
           className="group relative inline-flex items-center gap-4 bg-[#0f172a]/95 backdrop-blur-xl border border-white/10 text-white pl-8 pr-3 py-3 rounded-full font-bold text-xl shadow-2xl hover:bg-[#020617] transition-all duration-500 hover:scale-[1.02] hover:shadow-brand-accent/20 hover:shadow-[0_0_40px_rgba(249,115,22,0.15)] overflow-hidden"
         >
@@ -87,7 +87,7 @@ const CallToAction = () => {
           <div className="relative z-10 w-12 h-12 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-brand-accent transition-colors duration-300">
             <ArrowRight size={20} className="text-white group-hover:translate-x-0.5 transition-transform duration-300" />
           </div>
-        </Link>
+        </PrefetchLink>
         <p className="mt-8 text-slate-500 font-medium tracking-wide bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full shadow-sm border border-slate-100">
           Currently available for new projects
         </p>

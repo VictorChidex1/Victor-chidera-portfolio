@@ -5,6 +5,7 @@ import { useBlogs, useSiteSettings } from "../hooks/useFirebaseData";
 import { fadeInUp, staggerContainer } from "../utils/animations";
 import RouteSeo from "../components/seo/RouteSeo";
 import AuthorByline from "../components/AuthorByline";
+import { prefetchRoute } from "../lib/prefetch";
 import blogPostsFallback from "../data/blog-posts-fallback.json";
 import { collectionPageSchema } from "../seo/schemas";
 
@@ -71,6 +72,8 @@ const Blog = () => {
             href={featuredPost.slug ? `/blog/${featuredPost.slug}` : featuredPost.link}
             target={featuredPost.slug ? undefined : "_blank"}
             rel={featuredPost.slug ? undefined : "noopener noreferrer"}
+            onMouseEnter={() => featuredPost.slug && prefetchRoute(`/blog/${featuredPost.slug}`)}
+            onFocus={() => featuredPost.slug && prefetchRoute(`/blog/${featuredPost.slug}`)}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -139,6 +142,8 @@ const Blog = () => {
                 href={post.slug ? `/blog/${post.slug}` : post.link} 
                 target={post.slug ? undefined : "_blank"}
                 rel={post.slug ? undefined : "noopener noreferrer"}
+                onMouseEnter={() => post.slug && prefetchRoute(`/blog/${post.slug}`)}
+                onFocus={() => post.slug && prefetchRoute(`/blog/${post.slug}`)}
                 variants={fadeInUp}
                 className="group block break-inside-avoid cursor-crosshair"
               >

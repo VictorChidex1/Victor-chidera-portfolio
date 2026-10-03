@@ -10,5 +10,17 @@ export default defineConfig(({ command, mode }) => {
     plugins: [react()],
     // If it's GitHub Pages, use the repo name. If it's Vercel/Local, use root '/'.
     base: isGitHubPages ? "/my-portfolio/" : "/",
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (!id.includes("node_modules")) return;
+            if (id.includes("three") || id.includes("@react-three") || id.includes("zustand")) return "three";
+            if (id.includes("react-simple-maps") || id.includes("d3") || id.includes("world-atlas") || id.includes("topojson")) return "maps";
+            if (id.includes("firebase")) return "firebase";
+          },
+        },
+      },
+    },
   };
 });

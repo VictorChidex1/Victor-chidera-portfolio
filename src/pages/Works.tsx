@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { ExternalLink, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProjects } from "../hooks/useFirebaseData";
 import RouteSeo from "../components/seo/RouteSeo";
+import PrefetchLink from "../components/PrefetchLink";
 import projectsFallback from "../data/projects-fallback.json";
 import { collectionPageSchema } from "../seo/schemas";
 
@@ -114,13 +114,13 @@ const ProjectAccordionItem = ({
                 </div>
                 
                 {project.slug ? (
-                  <Link
+                  <PrefetchLink
                     to={`/works/${project.slug}`}
                     className="group/btn inline-flex items-center gap-3 bg-brand-ink text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-neutral-800 transition-colors shrink-0 mt-8 xl:mt-0"
                   >
                     View Case Study
                     <Plus size={20} className="group-hover/btn:rotate-90 transition-transform" />
-                  </Link>
+                  </PrefetchLink>
                 ) : (
                   project.link && (
                     <a
