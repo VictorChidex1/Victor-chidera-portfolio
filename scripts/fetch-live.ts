@@ -10,7 +10,7 @@
 //
 // Run:  node scripts/fetch-live.ts   (Node 22+ runs TypeScript natively)
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -29,6 +29,19 @@ const KEY_CANDIDATES = [
 function findKey(): string | null {
   for (const p of KEY_CANDIDATES) {
     if (p && existsSync(p)) return p;
+  }
+  // Check .firebase/ for any admin SDK service-account key
+  const dotFirebase = join(ROOT, ".firebase");
+  if (existsSync(dotFirebase)) {
+    try {
+      const files = readdirSync(dotFirebase);
+      const match = files.find(
+        (f) => f.includes("adminsdk") && f.endsWith(".json")
+      );
+      if (match) return join(dotFirebase, match);
+    } catch {
+      // ignore
+    }
   }
   return null;
 }
@@ -100,7 +113,7 @@ async function main(): Promise<void> {
       updatedAt: normalizeTimestamp(b.updatedAt ?? b.createdAt),
       publishedAt: normalizeTimestamp(b.publishedAt ?? b.createdAt),
     }))
-    .filter((b) => b.slug);
+    .filter((b: any) => b.slug);
 
   const projSnap = await db.collection("projects").get();
   const projects = projSnap.docs

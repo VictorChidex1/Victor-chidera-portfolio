@@ -13,6 +13,7 @@ dist-ssr
 *.local
 
 # Firebase local cache (regenerated on every deploy)
+*.tsbuildinfo
 .firebase/
 
 # Service-account credentials (never commit or deploy)

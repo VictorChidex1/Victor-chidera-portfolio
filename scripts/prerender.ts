@@ -246,7 +246,9 @@ function renderHome(
   about: { heading: string; paragraphs: string[] },
   services: Service[],
   process: { phase: string; title: string; description: string }[],
-  faqs: Faq[]
+  faqs: Faq[],
+  projects: Project[] = [],
+  blogs: BlogPost[] = []
 ): string {
   const servicesList = services
     .map(
@@ -266,15 +268,53 @@ function renderHome(
     )
     .join("");
 
+  const featuredWorks = projects
+    .filter((p) => p.slug)
+    .slice(0, 4)
+    .map(
+      (p) =>
+        `<li><h3><a href="/works/${escapeHtml(p.slug!)}">${escapeHtml(p.title)}</a></h3><p>${escapeHtml(p.description || "")}</p></li>`
+    )
+    .join("");
+
+  const recentBlogs = blogs
+    .filter((b) => b.slug)
+    .slice(0, 3)
+    .map(
+      (b) =>
+        `<li><h3><a href="/blog/${escapeHtml(b.slug!)}">${escapeHtml(b.title)}</a></h3><p>${escapeHtml(b.excerpt || "")}</p></li>`
+    )
+    .join("");
+
   return `
     <header>${navHtml("/")}</header>
     <main>
       <h1>${escapeHtml(about.heading)}</h1>
       ${about.paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join("\n      ")}
+      ${
+        featuredWorks
+          ? `
+      <section aria-labelledby="featured-works-heading">
+        <h2 id="featured-works-heading">Featured Works</h2>
+        <ul>${featuredWorks}</ul>
+        <p><a href="/works">View all works</a></p>
+      </section>`
+          : ""
+      }
       <section aria-labelledby="services-heading">
         <h2 id="services-heading">Services</h2>
         <ul>${servicesList}</ul>
       </section>
+      ${
+        recentBlogs
+          ? `
+      <section aria-labelledby="recent-blog-heading">
+        <h2 id="recent-blog-heading">Latest Insights</h2>
+        <ul>${recentBlogs}</ul>
+        <p><a href="/blog">Read all articles</a></p>
+      </section>`
+          : ""
+      }
       <section aria-labelledby="process-heading">
         <h2 id="process-heading">My Process</h2>
         <ol>${processList}</ol>
@@ -298,11 +338,24 @@ function renderWorks(projects: Project[]): string {
     .map(
       (p) => `
       <li>
-        <h2>${escapeHtml(p.title)}</h2>
+        <h2>${
+          p.slug
+            ? `<a href="/works/${escapeHtml(p.slug)}">${escapeHtml(p.title)}</a>`
+            : escapeHtml(p.title)
+        }</h2>
         <p>${escapeHtml(p.category || "")}</p>
         <p>${escapeHtml(p.description || "")}</p>
         ${p.tech && p.tech.length ? `<ul>${techTags(p.tech)}</ul>` : ""}
-        ${p.link ? `<p><a href="${escapeHtml(p.link)}" rel="noopener">View project</a></p>` : ""}
+        ${
+          p.slug
+            ? `<p><a href="/works/${escapeHtml(p.slug)}">View Case Study</a></p>`
+            : ""
+        }
+        ${
+          p.link
+            ? `<p><a href="${escapeHtml(p.link)}" rel="noopener" target="_blank">Live Project</a></p>`
+            : ""
+        }
       </li>`
     )
     .join("");
@@ -854,7 +907,7 @@ function main(): void {
   const about = readJson<{ heading: string; paragraphs: string[] }>("src/data/about.json");
   const services = readJson<Service[]>("src/data/services.json");
   const testimonials = readJson<Testimonial[]>("src/data/testimonials.json");
-  const process = readJson<{ phase: string; title: string; description: string }[]>(
+  const processSteps = readJson<{ phase: string; title: string; description: string }[]>(
     "src/data/process.json"
   );
   const faqs = readJson<Faq[]>("src/data/faqs.json");
@@ -882,12 +935,13 @@ function main(): void {
   };
 
   // Hub routes.
-  writeRoute("/", renderHome(about, services, process, faqs));
+  writeRoute("/", renderHome(about, services, processSteps, faqs, projects, blogs));
   writeRoute("/works", renderWorks(projects));
   writeRoute("/services", renderServices(services));
   writeRoute("/testimonials", renderTestimonials(testimonials));
   writeRoute("/blog", renderBlogList(blogs, settings));
   writeRoute("/contact", renderContact());
+  writeRoute("/404", renderNotFound());
 
   // Blog articles (only those with a slug — live Firestore snapshots).
   for (const post of blogs) {

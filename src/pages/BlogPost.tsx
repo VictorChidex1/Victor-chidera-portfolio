@@ -26,6 +26,7 @@ const BlogPost = () => {
   if (!post) {
     return (
       <main className="min-h-screen bg-white flex items-center justify-center px-6 pt-32">
+        <PageSeo title="Post Not Found | Victor Chidera" path={`/blog/${slug || ""}`} noindex={true} />
         <div className="text-center">
           <h1 className="text-5xl md:text-7xl font-bold font-display text-brand-ink tracking-tighter mb-6">Post not found.</h1>
           <PrefetchLink to="/blog" className="inline-flex items-center gap-2 bg-brand-ink text-white px-8 py-4 rounded-full font-bold hover:bg-neutral-800 transition-colors">

@@ -36,6 +36,7 @@ const CaseStudy = () => {
   if (!project) {
     return (
       <main className="min-h-screen bg-white flex items-center justify-center px-6 pt-32">
+        <PageSeo title="Project Not Found | Victor Chidera" path={`/works/${slug || ""}`} noindex={true} />
         <div className="text-center">
           <h1 className="text-5xl md:text-7xl font-bold font-display text-brand-ink tracking-tighter mb-6">
             Project not found.
